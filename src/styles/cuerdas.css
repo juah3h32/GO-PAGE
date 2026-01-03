@@ -3,13 +3,19 @@
   --text-color: #1a1a1a;
   --text-muted: #666666;
   --tech-orange: #FB670B;
-  --nav-height: 100px; /* Espacio reservado para tu Navbar */
+  --nav-height: 100px;
+  
+  /* AGREGA ESTO: Un gris suave para el modo claro (Negro al 8% de opacidad) */
+  --thumb-bg: rgba(0, 0, 0, 0.08); 
 }
 
 html.dark {
   --body-bg: #111010;
   --text-color: #ffffff;
   --text-muted: #a1a1a1;
+
+  /* AGREGA ESTO: Tu color original (Blanco al 5% de opacidad) */
+  --thumb-bg: rgba(255, 255, 255, 0.05); 
 }
 
 * {
@@ -354,8 +360,8 @@ model-viewer.model-3d-custom {
   border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
-  border: 2px solid transparent; /* Borde transparente para evitar saltos al hover */
-  background: rgba(255,255,255,0.05);
+  border: 5px solid transparent; /* Borde transparente para evitar saltos al hover */
+  background: var(--thumb-bg);
   transition: all 0.3s ease;
 }
 
@@ -583,9 +589,9 @@ model-viewer.model-3d-custom {
   height: 100%;
   aspect-ratio: 1/1; /* Siempre cuadrado */
   border-radius: 12px;
-  border: 2px solid transparent;
+  border: 5px solid transparent;
   cursor: pointer;
-  background: rgba(255,255,255,0.05);
+  background: var(--thumb-bg);
   transition: 0.3s;
 }
 .thumb-item.active {
