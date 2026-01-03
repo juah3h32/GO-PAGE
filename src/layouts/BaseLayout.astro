@@ -9,6 +9,7 @@ import FondoGlobal from "../components/FondoGlobal.astro";
 
 // 3. IMPORTAMOS EL BOT (Asegúrate que el archivo esté en components/BotGO.jsx)
 import BotGO from "../components/BotGO.jsx";
+import DockMenu from "../components/DockMenu.astro"; // <--- 1. IMPÓRTALO AQUÍ
 
 const { title = "Mi sitio" } = Astro.props;
 ---
@@ -46,6 +47,7 @@ const { title = "Mi sitio" } = Astro.props;
     <Loader />
 
     <slot />
+    <DockMenu />
 
     <BotGO client:load />
 

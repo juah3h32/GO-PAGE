@@ -7,7 +7,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import CustomCursor from "../components/CustomCursor.astro";
 import Navbar from "../components/Nadbar.astro";
 
-// DATA DE PRODUCTOS
 const productos = [
   { 
     img: "img1.png", 
@@ -64,7 +63,7 @@ const productos = [
               <div class="topic">{item.division}</div>
               <div class="des">{item.descripcion}</div>
               
-              <a href={item.link} class="seeMore" transition:name="producto">
+              <a href={item.link} class="seeMore">
                 Ver más
               </a>
             </div>

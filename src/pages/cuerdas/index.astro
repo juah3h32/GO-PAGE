@@ -4,24 +4,25 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import CustomCursor from "../../components/CustomCursor.astro";
 import AudioVisualizer from "../../components/AudioVisualizer.astro";
 import BuyButton from "../../components/BuyButton.astro";
-import Navbar from "../../components/Nadbar.astro"; // Asegúrate de que la ruta sea correcta
+import Navbar from "../../components/Nadbar.astro";
 
 /* -------------------------------------------------------------------------- */
 /* DATOS */
 /* -------------------------------------------------------------------------- */
 const products = [
-  { id: 0, name: 'Cuerda', img: '/images/cuerdas/CuerdaT1.webp', active: true, link: 'https://www.alibaba.com/product-detail/Rope-4-Strand-Braided-Polypropylene-Rope_11000029419919.html?spm=a27gk.ggs-spa.0.0.2ecaX0m3X0m35S' },
-  { id: 1, name: 'Strech', img: '/images/cuerdas/CuerdaNegra.webp', active: false, link: 'https://www.alibaba.com/product-detail/High-Strength-4-Strand-Braided-Polypropylene_11000029446131.html?spm=a27gk.ggs-spa.0.0.2ecaX0m3X0m35S' },
-  { id: 2, name: 'Rafia', img: '/images/img3.png', active: false, link: 'https://www.alibaba.com/product-detail/High-Strength-4-Strand-Braided-Polypropylene_11000029500051.html?spm=a27gk.ggs-spa.0.0.55c3SIyESIyE5I' }
+  { id: 0, name: 'Cuerda', img: '/images/cuerdas/CuerdaT1.webp', active: true, link: '...' },
+  { id: 1, name: 'Strech', img: '/images/cuerdas/CuerdaNegra.webp', active: false, link: '...' },
+  { id: 2, name: 'Rafia', img: '/images/img3.png', active: false, link: '...' }
 ];
 
+// IDs fijos para JS
 const specs = [
-  { label: "Rendimiento", id: "spec-load", highlight: true, tag: "Alta" },
-  { label: "Unidad", id: "spec-diam", highlight: false, tag: "Pieza" },
-  { label: "Material", id: "spec-mat", highlight: false, tag: "100%" },
-  { label: "Peso", id: "spec-elong", highlight: false, tag: "Promedio" },
-  { label: "Resistencia", id: "spec-grip", highlight: false, tag: "Alta" },
-  { label: "Resist. Carga", id: "spec-loadresist", highlight: false, tag: "Buena" },
+  { label: "Rendimiento", id: "spec-load", tag: "Alta" },
+  { label: "Unidad", id: "spec-diam", tag: "Pieza" },
+  { label: "Material", id: "spec-mat", tag: "100%" },
+  { label: "Peso", id: "spec-elong", tag: "Promedio" },
+  { label: "Resistencia", id: "spec-grip", tag: "Alta" },
+  { label: "Carga", id: "spec-loadresist", tag: "Buena" },
 ];
 ---
 
@@ -35,7 +36,7 @@ const specs = [
   <main class="main-container">
 
     <div class="content">
-      <a href="/productos" class="back-arrow-btn text-current hover:opacity-70 transition-opacity" aria-label="Volver a productos">
+      <a href="/productos" class="back-arrow-btn" aria-label="Volver">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="19" y1="12" x2="5" y2="12" />
@@ -44,35 +45,36 @@ const specs = [
       </a>
     
       <div class="text-area">
-         <h1 id="product-title" class="fade-in-text font-bold text-4xl mb-4"></h1>
-        <p id="product-desc" class="fade-in-text text-lg mb-6"></p>
+         <h1 id="product-title" class="fade-in-text">Cargando...</h1>
+         <p id="product-desc" class="fade-in-text"></p>
 
         <div class="specs-container fade-in-text">
-          <h3 class="specs-title text-sm font-semibold tracking-widest mb-4 opacity-80">ESPECIFICACIONES TÉCNICAS</h3>
+          <h3 class="specs-title">ESPECIFICACIONES TÉCNICAS</h3>
 
-          <div class="specs-grid grid grid-cols-2 gap-4">
+          <div class="specs-grid">
             {specs.map((spec) => (
-              <div class={`spec-box ${spec.highlight ? 'highlight border-accent' : 'border-gray-300 dark:border-gray-700'} p-3 border rounded-lg flex flex-col`}>
-                <span class="spec-label text-xs uppercase opacity-60">{spec.label}</span>
-                <span class="spec-value font-mono text-lg font-bold" id={spec.id}></span>
-                <span class="spec-percent text-xs text-accent">{spec.tag}</span>
+              <div class="spec-box">
+                <span class="spec-label">{spec.label}</span>
+                <span class="spec-value" id={spec.id}>--</span>
+                <span class="spec-percent">{spec.tag}</span>
               </div>
             ))}
           </div>
         </div>
 
-        <BuyButton />
+  <div class="fade-in-text w-full flex justify-center lg:justify-start">
+     <BuyButton />
+</div>
       </div>
 
-      <div class="thumbnails">
+      <div class="thumbnails fade-in-text">
         {products.map((prod, index) => (
           <div
-            class={`thumb-item ${prod.active ? 'active ring-2 ring-blue-500' : ''} cursor-pointer transition-transform hover:scale-105`}
+            class={`thumb-item ${prod.active ? 'active' : ''}`}
             data-index={index}
             data-link={prod.link}
           >
-            <div class="thumb-bg bg-white dark:bg-gray-800 rounded-lg shadow-md"></div>
-            <img src={prod.img} alt={`Miniatura de ${prod.name}`} class="rounded-lg" />
+            <img src={prod.img} alt={prod.name} />
           </div>
         ))}
       </div>
@@ -84,33 +86,33 @@ const specs = [
         <model-viewer
           id="rafia-3d"
           src="/models/rafiaNegra.glb"
-          alt="Modelo 3D de Rafia"
+          alt="Modelo 3D"
           camera-orbit="0deg 90deg 180%"
           min-camera-orbit="auto auto 300%"
           camera-controls
           auto-rotate
-          interaction-prompt="auto"
-          class="model-3d-custom w-full h-full" 
+          interaction-prompt="none"
+          class="model-3d-custom" 
           style="display:none;"
         ></model-viewer>
 
         {products.map((prod, index) => (
-          <div class={`wheel-item item-${index}`}>
-            <img src={prod.img} alt={`Producto ${prod.name}`} />
+          <div class={`wheel-item item-${index} ${index === 0 ? 'active' : ''}`}>
+            <img src={prod.img} alt={prod.name} />
           </div>
         ))}
       </div>
+      
+  
     </div>
 
-    <div class="tech-hud absolute bottom-10 left-10 text-gray-800 dark:text-gray-200 pointer-events-none">
-      <div class="hud-status flex items-center gap-2">
-        <span class="blink-dot w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-        <span class="hud-text text-xs tracking-widest font-mono">INTERACTIVE 3D</span>
-      </div>
-      <div class="hud-instruction text-xs opacity-50 font-mono mt-1">[ ROTAR CON RATÓN ]</div>
+<div style="position: fixed; bottom: 30px; right: 96px; z-index: 100; pointer-events: none;">
+         <div style="pointer-events: auto;">
+             <AudioVisualizer transition:persist />
+         </div>
     </div>
 
-    <AudioVisualizer />
+
   </main>
 
   <script src="/scripts/cuerdas.js" defer></script>

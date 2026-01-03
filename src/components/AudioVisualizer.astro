@@ -18,69 +18,112 @@
 </div>
 
 <script>
-  // CORRECCIÓN 1: Definir que 'playGlobalClick' existe en Window para evitar errores de TS
+  // Definición de tipos para TypeScript
   declare global {
     interface Window {
+      _globalBgMusic?: HTMLAudioElement;
+      _globalClickSound?: HTMLAudioElement;
+      _isGlobalMuted?: boolean; // Guardamos el estado del mute globalmente
       playGlobalClick: () => void;
     }
   }
 
-  // 1. CARGAMOS LOS AUDIOS
-  const clickSound = new Audio("/FX/Scan.wav");
-  const bgMusic = new Audio("/FX/ambient.mp3");
+  // --- LÓGICA DE INICIALIZACIÓN (Se ejecuta en cada navegación) ---
+  document.addEventListener('astro:page-load', () => {
+    initAudioSystem();
+  });
 
-  clickSound.volume = 0.5;
-  bgMusic.volume = 0.3;
-  bgMusic.loop = true;
-
-  const allSounds = [clickSound, bgMusic];
-
-  // Variables de estado
-  const audioControl = document.getElementById('audio-control');
-  let isGlobalMuted = false;
-
-  // 2. FUNCIÓN PÚBLICA (Corregida para evitar errores de tipo)
-  window.playGlobalClick = () => {
-    // Verificamos que el sonido exista y no esté muteado
-    if (clickSound && !clickSound.muted) {
-      clickSound.currentTime = 0;
-      clickSound.play().catch(e => console.error("Error audio click:", e));
-    }
-  };
-
-  // 3. LÓGICA DE CONTROL
-  if (audioControl) {
-    audioControl.addEventListener('click', () => {
-      isGlobalMuted = !isGlobalMuted;
-
-      allSounds.forEach(sound => {
-        if (sound) sound.muted = isGlobalMuted;
-      });
-
-      if (isGlobalMuted) {
-        audioControl.classList.add('muted');
-        // bgMusic.pause(); // Opcional
-      } else {
-        audioControl.classList.remove('muted');
-        if (bgMusic.paused) {
-          bgMusic.play().catch(e => console.log("Esperando interacción..."));
-        }
-      }
-    });
+  // Si no usas View Transitions, esto asegura que corra la primera vez
+  if (document.readyState === 'complete') {
+     initAudioSystem();
+  } else {
+     document.addEventListener('DOMContentLoaded', initAudioSystem);
   }
 
-  // 4. AUTOPLAY HACK (Inicializador)
-  document.addEventListener('click', function initAudio() {
-    if (!isGlobalMuted && bgMusic.paused) {
-      bgMusic.play().catch(e => {});
-      
-      // CORRECCIÓN 2: Usamos '?' para evitar crash si audioControl es null
-      audioControl?.classList.remove('muted');
-    }
-    // Nos aseguramos de remover el evento para que no se acumule memoria
-    document.removeEventListener('click', initAudio);
-  }, { once: true });
+  function initAudioSystem() {
+    const audioControl = document.getElementById('audio-control');
+    if (!audioControl) return; // Si no hay botón en esta página, salimos.
 
+    // 1. SINGLETON: Crear los audios SOLO si no existen en window
+    if (!window._globalBgMusic) {
+      window._globalBgMusic = new Audio("/FX/ambient.mp3");
+      window._globalBgMusic.loop = true;
+      window._globalBgMusic.volume = 0.3;
+    }
+
+    if (!window._globalClickSound) {
+      window._globalClickSound = new Audio("/FX/Scan.wav");
+      window._globalClickSound.volume = 0.5;
+    }
+
+    // Inicializar estado de mute si no existe
+    if (typeof window._isGlobalMuted === 'undefined') {
+        window._isGlobalMuted = false;
+    }
+
+    // 2. SINCRONIZAR UI ACTUAL CON EL ESTADO REAL
+    // Esto es vital: Si vienes de otra página y ya estaba muteado, 
+    // el botón nuevo debe reflejarlo.
+    updateMuteState(window._isGlobalMuted);
+
+    // 3. EVENT LISTENER DEL BOTÓN
+    // Primero removemos para evitar duplicados si el script corre dos veces
+    const newControl = audioControl.cloneNode(true) as HTMLElement;
+    audioControl.parentNode?.replaceChild(newControl, audioControl);
+    
+    newControl.addEventListener('click', () => {
+      // Invertir estado
+      window._isGlobalMuted = !window._isGlobalMuted;
+      updateMuteState(window._isGlobalMuted);
+    });
+
+    // 4. INICIADOR DE AUTOPLAY (Hack para navegadores)
+    const startAudio = () => {
+      if (window._globalBgMusic && window._globalBgMusic.paused && !window._isGlobalMuted) {
+        window._globalBgMusic.play().catch(() => {
+            // Si falla el autoplay, no hacemos nada, esperamos siguiente click
+        });
+      }
+      // Limpiamos el evento una vez activado
+      document.removeEventListener('click', startAudio);
+      document.removeEventListener('keydown', startAudio);
+    };
+
+    document.addEventListener('click', startAudio);
+    document.addEventListener('keydown', startAudio);
+  }
+
+  // Función auxiliar para aplicar el estado de Mute
+  function updateMuteState(isMuted: boolean) {
+    const btn = document.getElementById('audio-control');
+    const bgMusic = window._globalBgMusic;
+    const clickSound = window._globalClickSound;
+
+    // Aplicar a los audios
+    if (bgMusic) bgMusic.muted = isMuted;
+    if (clickSound) clickSound.muted = isMuted;
+
+    // Aplicar al botón (Visual)
+    if (btn) {
+        if (isMuted) {
+            btn.classList.add('muted');
+        } else {
+            btn.classList.remove('muted');
+            // Intentar reproducir si no está muteado y está pausado
+            if (bgMusic && bgMusic.paused) {
+                bgMusic.play().catch(() => {});
+            }
+        }
+    }
+  }
+
+  // 5. EXPORTAR FUNCIÓN GLOBAL (Para usar en otros componentes)
+  window.playGlobalClick = () => {
+    if (window._globalClickSound && !window._globalClickSound.muted) {
+      window._globalClickSound.currentTime = 0;
+      window._globalClickSound.play().catch(e => console.error(e));
+    }
+  };
 </script>
 
 <style>
@@ -88,13 +131,15 @@
   .audio-visualizer {
     position: fixed;
     bottom: 30px;
-    right: 96px;
+    right: 96px; /* Ajusta según tu diseño */
     width: 80px;
     height: 40px;
-    z-index: 999;
+    z-index: 9999; /* Z-index alto para asegurar click */
     cursor: pointer;
     overflow: hidden;
     transition: opacity 0.3s ease;
+    /* Fondo opcional para depuración si no lo ves */
+    /* background: rgba(0,0,0,0.2); */ 
   }
 
   .audio-visualizer:hover {

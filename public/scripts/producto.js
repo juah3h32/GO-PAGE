@@ -40,15 +40,17 @@ document.addEventListener("DOMContentLoaded", () => {
   ];
 
   /* =========================
-     ELEMENTOS
+     ELEMENTOS DOM
   ========================= */
   const nextButton = document.getElementById("next");
   const prevButton = document.getElementById("prev");
-  const backButton = document.getElementById("back");
+  const backButton = document.getElementById("back"); 
 
   const carousel = document.querySelector(".carousel");
   const listHTML = document.querySelector(".carousel .list");
   const productosPage = document.querySelector(".productos-page");
+  
+  const containerPage = productosPage || document.body; 
   const main = document.querySelector("main");
 
   const seeMoreButtons = document.querySelectorAll(".seeMore");
@@ -56,14 +58,14 @@ document.addEventListener("DOMContentLoaded", () => {
   let unAcceptClick;
 
   /* =========================
-     SLIDER
+     SLIDER (MOTOR PRINCIPAL)
   ========================= */
-  nextButton.onclick = () => showSlider("next");
-  prevButton.onclick = () => showSlider("prev");
+  if(nextButton) nextButton.onclick = () => showSlider("next");
+  if(prevButton) prevButton.onclick = () => showSlider("prev");
 
   function showSlider(type) {
-    nextButton.style.pointerEvents = "none";
-    prevButton.style.pointerEvents = "none";
+    if(nextButton) nextButton.style.pointerEvents = "none";
+    if(prevButton) prevButton.style.pointerEvents = "none";
 
     carousel.classList.remove("next", "prev");
     const items = document.querySelectorAll(".carousel .list .item");
@@ -78,96 +80,141 @@ document.addEventListener("DOMContentLoaded", () => {
 
     clearTimeout(unAcceptClick);
     unAcceptClick = setTimeout(() => {
-      nextButton.style.pointerEvents = "auto";
-      prevButton.style.pointerEvents = "auto";
+      if(nextButton) nextButton.style.pointerEvents = "auto";
+      if(prevButton) prevButton.style.pointerEvents = "auto";
       applyActiveProduct();
-    }, 300);
+    }, 500); 
   }
 
   /* =========================
-     PRODUCTO ACTIVO (CLAVE)
+     PRODUCTO ACTIVO & FONDO
   ========================= */
   function applyActiveProduct() {
-    const activeItem = document.querySelector(
-      ".carousel .list .item:nth-child(2)"
-    );
+    const activeItem = document.querySelector(".carousel .list .item:nth-child(2)");
     if (!activeItem) return;
 
-    const productName = activeItem.querySelector(".topic")?.innerText.trim();
+    const topicElement = activeItem.querySelector(".topic");
+    if (!topicElement) return; 
+    
+    const productName = topicElement.innerText.trim();
     const product = productsData.find(p => p.key === productName);
-    if (!product) return;
+    
+    if (product) {
+      if(main) main.style.background = product.background;
+      
+      const detailTitle = activeItem.querySelector(".detail .title");
+      const detailDes = activeItem.querySelector(".detail .des");
+      const specsBox = activeItem.querySelector(".specifications");
 
-    // Fondo dinámico
-    main.style.background = product.background;
+      if(detailTitle) detailTitle.innerText = product.key;
+      if(detailDes) detailDes.innerText = product.description;
 
-    // Texto
-    activeItem.querySelector(".detail .title").innerText = product.key;
-    activeItem.querySelector(".detail .des").innerText = product.description;
-
-    // Specs
-    const specsBox = activeItem.querySelector(".specifications");
-    specsBox.innerHTML = "";
-
-    product.specs.forEach(spec => {
-      const div = document.createElement("div");
-      div.innerHTML = `<p>${spec.value}</p><p>${spec.label}</p>`;
-      specsBox.appendChild(div);
-    });
+      if(specsBox) {
+        specsBox.innerHTML = "";
+        product.specs.forEach(spec => {
+          const div = document.createElement("div");
+          div.innerHTML = `<p style="font-weight:bold">${spec.value}</p><p style="font-size:0.8em">${spec.label}</p>`;
+          specsBox.appendChild(div);
+        });
+      }
+    }
   }
 
   /* =========================
-     VER MÁS
+     VER MÁS / DETALLES
   ========================= */
   seeMoreButtons.forEach(button => {
-    button.onclick = () => {
+    button.onclick = (e) => {
+      e.stopPropagation(); 
       carousel.classList.remove("next", "prev");
       applyActiveProduct();
       carousel.classList.add("showDetail");
-      productosPage.classList.remove("dark");
+      containerPage.classList.remove("dark");
     };
   });
 
-  /* =========================
-     BACK
-  ========================= */
-  backButton.onclick = () => {
-    carousel.classList.remove("showDetail");
-    productosPage.classList.add("dark");
-  };
+  if(backButton) {
+    backButton.onclick = () => {
+      carousel.classList.remove("showDetail");
+      containerPage.classList.add("dark");
+    };
+  }
 
-  /* =========================
-     DRAG MANUAL
-  ========================= */
+  /* =========================================
+     MOUSE DRAG (ARRASTRE CON MOUSE MEJORADO)
+  ========================================= */
   let isDragging = false;
   let startX = 0;
-  let deltaX = 0;
-  const DRAG_THRESHOLD = 90;
+  // Umbral: distancia mínima en píxeles para considerar que fue un arrastre
+  const DRAG_THRESHOLD = 50; 
 
-  listHTML.addEventListener("mousedown", (e) => {
-    if (carousel.classList.contains("showDetail")) return;
+  // 1. Al presionar el click
+  carousel.addEventListener("mousedown", (e) => {
+    // No activar si estamos viendo detalles o si se hizo click en un botón
+    if (carousel.classList.contains("showDetail") || e.target.closest('button')) return;
 
     isDragging = true;
     startX = e.clientX;
-    deltaX = 0;
-    carousel.classList.add("dragging");
+    carousel.classList.add("dragging"); // Útil si quieres cambiar el cursor con CSS
+    
+    // IMPORTANTE: Evita que el navegador seleccione texto o arrastre la imagen fantasma
+    e.preventDefault(); 
   });
 
+  // 2. Al mover el mouse (solo prevenimos selección)
   window.addEventListener("mousemove", (e) => {
     if (!isDragging) return;
-    deltaX = e.clientX - startX;
+    e.preventDefault(); 
   });
 
-  window.addEventListener("mouseup", () => {
+  // 3. Al soltar el click
+  window.addEventListener("mouseup", (e) => {
     if (!isDragging) return;
-
     isDragging = false;
     carousel.classList.remove("dragging");
 
-    if (Math.abs(deltaX) < DRAG_THRESHOLD) return;
+    const endX = e.clientX;
+    const diff = endX - startX;
 
-    deltaX > 0 ? showSlider("prev") : showSlider("next");
+    // Si la distancia movida es mayor al umbral, cambiamos el slider
+    if (Math.abs(diff) > DRAG_THRESHOLD) {
+      if (diff > 0) {
+        // Arrastró hacia la derecha -> Ver anterior
+        showSlider("prev");
+      } else {
+        // Arrastró hacia la izquierda -> Ver siguiente
+        showSlider("next");
+      }
+    }
   });
 
-  // Inicial
+  /* =========================
+     TOUCH SWIPE (Móvil)
+  ========================= */
+  let touchStartX = 0;
+  let touchEndX = 0;
+  const SWIPE_THRESHOLD = 50; 
+
+  carousel.addEventListener('touchstart', (e) => {
+      if (carousel.classList.contains("showDetail")) return;
+      touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  carousel.addEventListener('touchend', (e) => {
+      if (carousel.classList.contains("showDetail")) return;
+      touchEndX = e.changedTouches[0].screenX;
+      handleGesture();
+  }, { passive: true });
+
+  function handleGesture() {
+      if (touchEndX < touchStartX - SWIPE_THRESHOLD) {
+          showSlider('next');
+      }
+      if (touchEndX > touchStartX + SWIPE_THRESHOLD) {
+          showSlider('prev');
+      }
+  }
+
+  // Inicializar estado
   applyActiveProduct();
 });

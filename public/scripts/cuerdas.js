@@ -27,7 +27,7 @@ const productData = [
     bg: "var(--bg-cuerda)"
   },
   {
-    name: "CUERDA NEGRA UV",
+    name: "CUERDA UV",
     description: "Cable de polipropileno con filtro UV, diseñado para resistir alta exposición solar en mar y campo. Garantiza firmeza y larga vida útil en macrotúneles, ideal para cultivos de berries, pimiento y uso marítimo.",
     specs: { load: "3,240 m", diam: "1", mat: "PP-UV", elong: "18 kg", grip: "105 kg", loadResist: "Excelente" },
     bg: "var(--bg-strech)"

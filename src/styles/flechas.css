@@ -1,3 +1,7 @@
+/* =========================================
+   FLECHAS (styles/flechas.css)
+   ========================================= */
+
 /* Ocultar cursor por defecto */
 body {
   cursor: none;
@@ -6,24 +10,27 @@ body {
 /* --- CONTENEDOR PRINCIPAL --- */
 .arrows {
   position: absolute;
+  /* Centrado verticalmente en la pantalla */
   top: 50%;
   left: 0;
-  width: 100%; /* Ocupa todo el ancho */
-  height: 0;   /* Altura 0 para no bloquear clicks en el centro */
+  width: 100%;
+  height: 0; /* Altura 0 para no bloquear clicks en el centro */
   transform: translateY(-50%);
-  z-index: 20;
-  display: block; /* Cambiado de flex a block para posicionamiento manual */
+  z-index: 100; 
+  display: flex;
+  justify-content: space-between; /* Fuerza separación extrema */
+  pointer-events: none; /* IMPORTANTE: Deja pasar clicks en el hueco del medio */
+  padding: 0 2%; /* Un pequeño margen general */
 }
 
-/* --- ESTILOS COMUNES DE LOS BOTONES --- */
+/* --- ESTILOS DE LOS BOTONES --- */
 .arrows button {
-  pointer-events: all; /* Reactiva el click */
-  position: absolute;  /* Vital para moverlos libremente */
-  top: 50%;
-  transform: translateY(-50%); /* Centra el botón verticalmente */
+  pointer-events: auto; /* Reactiva el click SOLO en los botones */
+  position: relative; /* Relative porque el padre ya usa flex space-between */
   
-  width: 64px;
-  height: 64px;
+  /* TAMAÑO PEQUEÑO */
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   
   /* Estilos Visuales (Glassmorphism) */
@@ -33,45 +40,61 @@ body {
     rgba(255, 145, 0, 0.15),
     rgba(0, 0, 0, 0.6)
   );
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 
   color: #fff;
-  font-size: 22px;
-  font-weight: 600;
-  
   display: flex;
   align-items: center;
   justify-content: center;
-
-  box-shadow:
-    0 0 15px rgba(255, 145, 0, 0.45),
-    inset 0 0 12px rgba(255, 145, 0, 0.25);
-
+  
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-/* --- POSICIONES ESPECÍFICAS (Aquí está la solución) --- */
+/* AJUSTE DE ICONO (SVG) */
+.arrows button svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+/* --- IDS ESPECÍFICOS (Por si se requiere ajuste fino) --- */
 #prev {
-  left: 4rem; /* Distancia desde la izquierda */
+  /* No necesitamos left/right aquí porque el flex space-between lo hace solo */
 }
 
 #next {
-  right: 4rem; /* Distancia desde la derecha */
-  left: auto;  /* Asegura que no herede propiedades de izquierda */
+  /* No necesitamos left/right aquí */
 }
 
 /* --- HOVER --- */
 .arrows button:hover {
-  transform: translateY(-50%) scale(1.15); /* Mantiene el centrado al crecer */
-  box-shadow:
-    0 0 28px rgba(255, 145, 0, 0.8),
-    inset 0 0 20px rgba(255, 145, 0, 0.45);
+  transform: scale(1.1);
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: #fff;
 }
 
-/* Responsive: En móviles acercamos las flechas a los bordes */
+/* =========================================
+   MEDIA QUERIES (MÓVIL)
+   ========================================= */
 @media (max-width: 768px) {
-    #prev { left: 10px; }
-    #next { right: 10px; }
+    .arrows {
+      /* En móvil subimos un poco las flechas para que se alineen 
+         más con la imagen y no con el hueco vacío */
+      top: 40%; 
+      padding: 0 10px; /* Pegadas a la orilla (10px de margen) */
+    }
+
+    .arrows button {
+      width: 35px; /* Un pelín más chicas en móvil si prefieres, o déjalas en 40px */
+      height: 35px;
+      background: rgba(0, 0, 0, 0.5); /* Fondo un poco más oscuro para contraste */
+    }
+    
+    .arrows button svg {
+      width: 18px;
+      height: 18px;
+    }
 }
