@@ -22,26 +22,19 @@
 
 <script>
   // @ts-nocheck 
-  // (La línea de arriba desactiva chequeos estrictos de TS si te dan muchos problemas, 
-  // pero el código de abajo está corregido para funcionar sin ella).
-
   document.addEventListener("DOMContentLoaded", () => {
     const button = document.getElementById("truck-cta-btn");
     
-    // Si no hay botón, paramos todo.
     if (!button) return;
 
-    // 1. DEFINIR VARIABLES FUERA (Para asegurar que existen)
     const truck = button.querySelector(".truck");
     const box = button.querySelector(".box");
 
-    // 2. VALIDACIÓN DE SEGURIDAD (Si falta el camión o la caja, no hacemos nada)
     if (!truck || !box) {
         console.error("Error: Elementos del camión no encontrados en el DOM");
         return;
     }
 
-    // Función de reset
     const resetBtn = () => {
       button.classList.remove("animation", "done");
       gsap.set(truck, { x: 4 });
@@ -60,11 +53,8 @@
     button.addEventListener("click", (e) => {
       e.preventDefault();
 
-      // 3. CORRECCIÓN DEL DATASET
-      // Buscamos el elemento y lo forzamos a ser HTMLElement para leer dataset
       const activeThumb = document.querySelector(".thumb-item.active");
       
-      // Obtenemos el link con seguridad (si no hay thumb activo, usa #)
       let targetUrl = "#";
       if (activeThumb && activeThumb instanceof HTMLElement) {
           targetUrl = activeThumb.dataset.link || "#";
@@ -74,7 +64,6 @@
         if (!button.classList.contains("animation")) {
           button.classList.add("animation");
 
-          // Secuencia de animación GSAP
           gsap.to(button, { "--box-s": 1, "--box-o": 1, duration: 0.3, delay: 0.5 });
           gsap.to(box, { x: 0, duration: 0.4, delay: 0.7 });
           gsap.to(button, { "--hx": -5, "--bx": 50, duration: 0.18, delay: 0.92 });
@@ -90,8 +79,6 @@
               gsap.timeline({
                   onComplete() {
                     button.classList.add("done");
-
-                    // 4. LÓGICA DE REDIRECCIÓN FINAL
                     setTimeout(() => {
                       if (targetUrl && targetUrl !== "#" && targetUrl !== "undefined") {
                         window.location.href = targetUrl;
@@ -121,8 +108,8 @@
 </script>
 
 <style>
-  /* MISMOS ESTILOS QUE YA TENÍAS, SIN CAMBIOS AQUÍ */
   .cta-btn {
+    /* Mantenemos tus variables */
     --color: #fff;
     --background: #2b3044;
     --tick: #16bf78;
@@ -145,7 +132,10 @@
     position: relative;
     border: none;
     outline: none;
-    color: var(--color);
+    
+    /* CAMBIO PRINCIPAL: Color forzado */
+    color: #ffffff !important; 
+    
     background: var(--background);
     border-radius: var(--br, 15px);
     -webkit-appearance: none;
@@ -154,6 +144,13 @@
     transform: rotateX(var(--rx, 0deg)) translateZ(0);
     transition: transform 0.5s, border-radius 0.3s linear var(--br-d, 0s);
     margin-top: 20px;
+  }
+
+  /* REGLA ADICIONAL: Asegura el blanco en hover, focus y active */
+  .cta-btn:hover,
+  .cta-btn:focus,
+  .cta-btn:active {
+      color: #ffffff !important;
   }
 
   .cta-btn:before,
@@ -182,6 +179,8 @@
     line-height: 24px;
     opacity: var(--o, 1);
     transition: opacity 0.3s;
+    /* CAMBIO: Forzamos el color blanco en los hijos directos también */
+    color: #ffffff !important; 
   }
 
   .cta-btn .success {

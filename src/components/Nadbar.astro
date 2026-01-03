@@ -45,6 +45,7 @@
     <div class="nav-right">
       
       <div class="desktop-actions desktop-only">
+        
         <label class="theme-switch" aria-label="Cambiar tema">
           <div class="theme-switch-outer">
             <input id="theme-toggle" type="checkbox">
@@ -57,7 +58,8 @@
         
         <div class="nav-item has-dropdown icon-only-dropdown">
             <button class="icon-btn globe-btn">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                <span>Español</span>
             </button>
             <div class="dropdown-menu lang-menu-pos">
                 <a href="?lang=es" class="dropdown-item active-lang">Español</a>
@@ -143,13 +145,11 @@
 
 <script>
   function initNavbar() {
-    // Selección de elementos con comprobación de nulidad implícita
     const header = document.querySelector('.montfort-header');
     const mobileToggle = document.getElementById("mobile-menu-toggle");
     const mobileMenu = document.querySelector(".mobile-menu");
     const accordions = document.querySelectorAll(".accordion-btn");
     
-    // NUEVOS ELEMENTOS DEL IDIOMA
     const langTrigger = document.getElementById("mobile-lang-trigger");
     const langDropdown = document.getElementById("mobile-lang-dropdown");
   
@@ -173,19 +173,15 @@
       });
     }
   
-    // 3. Dropdown de Idioma Móvil (CORREGIDO ERROR TS)
+    // 3. Dropdown de Idioma Móvil
     if (langTrigger && langDropdown) {
-        // CORRECCIÓN: 'e' es MouseEvent
         langTrigger.addEventListener("click", (e) => {
             e.stopPropagation(); 
             langDropdown.classList.toggle("active");
         });
   
-        // CORRECCIÓN: 'e' es MouseEvent y e.target se fuerza 'as Node'
         document.addEventListener("click", (e) => {
-            // TypeScript necesita saber que e.target es un Nodo para usar .contains
             const target = e.target;
-            // Verificamos si target es un nodo antes de usar contains
             if (target instanceof Node && !langTrigger.contains(target) && !langDropdown.contains(target)) {
                 langDropdown.classList.remove("active");
             }
@@ -201,7 +197,7 @@
                const panel = btn.nextElementSibling;
                if (panel instanceof HTMLElement) {
                    if (panel.style.maxHeight) {
-                       panel.style.maxHeight = ''; // Solución string null
+                       panel.style.maxHeight = ''; 
                    } else {
                        panel.style.maxHeight = panel.scrollHeight + "px";
                    }
@@ -210,11 +206,10 @@
         });
     });
   
-    // 5. Sincronización Switch (CORREGIDO ERROR TS: 'any')
+    // 5. Sincronización Switch
     const themeMain = document.getElementById('theme-toggle');
     const themeMobile = document.getElementById('theme-toggle-mobile');
   
-    // CORRECCIÓN: Definir 'e' como Event
     function syncSwitches(e) {
         const target = e.target;
         if (target instanceof HTMLInputElement) {
@@ -229,14 +224,11 @@
   }
   
   document.addEventListener('DOMContentLoaded', initNavbar);
-  // Si usas Astro ViewTransitions:
   document.addEventListener('astro:page-load', initNavbar);
 </script>
 
 <style>
-/* =========================================
-   VARIABLES
-   ========================================= */
+/* ================= VARIABLES ================= */
 :root {
   --btn-bg: #ff6600; 
   --btn-text: #fff;
@@ -245,38 +237,23 @@
   --text-muted: #cccccc;
   --header-height: 80px;
   --max-width: 1600px;
-
-  
 }
 html.dark {
   --text-main: #ffffff;
 }
-
 body.no-scroll { overflow: hidden; }
 
 /* HEADER */
 .montfort-header {
-  position: fixed; 
-  top: 0; 
-  left: 0; 
-  width: 100%;
-  height: var(--header-height);
-  z-index: 1000;
-  transition: all 0.4s ease;
-  padding-top: 25px; /* Ajuste estándar */
+  position: fixed; top: 0; left: 0; width: 100%;
+  height: var(--header-height); z-index: 1000;
+  transition: all 0.4s ease; padding-top: 25px;
 }
-
-/* Header transparente por defecto */
-.montfort-header.transparent {
-    background: transparent;
-    box-shadow: none;
-}
-
-/* Header al hacer scroll */
+.montfort-header.transparent { background: transparent; box-shadow: none; }
 .montfort-header.scrolled {
-    background: var(--header-bg-scrolled);
-    padding-top: 0; /* Se compacta al bajar */
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+   background: var(--header-bg-scrolled);
+   padding-top: 0;
+   box-shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
 
 .montfort-nav {
@@ -297,23 +274,20 @@ body.no-scroll { overflow: hidden; }
   text-transform: uppercase; display: flex; align-items: center; gap: 6px;
   padding: 10px 0; transition: color 0.3s ease;
 }
-
 .nav-item::after {
   content: ""; position: absolute; bottom: 0; left: 0;
-  width: 0; height: 2px; background: var(--btn-bg); 
-  transition: width 0.3s ease;
+  width: 0; height: 2px; background: var(--btn-bg); transition: width 0.3s ease;
 }
 .nav-item:hover, .nav-text-link:hover { color: var(--btn-bg); }
 .nav-item:hover::after { width: 100%; }
 
-/* BOTONES Y UTILIDADES */
+/* BOTÓN PRIMARIO (Contacto) */
 .btn-primary {
   background-color: var(--btn-bg); color: var(--btn-text);
   font-size: 13.5px; font-weight: 600; height: 42px; padding: 0 24px;
   border-radius: 50px; display: inline-flex; align-items: center; justify-content: center;
   text-decoration: none; border: none; cursor: pointer; line-height: 1;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3);
+  transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3);
 }
 .btn-primary:hover {
   background-color: #e65c00; transform: translateY(-2px);
@@ -322,11 +296,37 @@ body.no-scroll { overflow: hidden; }
 
 .nav-right, .desktop-actions { display: flex; align-items: center; gap: 20px; }
 
+/* GLOBE BTN - MODIFICADO ESTILO BOTÓN NARANJA
+   Este bloque hace que se vea igual al botón de contacto
+*/
 .globe-btn {
-  background: none; border: none; cursor: pointer; color: #ffffff;
-  padding: 8px; display: flex; align-items: center; transition: color 0.3s;
+  background-color: var(--btn-bg); /* Fondo Naranja */
+  color: #fff; /* Texto Blanco */
+  border: none;
+  cursor: pointer;
+  height: 42px; /* Misma altura que btn-primary */
+  padding: 0 20px; /* Relleno lateral */
+  border-radius: 50px; /* Forma de píldora */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3);
 }
-.globe-btn:hover { color: var(--btn-bg); }
+
+.globe-btn span {
+    font-size: 13.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.globe-btn:hover { 
+    background-color: #e65c00; /* Naranja más oscuro al hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 102, 0, 0.5);
+}
 
 /* DROPDOWNS */
 .has-dropdown { position: relative; height: 100%; display: flex; align-items: center; }
@@ -392,13 +392,11 @@ body.no-scroll { overflow: hidden; }
 }
 .mobile-menu.active { transform: translateX(0); }
 .mobile-scroll-container { overflow-y: auto; height: 100%; padding-bottom: 40px; }
-
 .mobile-link {
   display: block; font-size: 18px; color: var(--text-main); text-decoration: none;
   padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
   font-weight: 500; text-align: left; width: 100%; background: none; border: none;
 }
-
 .accordion-btn { display: flex; justify-content: space-between; align-items: center; }
 .accordion-btn.active { color: var(--btn-bg); border-bottom-color: transparent; }
 .accordion-btn.active .chevron { transform: rotate(180deg); }
@@ -411,50 +409,26 @@ body.no-scroll { overflow: hidden; }
 
 .mobile-divider { margin: 30px 0; height: 1px; background: rgba(255,255,255,0.1); }
 .mobile-actions { display: flex; flex-direction: column; gap: 25px; }
-
 .mobile-theme-row { display: flex; justify-content: space-between; align-items: center; color: var(--text-main); }
 .mobile-switch { transform: scale(0.8); transform-origin: right center; }
 .full-width { width: 100%; text-align: center; }
 
-/* ESTILOS ESPECÍFICOS DEL SELECTOR MÓVIL */
-.mobile-lang-wrapper {
-  position: relative;
-  margin-right: 15px;
-  display: none; 
-}
-
+/* MOBILE LANG SELECTOR */
+.mobile-lang-wrapper { position: relative; margin-right: 15px; display: none; }
 .lang-pill-btn {
-  background-color: var(--btn-bg);
-  color: #fff;
-  border: none;
-  border-radius: 50px;
-  padding: 8px 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(255, 102, 0, 0.3);
-  transition: transform 0.2s ease;
+  background-color: var(--btn-bg); color: #fff; border: none;
+  border-radius: 50px; padding: 8px 16px; display: flex; align-items: center;
+  gap: 8px; font-size: 14px; font-weight: 600; cursor: pointer;
+  box-shadow: 0 4px 10px rgba(255, 102, 0, 0.3); transition: transform 0.2s ease;
 }
-
 .lang-pill-btn:active { transform: scale(0.95); }
-
 .mobile-mini-dropdown {
-  position: absolute;
-  top: 120%; right: 0;
-  background: #222;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 8px; padding: 5px; width: 120px;
-  opacity: 0; visibility: hidden;
-  transform: translateY(-10px); transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-  display: flex; flex-direction: column;
+  position: absolute; top: 120%; right: 0; background: #222;
+  border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 5px; width: 120px;
+  opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5); display: flex; flex-direction: column;
 }
-
 .mobile-mini-dropdown.active { opacity: 1; visibility: visible; transform: translateY(0); }
-
 .mini-item {
   color: #ccc; text-decoration: none; padding: 8px 12px;
   font-size: 14px; border-radius: 4px; text-align: center;
@@ -462,13 +436,10 @@ body.no-scroll { overflow: hidden; }
 .mini-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
 .mini-item.active { color: var(--btn-bg); font-weight: bold; }
 
-/* MEDIA QUERIES CLAVE */
 @media (max-width: 1024px) {
   .desktop-only { display: none !important; }
   .mobile-only { display: block !important; }
   .hamburger { display: flex; }
-  
-  /* Asegura que el contenedor de la derecha se alinee bien en móvil */
   .nav-right { display: flex; align-items: center; }
 }
 </style>
