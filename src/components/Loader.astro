@@ -29,10 +29,9 @@
 
 <style>
   :root {
-    /* CAMBIO A NARANJA TECNOLÓGICO */
     --tech-orange: #ff9100; 
     --tech-orange-glow: rgba(255, 145, 0, 0.5);
-    --bg-dark: #0a0600; /* Fondo negro con un toque cálido */
+    --bg-dark: #0a0600; 
   }
 
   #loader-wrapper {
@@ -45,7 +44,14 @@
     z-index: 10000;
     overflow: hidden;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), visibility 1s;
+    
+    /* MEJORA 1: Transición suave de Opacidad y Escala */
+    transition: 
+      opacity 0.8s ease-in-out, 
+      visibility 0.8s ease-in-out,
+      transform 0.8s ease-in-out; /* Efecto zoom al salir */
+    
+    transform: scale(1); /* Estado inicial */
   }
 
   /* Fondo Dinámico Naranja */
@@ -53,9 +59,7 @@
     position: absolute;
     width: 200%;
     height: 200%;
-    background-image: 
-      linear-gradient(rgba(255, 145, 0, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 145, 0, 0.05) 1px, transparent 1px);
+    background-image: linear-gradient(rgba(255, 145, 0, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 145, 0, 0.05) 1px, transparent 1px);
     background-size: 60px 60px;
     transform: perspective(500px) rotateX(60deg);
     animation: gridMove 12s linear infinite;
@@ -63,158 +67,63 @@
     filter: blur(1px);
   }
 
-  .tech-center {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 50px;
-    z-index: 10;
+  .tech-center { position: relative; display: flex; flex-direction: column; align-items: center; gap: 50px; z-index: 10; }
+  .rings-portal { position: relative; width: 300px; height: 300px; display: flex; justify-content: center; align-items: center; }
+  .ring { position: absolute; border-radius: 50%; border: 2px solid transparent; }
+  .ring-outer { width: 100%; height: 100%; border-top: 3px solid var(--tech-orange); border-bottom: 3px solid var(--tech-orange); animation: spin 4s linear infinite; opacity: 0.8; box-shadow: 0 0 25px var(--tech-orange-glow); }
+  .ring-middle { width: 85%; height: 85%; border-left: 2px solid #fff; border-right: 2px solid #fff; animation: spin-reverse 3s linear infinite; opacity: 0.2; }
+  .ring-inner { width: 70%; height: 70%; border: 1px dashed var(--tech-orange); animation: spin 10s linear infinite; opacity: 0.5; }
+  .logo-core { position: relative; width: 60%; height: 60%; display: flex; justify-content: center; align-items: center; background: radial-gradient(circle, rgba(255, 145, 0, 0.15) 0%, transparent 70%); border-radius: 50%; }
+  .main-logo { width: 140px; height: auto; z-index: 5; filter: drop-shadow(0 0 15px rgba(255, 145, 0, 0.4)); }
+  .scanner-line { position: absolute; top: 0; left: 10%; width: 80%; height: 2px; background: var(--tech-orange); box-shadow: 0 0 15px var(--tech-orange), 0 0 30px var(--tech-orange); animation: scanVertical 3s ease-in-out infinite; z-index: 6; }
+  .loading-info { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: white; gap: 10px; }
+  .glitch-text { font-size: 14px; font-weight: 900; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 10px; color: var(--tech-orange); text-shadow: 0 0 15px var(--tech-orange-glow); }
+  .status-bar { flex: 1; max-width: 200px; height: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,145,0,0.2); position: relative; }
+  .status-container { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; }
+  
+  .status-fill { 
+    width: 0%; 
+    height: 100%; 
+    background: linear-gradient(90deg, #ff5e00, var(--tech-orange)); 
+    box-shadow: 0 0 15px var(--tech-orange); 
+    /* MEJORA 2: La barra se llena fluidamente, sin saltos bruscos */
+    transition: width 0.2s ease-out; 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
   }
+  
+  #percent-text { font-family: monospace; font-size: 14px; color: var(--tech-orange); }
 
-  .rings-portal {
-    position: relative;
-    width: 300px;
-    height: 300px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .ring {
-    position: absolute;
-    border-radius: 50%;
-    border: 2px solid transparent;
-  }
-
-  .ring-outer {
-    width: 100%;
-    height: 100%;
-    border-top: 3px solid var(--tech-orange);
-    border-bottom: 3px solid var(--tech-orange);
-    animation: spin 4s linear infinite;
-    opacity: 0.8;
-    box-shadow: 0 0 25px var(--tech-orange-glow);
-  }
-
-  .ring-middle {
-    width: 85%;
-    height: 85%;
-    border-left: 2px solid #fff;
-    border-right: 2px solid #fff;
-    animation: spin-reverse 3s linear infinite;
-    opacity: 0.2;
-  }
-
-  .ring-inner {
-    width: 70%;
-    height: 70%;
-    border: 1px dashed var(--tech-orange);
-    animation: spin 10s linear infinite;
-    opacity: 0.5;
-  }
-
-  .logo-core {
-    position: relative;
-    width: 60%;
-    height: 60%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: radial-gradient(circle, rgba(255, 145, 0, 0.15) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-
-  .main-logo {
-    width: 140px;
-    height: auto;
-    z-index: 5;
-    filter: drop-shadow(0 0 15px rgba(255, 145, 0, 0.4));
-  }
-
-  .scanner-line {
-    position: absolute;
-    top: 0;
-    left: 10%;
-    width: 80%;
-    height: 2px;
-    background: var(--tech-orange);
-    box-shadow: 0 0 15px var(--tech-orange), 0 0 30px var(--tech-orange);
-    animation: scanVertical 3s ease-in-out infinite;
-    z-index: 6;
-  }
-
-.loading-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: white;
-  gap: 10px; /* espacio entre elementos */
-}
-
-  .glitch-text {
-    font-size: 14px;
-    font-weight: 900;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-    color: var(--tech-orange);
-    text-shadow: 0 0 15px var(--tech-orange-glow);
-  }
-
-.status-bar {
-  flex: 1; /* que la barra ocupe todo el ancho disponible */
-  max-width: 200px; /* ancho máximo */
-  height: 6px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid rgba(255,145,0,0.2);
-  position: relative;
-}
-  .status-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px; /* espacio entre barra y porcentaje */
-  width: 100%;
-}
-
-.status-fill {
-  width: 0%;
-  height: 100%;
-  background: linear-gradient(90deg, #ff5e00, var(--tech-orange));
-  box-shadow: 0 0 15px var(--tech-orange);
-  transition: width 0.1s linear;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-#percent-text {
-  font-family: monospace;
-  font-size: 14px;
-  color: var(--tech-orange);
-  /* eliminar margin-left para centrar todo */
-}
-  @keyframes gridMove {
-    0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
-    100% { transform: perspective(500px) rotateX(60deg) translateY(60px); }
-  }
-
+  @keyframes gridMove { 0% { transform: perspective(500px) rotateX(60deg) translateY(0); } 100% { transform: perspective(500px) rotateX(60deg) translateY(60px); } }
   @keyframes spin { 100% { transform: rotate(360deg); } }
   @keyframes spin-reverse { 100% { transform: rotate(-360deg); } }
+  @keyframes scanVertical { 0%, 100% { top: 20%; opacity: 0; } 50% { top: 80%; opacity: 1; } }
 
-  @keyframes scanVertical {
-    0%, 100% { top: 20%; opacity: 0; }
-    50% { top: 80%; opacity: 1; }
-  }
-
-  .loader-hidden {
+  /* --- CLASE PARA OCULTAR EL LOADER --- */
+  #loader-wrapper.loader-hidden {
     opacity: 0 !important;
     visibility: hidden !important;
+    pointer-events: none !important;
+    /* MEJORA 3: Efecto de disipación (se agranda un poco al desaparecer) */
+    transform: scale(1.1) !important; 
+  }
+
+  /* --- VERSIÓN MÓVIL SIMPLIFICADA (Flash Negro) --- */
+  @media screen and (max-width: 1024px) {
+    #loader-wrapper {
+      display: flex !important;
+      visibility: visible; /* Dejamos que .loader-hidden gane luego */
+      background: #0a0600 !important;
+      z-index: 99999 !important;
+      /* En móvil también aplicamos la transición suave */
+      transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out !important; 
+    }
+
+    /* Ocultamos todo lo pesado */
+    .grid-background, .tech-center {
+      display: none !important;
+    }
   }
 </style>
 
@@ -223,19 +132,24 @@
     const loader = document.getElementById('loader-wrapper');
     const percentText = document.getElementById('percent-text');
     const statusFill = document.querySelector('.status-fill');
+    
+    if (!loader) return;
 
-    if (!loader || !percentText || !statusFill) {
-      console.error('Loader elements missing', {
-        loader,
-        percentText,
-        statusFill
-      });
-      return;
+    // --- LÓGICA MÓVIL (Flash Negro Suave) ---
+    if (window.innerWidth <= 1024) {
+      setTimeout(() => {
+        // Se desvanece suavemente gracias al CSS mejorado
+        loader.classList.add('loader-hidden');
+      }, 500); 
+      return; 
     }
 
-    let count = 0;
+    // --- LÓGICA DE ESCRITORIO ---
+    if (!percentText || !statusFill) return;
 
+    let count = 0;
     const interval = setInterval(() => {
+      // Incrementos aleatorios para simular carga real
       count += Math.floor(Math.random() * 3) + 1;
       if (count > 100) count = 100;
 
@@ -248,10 +162,8 @@
           loader.classList.add('loader-hidden');
         }, 600);
       }
-    }, 50);
+    }, 50); // Velocidad de actualización
   }
 
   window.addEventListener('load', initTechLoader);
 </script>
-
-
