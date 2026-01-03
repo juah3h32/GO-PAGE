@@ -1,0 +1,12 @@
+---
+import GlobePlanetClient from '../scripts/planet';
+import Somos from '../scripts/somos';
+---
+
+<div>
+  <!-- PRIMERO: QUIÉNES SOMOS -->
+  <Somos client:only="react" />
+
+  <!-- DESPUÉS: PLANETA -->
+  <GlobePlanetClient client:only="react" />
+</div>

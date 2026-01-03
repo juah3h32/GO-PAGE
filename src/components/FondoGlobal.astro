@@ -1,0 +1,53 @@
+---
+/* src/components/FondoGlobal.astro */
+---
+
+<div class="fondo-global"></div>
+
+<style>
+  /* 1. VARIABLES EXACTAS DEL CÓDIGO ORIGINAL */
+  :root {
+    --bg-gradient: linear-gradient(
+      70deg,
+      #ff7a18 0%,
+      #fb670b 35%,
+      #000000 55%,
+      #000000 85%
+    );
+  }
+
+  :global(.dark) {
+    --bg-gradient: linear-gradient(70deg, #ff6600, #222222);
+  }
+
+  /* 2. ESTILOS COPIADOS DE ".carousel::before" */
+  .fondo-global {
+    /* Posición fija para que sirva de fondo de pantalla */
+    position: fixed; 
+    
+    /* Centrado en la pantalla (Punto de anclaje) */
+    top: 50%;
+    left: 50%;
+    
+    /* DIMENSIONES GIGANTES (Del original) */
+    width: 2000px;
+    height: 1200px;
+    
+    /* EL DEGRADADO */
+    background-image: var(--bg-gradient);
+    
+    /* LA FORMA ORGÁNICA (Del original) */
+    border-radius: 20% 30% 80% 10%;
+    
+    /* EL DESENFOQUE (Del original) */
+    filter: blur(150px);
+    
+    /* LA POSICIÓN Y TRANSFORMACIÓN EXACTA (Del original) */
+    transform: translate(-10%, -50%);
+    
+    /* CAPAS Y COMPORTAMIENTO */
+    z-index: -10; /* Detrás de todo */
+    pointer-events: none; /* Ignora clicks */
+    transition: background 1s ease, transform 1s ease;
+  }
+</style>

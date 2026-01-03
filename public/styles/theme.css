@@ -1,0 +1,196 @@
+/* =====================================================
+   THEME VARIABLES
+===================================================== */
+:root {
+  /* GLOBAL */
+  --bg: #ffffff;
+  --text: #0f172a;
+  --text-muted: #475569;
+
+  /* BUTTONS */
+  --btn-bg: #ff6600;
+  --btn-text: #ffffff;
+
+  /* ARROWS */
+  --arrow-line: #FB670B;
+  --arrow-text: #FB670B;
+
+  /* HEADER – LIGHT */
+  --header-bg: rgba(0, 0, 0, 0.85);
+  --header-text: #ffffff;
+  --header-text-muted: #6e87a4;
+  --header-shadow: 0 14px 40px rgba(0,0,0,0.12);
+
+  /* PRODUCTOS – LIGHT */
+  --productos-bg: linear-gradient(180deg, #0b1a2b 0%, #0f2e4e 50%, #000 100%);
+  --productos-text: #0f172a;
+  --productos-text-muted: #475569;
+  --productos-border: rgba(0,0,0,0.3);
+  --productos-hover: rgba(0,0,0,0.05);
+
+  /* === NUEVA VARIABLE: FONDO DEGRADADO (LIGHT) === */
+  /* Aquí definimos el naranja que se funde a BLANCO para que el texto negro se lea */
+  --blob-gradient: linear-gradient(
+      70deg,
+      #ff7a18 0%,
+      #fb670b 35%,
+      #ffffff 55%, 
+      #ffffff 85%
+  );
+}
+
+/* =====================================================
+   DARK MODE
+===================================================== */
+html.dark {
+  --bg: #111010;
+  --text: #f5f5f5;
+  --text-muted: #a1a1aa;
+
+  /* HEADER – DARK */
+  --header-bg: rgba(255, 255, 255, 0.9);
+  --header-text: #000000;
+  --header-text-muted: #cbd5f5;
+  --header-shadow: 0 14px 40px rgba(0,0,0,0.6);
+
+  /* PRODUCTOS – DARK */
+  --productos-bg: linear-gradient(180deg, #000000 0%, #111111 50%, #1a1a1a 100%);
+  --productos-text: #ffffff;
+  --productos-text-muted: rgba(255,255,255,0.65);
+  --productos-border: rgba(255,255,255,0.4);
+  --productos-hover: rgba(255,255,255,0.08);
+
+  /* === NUEVA VARIABLE: FONDO DEGRADADO (DARK) === */
+  /* Aquí el naranja se funde a NEGRO/GRIS para que el texto blanco se lea */
+  --blob-gradient: linear-gradient(
+      70deg, 
+      #ff6600 0%, 
+      #222222 60%
+  );
+}
+
+/* ... RESTO DE TU CSS (body, h1, etc.) SE QUEDA IGUAL ... */
+
+/* =====================================================
+   GLOBAL STYLES
+===================================================== */
+body {
+  background: var(--bg);
+  color: var(--text);
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+/* =====================================================
+   GLOBAL STYLES
+===================================================== */
+body {
+  background: var(--bg);
+  color: var(--text);
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+h1, h2, h3, h4, h5, h6,
+.ui-title,
+.ui-description {
+  color: var(--text);
+}
+
+.ui-wrap {
+  color: var(--text);
+}
+.ui-eyebrow {
+  color: var(--text-muted);
+}
+
+.ui-title {
+  color: var(--text);
+}
+
+.ui-description {
+  color: var(--text);
+}
+/* ===============================
+   CLASES ADICIONALES PARA BODY
+================================= */
+
+/* Text colors */
+.text-primary { color: var(--text) !important; }
+.text-muted   { color: var(--text-muted) !important; }
+.text-inverse { color: #fff !important; }
+
+/* Background colors */
+.bg-primary   { background: var(--bg) !important; }
+.bg-header    { background: var(--header-bg) !important; }
+.bg-productos { background: var(--productos-bg) !important; }
+
+/* Buttons */
+.btn-primary  { background-color: var(--btn-bg); color: var(--btn-text); }
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+.ui-btn {
+  background-color: var(--btn-bg);
+  color: var(--btn-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+/* =====================================================
+   ARROWS
+===================================================== */
+.arrow-line {
+  background-color: var(--arrow-line);
+  transition: background-color 0.35s ease;
+}
+
+.arrow-text {
+  color: var(--arrow-text);
+  transition: color 0.35s ease;
+}
+
+/* =====================================================
+   SECTIONS
+===================================================== */
+section,
+main {
+  background: var(--bg);
+}
+
+/* =====================================================
+   FIX TEXT COLORS - PRODUCTOS / MAIN / TITULOS
+===================================================== */
+
+/* Forzar que todos los textos principales tomen la variable --text */
+.main-container,
+.main-container * {
+  color: var(--productos-text) !important;
+}
+
+#product-title,
+#product-desc,
+.spec-label,
+.spec-value,
+.spec-percent,
+.fade-in-text {
+  color: var(--productos-text) !important;
+}
+
+/* Para textos secundarios */
+.spec-label,
+.spec-percent,
+.ui-eyebrow {
+  color: var(--productos-text-muted) !important;
+}
+
+/* Asegurar botones respeten el theme */
+.cta-btn,
+.shop-btn,
+.btn-primary,
+.ui-btn {
+  background-color: var(--btn-bg) !important;
+  color: var(--btn-text) !important;
+}
+
+/* Miniaturas y hover de productos */
+.thumb-bg {
+  background-color: var(--productos-hover) !important;
+  border: 1px solid var(--productos-border) !important;
+}

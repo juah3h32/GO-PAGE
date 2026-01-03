@@ -1,0 +1,603 @@
+/* =========================================
+   1. IMPORTS & FUENTES
+   ========================================= */
+   @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+   /* =========================================
+      2. VARIABLES (:ROOT & DARK MODE)
+      ========================================= */
+   :root {
+     --body-bg: #ffffff;
+     --productos-text: #000;
+     --productos-text-muted: #555;
+     --productos-hover: #e8610d;
+     
+     --carousel-bg-gradient: linear-gradient(
+       70deg,
+       #ff7a18 0%,
+       #fb670b 35%,
+       #000000 55%,
+       #000000 85%
+     );
+   
+     /* Tech Cursor Colors */
+     --tech-orange: #ff9100;
+     --tech-orange-glow: rgba(255, 145, 0, 0.5);
+   
+     /* Animation Variables */
+     --item1-transform: translateX(-100%) translateY(-2%) scale(1.5);
+     --item1-filter: blur(70px);
+     --item1-zIndex: 11;
+     --item1-opacity: 0;
+   
+     --item2-transform: translateX(0);
+     --item2-filter: blur(0px);
+     --item2-zIndex: 10;
+     --item2-opacity: 1;
+   
+     --item3-transform: translate(50%, 10%) scale(0.8);
+     --item3-filter: blur(10px);
+     --item3-zIndex: 9;
+     --item3-opacity: 1;
+   
+     --item4-transform: translate(90%, 20%) scale(0.5);
+     --item4-filter: blur(30px);
+     --item4-zIndex: 8;
+     --item4-opacity: 1;
+   
+     --item5-transform: translate(120%, 30%) scale(0.3);
+     --item5-filter: blur(40px);
+     --item5-zIndex: 7;
+     --item5-opacity: 0;
+   }
+   
+   html.dark {
+     --body-bg: #111010;
+     --carousel-bg-gradient: linear-gradient(70deg, #ff6600, #222222);
+     --productos-text: #fff;
+     --productos-text-muted: #aaa;
+   }
+   
+   /* =========================================
+      3. GENERAL STYLES
+      ========================================= */
+   body {
+     margin: 0;
+     padding: 0; /* CORREGIDO: Eliminado padding gigante */
+     background-color: var(--body-bg);
+     font-family: 'Poppins', sans-serif;
+     width: 100vw;
+     height: 100vh; /* CORREGIDO: Ocupa toda la altura */
+     overflow: hidden; /* Evita scrollbars */
+     cursor: none;
+   }
+   .productos-page {
+     background: transparent;
+   }
+   
+   /* =========================================
+      4. CAROUSEL LAYOUT
+      ========================================= */
+   .carousel {
+     position: relative;
+     height: 100%;
+     margin-top: 400px;
+     overflow: visible;
+     isolation: isolate;
+     z-index: 0;
+   }
+   
+   /* Fondo degradado gigante detrás del carrusel */
+   .carousel::before {
+     content: '';
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     width: 2000px;
+     height: 1200px;
+     background-image: var(--carousel-bg-gradient);
+     border-radius: 20% 30% 80% 10%;
+     filter: blur(150px);
+     transform: translate(-10%, -50%);
+     z-index: -1;
+     transition: all 1s ease;
+   }
+   
+   .carousel.showDetail::before {
+     transform: translate(-100%, -50%) rotate(90deg);
+     filter: blur(130px);
+   }
+   
+   .carousel .list {
+     position: absolute;
+     width: 1140px;
+     max-width: 90%;
+     height: 80%;
+     left: 50%;
+     transform: translateX(-50%);
+     cursor: grab;
+   }
+   
+   .carousel.dragging .list {
+     cursor: grabbing;
+   }
+   
+   /* =========================================
+      5. CAROUSEL ITEMS
+      ========================================= */
+   .carousel .list .item {
+     position: absolute;
+     left: 0%;
+     width: 70%;
+     height: 100%;
+     font-size: 15px;
+     transition: left 0.5s, opacity 0.5s, width 0.5s;
+   }
+   
+   /* Estilos de imagen dentro del item */
+   .carousel .list .item img {
+     width: 50%;
+     position: absolute;
+     right: 0;
+     top: 50%;
+     transform: translateY(-50%);
+     transition: right 1.5s;
+   }
+   
+   /* Efecto spotlight para el item activo (before) */
+   .carousel .list .item::before {
+     opacity: 0;
+     transition: opacity 0.6s ease;
+   }
+   
+   .carousel .list .item:nth-child(2)::before {
+     content: '';
+     position: absolute;
+     top: 0;
+     right: -10%;
+     width: 67%;
+     height: 1500px;
+     background: radial-gradient(
+       ellipse at top,
+       rgba(255, 145, 0, 0.35) 0%,
+       rgba(255, 145, 0, 0.18) 25%,
+       rgba(255, 145, 0, 0.05) 45%,
+       transparent 60%
+     );
+     filter: blur(90px);
+     z-index: 1;
+     pointer-events: none;
+     opacity: 1; /* Activo en el segundo hijo */
+   }
+   
+   /* Efecto desenfoque producto */
+   .producto::before {
+     content: "";
+     position: absolute;
+     top: -30%;
+     left: 50%;
+     width: 120%;
+     height: 120%;
+     transform: translateX(-50%);
+     background: inherit;
+     filter: blur(20px);
+     pointer-events: none;
+   }
+   
+   /* --- Posicionamiento de Items (Lógica 3D) --- */
+   .carousel .list .item:nth-child(1) {
+     transform: var(--item1-transform);
+     filter: var(--item1-filter);
+     z-index: var(--item1-zIndex);
+     opacity: var(--item1-opacity);
+     pointer-events: none;
+   }
+   
+   .carousel .list .item:nth-child(2) {
+     z-index: 10;
+     transform: translateX(0);
+   }
+   
+   .carousel .list .item:nth-child(3) {
+     transform: var(--item3-transform);
+     filter: var(--item3-filter);
+     z-index: var(--item3-zIndex);
+   }
+   
+   .carousel .list .item:nth-child(4) {
+     transform: var(--item4-transform);
+     filter: var(--item4-filter);
+     z-index: var(--item4-zIndex);
+   }
+   
+   .carousel .list .item:nth-child(5) {
+     transform: var(--item5-transform);
+     filter: var(--item5-filter);
+     opacity: var(--item5-opacity);
+     pointer-events: none;
+   }
+   
+   .carousel .list .item:nth-child(n + 6) {
+     opacity: 0;
+   }
+   
+   /* =========================================
+      6. TEXTO & CONTENIDO (Introduce)
+      ========================================= */
+   .carousel .list .item .introduce {
+     opacity: 0;
+     color: var(--productos-text);
+     pointer-events: none;
+   }
+   
+   /* El item 2 es el activo, mostramos texto */
+   .carousel .list .item:nth-child(2) .introduce {
+     opacity: 1;
+     pointer-events: auto;
+     width: 400px;
+     position: absolute;
+     top: 50%;
+     transform: translateY(-50%);
+     transition: opacity 0.5s;
+   }
+   
+   .carousel .list .item .introduce .title {
+     font-size: 2em;
+     font-weight: 500;
+     line-height: 1em;
+     color: var(--productos-text);
+   }
+   
+   .carousel .list .item .introduce .topic {
+     font-size: 4em;
+     font-weight: 500;
+     color: var(--productos-text);
+   }
+   
+   .carousel .list .item .introduce .des {
+     font-size: small;
+     color: var(--productos-text-muted);
+   }
+   
+   /* --- Botón VER MÁS (Estilo unificado) --- */
+   .carousel .list .item .introduce .seeMore {
+     /* Propiedades base y animación */
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+     gap: 0.4em;
+     width: 120px;
+     margin-top: 1.4em;
+     padding: 14px 28px;
+     
+     font-family: 'Poppins', sans-serif;
+     font-size: 13px;
+     font-weight: 600;
+     letter-spacing: 0.18em;
+     text-transform: uppercase;
+     white-space: nowrap;
+     
+     color: #000;
+     background: linear-gradient(135deg, #ff9100, #ff6a00);
+     border: none;
+     border-radius: 999px;
+     cursor: pointer;
+     
+     box-sizing: border-box;
+     overflow: hidden;
+     
+     box-shadow: 0 0 18px rgba(255, 145, 0, 0.55), inset 0 0 12px rgba(255, 255, 255, 0.35);
+     
+     transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+   }
+   
+   .carousel .list .item .introduce .seeMore:hover {
+     background: var(--productos-hover);
+   }
+   
+   /* Animación de entrada del texto en item 2 */
+   .carousel .list .item:nth-child(2) .introduce .title,
+   .carousel .list .item:nth-child(2) .introduce .topic,
+   .carousel .list .item:nth-child(2) .introduce .des,
+   .carousel .list .item:nth-child(2) .introduce .seeMore {
+     opacity: 0;
+     animation: showContent 0.5s 1s ease-in-out 1 forwards;
+   }
+   
+   .carousel .list .item:nth-child(2) .introduce .topic { animation-delay: 1.2s; }
+   .carousel .list .item:nth-child(2) .introduce .des { animation-delay: 1.4s; }
+   .carousel .list .item:nth-child(2) .introduce .seeMore { animation-delay: 1.6s; }
+   
+   /* =========================================
+      7. DETAIL VIEW (Vista de detalle)
+      ========================================= */
+   .carousel .list .item .detail {
+     opacity: 0;
+     pointer-events: none;
+   }
+   
+   /* Transiciones al activar .showDetail */
+   .carousel.showDetail .list .item:nth-child(3),
+   .carousel.showDetail .list .item:nth-child(4) {
+     left: 100%;
+     opacity: 0;
+     pointer-events: none;
+   }
+   
+   .carousel.showDetail .list .item:nth-child(2) {
+     width: 100%;
+   }
+   
+   .carousel.showDetail .list .item:nth-child(2) .introduce {
+     opacity: 0;
+     pointer-events: none;
+   }
+   
+   .carousel.showDetail .list .item:nth-child(2) img {
+     right: 50%;
+   }
+   
+   .carousel.showDetail .list .item:nth-child(2) .detail {
+     opacity: 1;
+     width: 50%;
+     position: absolute;
+     right: 0;
+     top: 50%;
+     transform: translateY(-50%);
+     text-align: right;
+     pointer-events: auto;
+   }
+   
+   .carousel.showDetail .list .item:nth-child(2) .detail .title {
+     font-size: 4em;
+   }
+   
+   .carousel.showDetail .list .item:nth-child(2) .detail .specifications {
+     display: flex;
+     gap: 10px;
+     width: 100%;
+     border-top: 1px solid rgb(0, 0, 0);
+     margin-top: 20px;
+   }
+   
+   .carousel.showDetail .list .item:nth-child(2) .detail .specifications div {
+     width: 90px;
+     text-align: center;
+     flex-shrink: 0;
+   }
+   
+   .carousel.showDetail .list .item:nth-child(2) .detail .specifications div p:nth-child(1) {
+     font-weight: bold;
+   }
+   
+   .carousel.showDetail .list .item:nth-child(2) .checkout button {
+     font-family: Poppins;
+     background-color: #e8610d;
+     color: #eee;
+     border: 1px solid #5555;
+     margin-left: 5px;
+     padding: 5px 10px;
+     letter-spacing: 2px;
+     font-weight: 500;
+   }
+   
+   /* Animaciones de entrada Detalle */
+   .carousel.showDetail .list .item:nth-child(2) .detail .title,
+   .carousel.showDetail .list .item:nth-child(2) .detail .des,
+   .carousel.showDetail .list .item:nth-child(2) .detail .specifications,
+   .carousel.showDetail .list .item:nth-child(2) .detail .checkout {
+     opacity: 0;
+     animation: showContent 0.5s 1s ease-in-out 1 forwards;
+   }
+   
+   .carousel.showDetail .list .item:nth-child(2) .detail .des { animation-delay: 1.2s; }
+   .carousel.showDetail .list .item:nth-child(2) .detail .specifications { animation-delay: 1.4s; }
+   .carousel.showDetail .list .item:nth-child(2) .detail .checkout { animation-delay: 1.6s; }
+   
+   /* Controles de navegación en Detalle */
+   .carousel.showDetail #prev,
+   .carousel.showDetail #next {
+     display: none;
+     opacity: 0;
+     pointer-events: none;
+   }
+   
+   .carousel.show-detail #back {
+     display: flex;
+   }
+   
+   .carousel.showDetail #back {
+     opacity: 1;
+   }
+   
+   /* =========================================
+      8. ANIMACIONES Y TRANSICIONES
+      ========================================= */
+   
+   /* Animación genérica de aparición de contenido */
+   @keyframes showContent {
+     from {
+       transform: translateY(-30px);
+       filter: blur(10px);
+     }
+     to {
+       transform: translateY(0);
+       opacity: 1;
+       filter: blur(0px);
+     }
+   }
+   
+   /* --- Animaciones NEXT CLICK --- */
+   .carousel.next .item:nth-child(1) {
+     animation: transformFromPosition2 0.5s ease-in-out 1 forwards;
+   }
+   @keyframes transformFromPosition2 {
+     from {
+       transform: var(--item2-transform);
+       filter: var(--item2-filter);
+       opacity: var(--item2-opacity);
+     }
+   }
+   
+   .carousel.next .item:nth-child(2) {
+     animation: transformFromPosition3 0.7s ease-in-out 1 forwards;
+   }
+   @keyframes transformFromPosition3 {
+     from {
+       transform: var(--item3-transform);
+       filter: var(--item3-filter);
+       opacity: var(--item3-opacity);
+     }
+   }
+   
+   .carousel.next .item:nth-child(3) {
+     animation: transformFromPosition4 0.9s ease-in-out 1 forwards;
+   }
+   @keyframes transformFromPosition4 {
+     from {
+       transform: var(--item4-transform);
+       filter: var(--item4-filter);
+       opacity: var(--item4-opacity);
+     }
+   }
+   
+   .carousel.next .item:nth-child(4) {
+     animation: transformFromPosition5 1.1s ease-in-out 1 forwards;
+   }
+   @keyframes transformFromPosition5 {
+     from {
+       transform: var(--item5-transform);
+       filter: var(--item5-filter);
+       opacity: var(--item5-opacity);
+     }
+   }
+   
+   /* --- Animaciones PREVIOUS CLICK --- */
+   .carousel.prev .list .item:nth-child(5) {
+     animation: transformFromPosition4 0.5s ease-in-out 1 forwards;
+   }
+   .carousel.prev .list .item:nth-child(4) {
+     animation: transformFromPosition3 0.7s ease-in-out 1 forwards;
+   }
+   .carousel.prev .list .item:nth-child(3) {
+     animation: transformFromPosition2 0.9s ease-in-out 1 forwards;
+   }
+   .carousel.prev .list .item:nth-child(2) {
+     animation: transformFromPosition1 1.1s ease-in-out 1 forwards;
+   }
+   @keyframes transformFromPosition1 {
+     from {
+       transform: var(--item1-transform);
+       filter: var(--item1-filter);
+       opacity: var(--item1-opacity);
+     }
+   }
+   
+   /* =========================================
+      9. CUSTOM CURSOR
+      ========================================= */
+   .custom-cursor {
+     position: fixed;
+     top: 0;
+     left: 0;
+     pointer-events: none;
+     width: 60px;
+     height: 60px;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     transform: translate(-50%, -50%);
+     z-index: 9999;
+   }
+   
+   .ring {
+     position: absolute;
+     border-radius: 50%;
+     border: 2px solid transparent;
+   }
+   
+   .ring-outer {
+     width: 100%;
+     height: 100%;
+     border-top: 3px solid var(--tech-orange);
+     border-bottom: 3px solid var(--tech-orange);
+     animation: spin 4s linear infinite;
+     opacity: 0.8;
+     box-shadow: 0 0 15px var(--tech-orange-glow);
+   }
+   
+   .ring-middle {
+     width: 85%;
+     height: 85%;
+     border-left: 2px solid #fff;
+     border-right: 2px solid #fff;
+     animation: spin-reverse 3s linear infinite;
+     opacity: 0.3;
+   }
+   
+   .ring-inner {
+     width: 70%;
+     height: 70%;
+     border: 1px dashed var(--tech-orange);
+     animation: spin 6s linear infinite;
+     opacity: 0.5;
+   }
+   
+   @keyframes spin { 100% { transform: rotate(360deg); } }
+   @keyframes spin-reverse { 100% { transform: rotate(-360deg); } }
+   
+   /* =========================================
+      10. MEDIA QUERIES
+      ========================================= */
+   @media screen and (max-width: 991px) {
+     /* iPad, Tablets */
+     .carousel .list .item {
+       width: 90%;
+     }
+     .carousel.showDetail .list .item:nth-child(2) .detail .specifications {
+       overflow: auto;
+     }
+     .carousel.showDetail .list .item:nth-child(2) .detail .title {
+       font-size: 2em;
+     }
+   }
+   
+   @media screen and (max-width: 767px) {
+     /* Mobile */
+     .carousel {
+       height: 600px;
+     }
+     .carousel .list .item {
+       width: 100%;
+       font-size: 10px;
+     }
+     .carousel .list {
+       height: 100%;
+     }
+     .carousel .list .item:nth-child(2) .introduce {
+       width: 50%;
+     }
+     .carousel .list .item img {
+       width: 40%;
+     }
+     .carousel.showDetail .list .item:nth-child(2) .detail {
+       backdrop-filter: blur(10px);
+       font-size: small;
+     }
+     .carousel .list .item:nth-child(2) .introduce .des,
+     .carousel.showDetail .list .item:nth-child(2) .detail .des {
+       height: 100px;
+       overflow: auto;
+     }
+     .carousel.showDetail .list .item:nth-child(2) .detail .checkout {
+       display: flex;
+       width: max-content;
+       float: right;
+     }
+   }
+
+
+
+
+
+   

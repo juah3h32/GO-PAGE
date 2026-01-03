@@ -1,0 +1,77 @@
+/* Ocultar cursor por defecto */
+body {
+  cursor: none;
+}
+
+/* --- CONTENEDOR PRINCIPAL --- */
+.arrows {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%; /* Ocupa todo el ancho */
+  height: 0;   /* Altura 0 para no bloquear clicks en el centro */
+  transform: translateY(-50%);
+  z-index: 20;
+  display: block; /* Cambiado de flex a block para posicionamiento manual */
+}
+
+/* --- ESTILOS COMUNES DE LOS BOTONES --- */
+.arrows button {
+  pointer-events: all; /* Reactiva el click */
+  position: absolute;  /* Vital para moverlos libremente */
+  top: 50%;
+  transform: translateY(-50%); /* Centra el botón verticalmente */
+  
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  
+  /* Estilos Visuales (Glassmorphism) */
+  border: 1px solid rgba(255, 145, 0, 0.35);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 145, 0, 0.15),
+    rgba(0, 0, 0, 0.6)
+  );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  color: #fff;
+  font-size: 22px;
+  font-weight: 600;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow:
+    0 0 15px rgba(255, 145, 0, 0.45),
+    inset 0 0 12px rgba(255, 145, 0, 0.25);
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* --- POSICIONES ESPECÍFICAS (Aquí está la solución) --- */
+#prev {
+  left: 4rem; /* Distancia desde la izquierda */
+}
+
+#next {
+  right: 4rem; /* Distancia desde la derecha */
+  left: auto;  /* Asegura que no herede propiedades de izquierda */
+}
+
+/* --- HOVER --- */
+.arrows button:hover {
+  transform: translateY(-50%) scale(1.15); /* Mantiene el centrado al crecer */
+  box-shadow:
+    0 0 28px rgba(255, 145, 0, 0.8),
+    inset 0 0 20px rgba(255, 145, 0, 0.45);
+}
+
+/* Responsive: En móviles acercamos las flechas a los bordes */
+@media (max-width: 768px) {
+    #prev { left: 10px; }
+    #next { right: 10px; }
+}

@@ -1,0 +1,262 @@
+---
+import "../styles/producto.css";
+import Header from "../components/Header.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const productos = [
+  { img: "img1.png", division: "STRETCH FILM", descripcion: "Fabricación de arpillas industriales para empaque agrícola." },
+  { img: "img2.png", division: "CUERDAS", descripcion: "Cuerdas y cabos de alta resistencia para uso industrial." },
+  { img: "img3.png", division: "RAFIA", descripcion: "Soluciones de rafia para embalaje y carga." },
+  { img: "img4.png", division: "RAFIA", descripcion: "Empaques flexibles personalizados." },
+  { img: "img5.png", division: "SACOS", descripcion: "Textiles técnicos industriales." },
+  { img: "img6.png", division: "ESQUINEROS", descripcion: "Desarrollos a la medida." }
+];
+---
+
+<BaseLayout title="Productos | Grupo Ortiz">
+  <Header />
+
+  <!-- Cursor personalizado con delay -->
+  <div class="custom-cursor">
+    <div class="cursor-dot"></div> <!-- punto central -->
+    <div class="ring ring-outer"></div>
+    <div class="ring ring-middle"></div>
+    <div class="ring ring-inner"></div>
+  </div>
+
+  <main class="productos-main">
+    <div class="carousel">
+     
+    </div>
+  </main>
+
+  <!-- Estilos del cursor -->
+  <style>
+    :root {
+      --tech-orange: #ff9100;
+      --tech-orange-glow: rgba(255, 145, 0, 0.5);
+      --dot-size: 8px;
+      --cursor-size: 60px;
+    }
+
+    body {
+      cursor: none;
+    }
+    
+
+    .custom-cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      width: var(--cursor-size);
+      height: var(--cursor-size);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+    }
+
+    /* Punto central */
+    .cursor-dot {
+      position: absolute;
+      width: var(--dot-size);
+      height: var(--dot-size);
+      background: var(--tech-orange);
+      border-radius: 50%;
+      z-index: 10;
+      box-shadow: 0 0 8px var(--tech-orange-glow);
+    }
+
+    .ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 2px solid transparent;
+    }
+
+    .ring-outer {
+      width: 100%;
+      height: 100%;
+      border-top: 3px solid var(--tech-orange);
+      border-bottom: 3px solid var(--tech-orange);
+      animation: spin 4s linear infinite;
+      opacity: 0.8;
+      box-shadow: 0 0 15px var(--tech-orange-glow);
+    }
+
+    .ring-middle {
+      width: 85%;
+      height: 85%;
+      border-left: 2px solid #fff;
+      border-right: 2px solid #fff;
+      animation: spin-reverse 3s linear infinite;
+      opacity: 0.3;
+    }
+
+    .ring-inner {
+      width: 70%;
+      height: 70%;
+      border: 1px dashed var(--tech-orange);
+      animation: spin 6s linear infinite;
+      opacity: 0.5;
+    }
+
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    @keyframes spin-reverse { 100% { transform: rotate(-360deg); } }
+    .carousel {
+  position: relative; /* referencia para los arrows */
+}
+/* CONTENEDOR */
+.arrows {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 4rem; /* MÁS ESPACIO */
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* BOTONES */
+.arrows button {
+  pointer-events: all;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 145, 0, 0.35);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 145, 0, 0.15),
+    rgba(0, 0, 0, 0.6)
+  );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  color: #fff;
+  font-size: 22px;
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow:
+    0 0 15px rgba(255, 145, 0, 0.45),
+    inset 0 0 12px rgba(255, 145, 0, 0.25);
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* HOVER */
+.arrows button:hover {
+  transform: scale(2.18);
+  box-shadow:
+    0 0 28px rgba(255, 145, 0, 0.8),
+    inset 0 0 20px rgba(255, 145, 0, 0.45);
+}
+
+/* ICONOS MÁS PRO */
+#prev::before {
+  font-size: 34px;
+}
+
+#next::before {
+  font-size: 34px;
+}
+
+/* BOTÓN VER TODAS (APARTE) */
+#back {
+  position: absolute;
+  bottom: -90px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.7rem 1.8rem;
+  border-radius: 999px;
+  background: linear-gradient(
+    135deg,
+    var(--tech-orange),
+    #ff6a00
+  );
+  color: #000;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  box-shadow: 0 0 25px rgba(255, 145, 0, 0.7);
+}
+/* ❌ ELIMINAR DESTELLOS AL HACER CLICK */
+.item,
+.item * {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Quitar glow / sombra cuando se hace click */
+.item:active,
+.item:focus,
+.item:focus-within {
+  box-shadow: none !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+/* Si el JS agrega una clase activa */
+.item.active,
+.item.showDetail {
+  box-shadow: none !important;
+  filter: none !important;
+}
+.seeMore {
+  outline: none;
+  border: none;
+}
+
+.seeMore:focus,
+.seeMore:active,
+.seeMore:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.item.showDetail {
+  background: #000 !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+
+
+
+  </style>
+
+  <!-- Script del cursor con delay -->
+ <script is:inline>
+    const cursor = document.querySelector('.custom-cursor');
+    const cursorDot = document.querySelector('.cursor-dot');
+
+    let mouseX = 0, mouseY = 0;
+    let posX = 0, posY = 0;
+    const delay = 0.19; // entre 0 y 1, menor = más rápido
+
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    function animateCursor() {
+      posX += (mouseX - posX) * delay;
+      posY += (mouseY - posY) * delay;
+
+      cursor.style.transform = `translate(${posX}px, ${posY}px) translate(-50%, -50%)`;
+
+      requestAnimationFrame(animateCursor);
+    }
+
+    animateCursor();
+  </script>
+
+  <script src="/scripts/producto.js" defer></script>
+</BaseLayout>

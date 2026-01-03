@@ -1,0 +1,361 @@
+---
+---
+
+<header
+  class="montfort-header transparent
+    tb:col-start-1 tb:col-end-25
+    dk:col-start-2 dk:col-end-24
+    ml:col-start-3 ml:col-end-23
+    lg:col-start-3 lg:col-end-23"
+>
+  <nav class="montfort-nav">
+
+    <div class="nav-left">
+      <div class="logo">
+        <a href="/">
+          <img src="/images/logo/logo.png" alt="Logo" />
+        </a>
+      </div>
+
+      <div class="nav-links">
+        <a href="/" class="nav-item">INICIO</a>
+
+        <div class="nav-item has-dropdown">
+          <a href="productos" class="nav-text-link">
+            PRODUCTOS
+            <svg class="chevron" width="10" height="6" viewBox="0 0 10 6">
+              <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            </svg>
+          </a>
+          <div class="dropdown-menu">
+            <a href="productos" class="dropdown-item">Productos</a>
+            <a href="/catalogo" class="dropdown-item">Catálogo</a>
+            <a href="/promociones" class="dropdown-item">Promociones</a>
+            <a href="/cotizar" class="dropdown-item">Cotizar</a>
+          </div>
+        </div>
+
+        <div class="nav-item has-dropdown">
+          <a href="/about" class="nav-text-link">
+            NOSOTROS
+            <svg class="chevron" width="10" height="6" viewBox="0 0 10 6">
+              <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            </svg>
+          </a>
+          <div class="dropdown-menu">
+            <a href="/about" class="dropdown-item">Nosotros</a>
+            <a href="/impulso-social" class="dropdown-item">Impulso Social</a>
+          </div>
+        </div>
+
+        <a href="/distribuidor" class="nav-item">DISTRIBUIDOR</a>
+      </div>
+    </div>
+
+    <div class="nav-right">
+      <label class="theme-switch" aria-label="Cambiar tema">
+        <div class="theme-switch-outer">
+          <input id="theme-toggle" type="checkbox">
+          <div class="theme-button">
+            <span class="theme-toggle"></span>
+            <span class="theme-indicator"></span>
+          </div>
+        </div>
+      </label>
+
+      <a href="/contacto" class="nav-btn btn-primary">CONTACTO</a>
+
+      <button id="mobile-menu-toggle" class="hamburger" aria-label="Abrir menú">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+    <div class="mobile-menu">
+      <a href="/" class="nav-item mobile-link">Inicio</a>
+      <a href="/productos" class="nav-item mobile-link">Productos</a>
+      <a href="/about" class="nav-item mobile-link">Nosotros</a>
+      <a href="/distribuidor" class="nav-item mobile-link">Distribuidor</a>
+      <a href="/contacto" class="nav-item mobile-link">Contacto</a>
+    </div>
+
+  </nav>
+</header>
+
+<script>
+// LÓGICA JAVASCRIPT (ISLAS)
+function initNavbar() {
+  const currentPath = window.location.pathname;
+
+  // 1. Marcar links activos
+  const links = document.querySelectorAll(
+    ".nav-item[href], .dropdown-item[href], .nav-text-link[href], .mobile-menu .nav-item[href]"
+  );
+  links.forEach(link => {
+    const href = link.getAttribute("href");
+    if (!href || href === "#") return;
+    // Lógica simple: si la url es igual al href
+    if (href === currentPath || (href !== '/' && currentPath.startsWith(href))) {
+      link.classList.add("active");
+      const dropdownParent = link.closest(".has-dropdown");
+      if (dropdownParent) dropdownParent.classList.add("active");
+    }
+  });
+
+  // 2. Hamburguesa Móvil
+  const mobileToggle = document.getElementById("mobile-menu-toggle");
+  const mobileMenu = document.querySelector(".mobile-menu");
+  const hamburger = document.querySelector(".hamburger");
+
+  if (mobileToggle && mobileMenu) {
+    mobileToggle.addEventListener("click", () => {
+      mobileMenu.classList.toggle("active");
+      mobileToggle.classList.toggle("active"); // Para animar la cruz
+    });
+
+    // Cerrar al redimensionar
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 1024) { 
+        mobileMenu.classList.remove("active");
+        mobileToggle.classList.remove("active");
+      }
+    });
+  }
+
+  // 3. Efecto Scroll Header
+  const header = document.querySelector('.montfort-header');
+  window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+          header?.classList.add('scrolled');
+          header?.classList.remove('transparent');
+      } else {
+          header?.classList.remove('scrolled');
+          header?.classList.add('transparent');
+      }
+  });
+}
+
+// Inicializar en carga de Astro
+document.addEventListener('astro:page-load', initNavbar);
+document.addEventListener('DOMContentLoaded', initNavbar);
+</script>
+
+<style>
+/* =====================================================
+   TU CÓDIGO CSS ORIGINAL (PEGADO)
+===================================================== */
+:root {
+  --logo-gap: 90px;
+  --menu-gap: 85px;
+  --right-gap: 24px;
+  --header-height: 80px;
+  --btn-bg: #ff6600;
+  --btn-text: #fff;
+  --header-text-muted: #555;
+  --header-text: #000;
+  --header-bg: #fff;
+  --header-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.montfort-header {
+  font-family: 'Blauer Neue', sans-serif;
+  position: fixed;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; z-index: 1000;
+  margin-top: 45px;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  padding: 0 40px;
+  height: var(--header-height);
+  display: flex; align-items: center;
+}
+
+.montfort-header.transparent { background: transparent; box-shadow: none; }
+.montfort-header.scrolled {
+  background: var(--header-bg); box-shadow: var(--header-shadow); margin-top: 0;
+}
+.montfort-header.compact {
+  margin-top: 55px; width: auto; min-width: 70%;
+  border-radius: 50px; background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px); padding: 10 30px; height: 90px;
+}
+.montfort-header.hide { transform: translate(-50%, -100%); opacity: 0; }
+
+.montfort-nav {
+  width: 100%; max-width: 1600px; margin: 0 auto;
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+.nav-left { display: flex; align-items: center; gap: var(--logo-gap); }
+.nav-links { display: flex; align-items: center; gap: var(--menu-gap); }
+
+.logo img { display: block; height: 48px; width: auto; transition: transform 0.3s ease; }
+.logo img:hover { transform: scale(1.05); }
+
+.nav-item {
+  position: relative; display: flex; align-items: center;
+  height: 100%; font-size: 13.5px; font-weight: 500;
+  letter-spacing: 0.1em; color: var(--header-text-muted);
+  text-decoration: none; cursor: pointer; padding: 10px 0;
+  transition: color 0.3s ease;
+}
+.nav-item.active, .nav-text-link.active { color: var(--btn-bg); }
+.nav-text-link { display: flex; align-items: center; gap: 6px; color: inherit; text-decoration: none; }
+.nav-item::after {
+  content: ""; position: absolute; bottom: 0; left: 0;
+  width: 0; height: 2px; background: var(--btn-bg); transition: width 0.3s ease;
+}
+.nav-item:hover, .nav-item.active, .montfort-header.scrolled .nav-item:hover { color: var(--btn-bg); }
+.nav-item:hover::after { width: 100%; }
+.montfort-header.scrolled .nav-item { color: var(--header-text); }
+
+.chevron { transition: transform 0.3s ease; margin-top: 1px; }
+.has-dropdown:hover .chevron { transform: rotate(180deg); }
+
+.has-dropdown { position: relative; }
+.dropdown-menu {
+  position: absolute; top: 100%; left: -15px;
+  background: #fff; border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  min-width: 220px; padding: 8px;
+  opacity: 0; visibility: hidden; transform: translateY(10px);
+  transition: all 0.25s ease; z-index: 1100;
+}
+.has-dropdown:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+
+.dropdown-item {
+  display: block; padding: 10px 16px; font-size: 13px;
+  color: #666; text-decoration: none; border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+}
+.dropdown-item:hover { background: #fff5eb; color: var(--btn-bg); }
+
+.nav-right { display: flex; align-items: center; gap: 30px; }
+.nav-utils { display: flex; align-items: center; gap: 12px; }
+
+.nav-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  text-decoration: none; transition: all 0.3s ease; cursor: pointer;
+  border: none; background: transparent; font-family: inherit;
+}
+.btn-primary {
+  background-color: var(--btn-bg); color: var(--btn-text);
+  font-size: 13.5px; font-weight: 600; height: 40px; padding: 0 22px;
+  border-radius: 50px; display: inline-flex; gap: 8px; line-height: 1;
+}
+.btn-primary:hover {
+  background-color: #e65c00; transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(255, 102, 0, 0.25);
+}
+.icon-btn { color: var(--header-text-muted); padding: 8px; border-radius: 50%; font-size: 16px; }
+.icon-btn:hover { background: rgba(0,0,0,0.05); color: var(--header-text); }
+.icon-btn.with-text { border-radius: 50px; padding: 8px 16px; gap: 8px; font-size: 13.5px; font-weight: 500; }
+.montfort-header.scrolled .icon-btn { color: var(--header-text); }
+
+.hamburger {
+  display: none; flex-direction: column; justify-content: space-between;
+  width: 28px; height: 20px; background: none; border: none;
+  cursor: pointer; padding: 0; z-index: 1200;
+}
+.hamburger span { display: block; height: 3px; width: 100%; background: var(--header-text); border-radius: 2px; transition: all 0.3s ease; }
+.hamburger.active span:nth-child(1) { transform: rotate(45deg) translateY(8px); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: rotate(-45deg) translateY(-8px); }
+
+.mobile-menu {
+  display: none; position: fixed; top: var(--header-height); left: 0;
+  width: 100%; background: var(--header-bg); flex-direction: column;
+  padding: 20px; gap: 12px; z-index: 1100;
+}
+.mobile-menu.active { display: flex; }
+
+/* THEME SWITCH (Tu CSS intacto) */
+.theme-switch { display: flex; align-items: center; justify-content: center; margin: 0; height: 45px; }
+.theme-switch .theme-switch-outer {
+    height: 100%; background: #262626; width: 115px; border-radius: 165px;
+    box-shadow: inset 0px 5px 10px 0px #db6a00, 0px 3px 6px -2px #403f4e;
+    border: 1px solid #32303e; padding: 6px; box-sizing: border-box; cursor: pointer;
+}
+.theme-switch .theme-switch-outer input[type="checkbox"] { opacity: 0; appearance: none; position: absolute; }
+.theme-switch .theme-switch-outer .theme-toggle {
+    height: 30px; width: 30px; background: linear-gradient(#ffffff, #ffffff);
+    border-radius: 100%; box-shadow: inset 0px 5px 4px 0px #ffffff, 0px 4px 15px 0px #0f0e17;
+    position: relative; z-index: 2; transition: left 0.3s ease-in; left: 0;
+}
+.theme-switch .theme-switch-outer input[type="checkbox"]:checked+.theme-button .theme-toggle { left: 58%; }
+.theme-switch .theme-switch-outer input[type="checkbox"]:checked+.theme-button .theme-indicator { animation: theme-indicator 1s forwards; }
+.theme-switch .theme-switch-outer .theme-button { width: 100%; height: 100%; display: flex; justify-content: space-between; position: relative; }
+.theme-switch .theme-switch-outer .theme-indicator {
+    height: 25px; width: 25px; top: 50%; transform: translateY(-50%); border-radius: 50%;
+    border: 3px solid #ef565f; box-sizing: border-box; right: 10px; position: relative;
+}
+@keyframes theme-indicator {
+    30% { opacity: 0; } 0% { opacity: 1; } 100% { opacity: 1; border: 3px solid #60d480; left: -68%; }
+}
+
+/* =====================================================
+   ESTILOS ADICIONALES PARA LA INTEGRACIÓN
+===================================================== */
+
+/* Ajuste del Dropdown de idioma para que se alinee a la derecha */
+.lang-menu-pos {
+  left: auto;
+  right: 0;
+  min-width: 150px;
+}
+/* Color para el idioma activo */
+.active-lang {
+  color: var(--btn-bg);
+  font-weight: bold;
+}
+
+/* Ajustes adicionales Menu Movil */
+.mobile-link {
+  font-size: 16px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.mobile-lang-container {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(0,0,0,0.1);
+}
+.mobile-lang-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #999;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+.mobile-lang-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.mobile-lang-btn {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  transition: all 0.2s;
+}
+.mobile-lang-btn.current {
+  background: var(--btn-bg);
+  color: #fff;
+  border-color: var(--btn-bg);
+}
+
+@media (max-width: 1024px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+}
+@media (max-width: 640px) {
+  /* Ocultamos los botones de escritorio en movil, dejamos solo hamburguesa */
+  .nav-right > .nav-btn, 
+  .nav-right > .theme-switch,
+  .nav-right > .has-dropdown { display: none; }
+}
+</style>

@@ -1,0 +1,66 @@
+---
+// src/layouts/Layout.astro
+
+// 1. Importamos el componente Loader
+import Loader from "../components/Loader.astro";
+
+// 2. IMPORTAMOS EL FONDO GLOBAL
+import FondoGlobal from "../components/FondoGlobal.astro";
+
+// 3. IMPORTAMOS EL BOT (Asegúrate que el archivo esté en components/BotGO.jsx)
+import BotGO from "../components/BotGO.jsx";
+
+const { title = "Mi sitio" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/styles/theme.css" />
+
+    <script is:inline>
+      (function () {
+        try {
+          if (localStorage.getItem("theme") === "dark") {
+            document.documentElement.classList.add("dark");
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+
+  <body>
+    <FondoGlobal />
+
+    <Loader />
+
+    <slot />
+
+    <BotGO client:load />
+
+    <script src="/scripts/theme-toggle.js" defer></script>
+
+    <script is:inline>
+      window.addEventListener('load', () => {
+        const loader = document.getElementById('loader-wrapper');
+        if (loader) {
+          loader.style.opacity = '0';
+          setTimeout(() => {
+            loader.style.display = 'none';
+          }, 500); // 0.5s de transición suave
+        }
+      });
+    </script>
+  </body>
+</html>

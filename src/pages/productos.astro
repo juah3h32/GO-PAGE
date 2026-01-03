@@ -1,0 +1,95 @@
+---
+import "../styles/producto.css";
+import "../styles/carousel.css";
+import "../styles/flechas.css";
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CustomCursor from "../components/CustomCursor.astro";
+import Navbar from "../components/Nadbar.astro";
+
+// DATA DE PRODUCTOS
+const productos = [
+  { 
+    img: "img1.png", 
+    division: "STRETCH FILM", 
+    descripcion: "Fabricación de arpillas industriales para empaque agrícola.",
+    link: "/productos/stretch-film" 
+  },
+  { 
+    img: "img2.png", 
+    division: "CUERDAS", 
+    descripcion: "Cuerdas y cabos de alta resistencia para uso industrial.",
+    link: "/cuerdas" 
+  },
+  { 
+    img: "img3.png", 
+    division: "RAFIA", 
+    descripcion: "Soluciones de rafia para embalaje y carga.",
+    link: "/rafias" 
+  },
+  { 
+    img: "img4.png", 
+    division: "RAFIA", 
+    descripcion: "Empaques flexibles personalizados.",
+    link: "/productos/rafia-empaques" 
+  },
+  { 
+    img: "img5.png", 
+    division: "SACOS", 
+    descripcion: "Textiles técnicos industriales.",
+    link: "/productos/sacos" 
+  },
+  { 
+    img: "img6.png", 
+    division: "ESQUINEROS", 
+    descripcion: "Desarrollos a la medida.",
+    link: "/productos/esquineros" 
+  }
+];
+---
+
+<BaseLayout title="Productos | Grupo Ortiz">
+  <Navbar />
+  <CustomCursor />
+
+  <main class="productos-main">
+    <div class="carousel">
+      <div class="list">
+        {productos.map((item) => (
+          <div class="item">
+            <img src={`/images/${item.img}`} alt={item.division} />
+
+            <div class="introduce">
+              <div class="title">GRUPO ORTIZ</div>
+              <div class="topic">{item.division}</div>
+              <div class="des">{item.descripcion}</div>
+              
+              <a href={item.link} class="seeMore" transition:name="producto">
+                Ver más
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="arrows">
+        <button id="prev" aria-label="Anterior">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+        <button id="next" aria-label="Siguiente">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script src="/scripts/producto.js" defer></script>
+</BaseLayout>
