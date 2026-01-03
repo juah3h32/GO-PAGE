@@ -1,5 +1,3 @@
----
----
 <div class="custom-cursor">
   <div class="cursor-dot"></div>
   <div class="ring ring-outer"></div>
@@ -15,8 +13,11 @@
   --cursor-size: 60px;
 }
 
-body {
-  cursor: none;
+/* 1. Lógica base: El cursor nativo se oculta solo si NO es táctil */
+@media (hover: hover) and (pointer: fine) {
+    body {
+        cursor: none; /* Solo oculta el nativo en PC */
+    }
 }
 
 .custom-cursor {
@@ -33,7 +34,20 @@ body {
   z-index: 9999;
 }
 
-/* Punto central */
+/* 2. Lógica de ocultación para móviles/tablets */
+/* Si el dispositivo NO tiene hover (es táctil) O el puntero es grueso (dedo) */
+@media (hover: none), (pointer: coarse) {
+    .custom-cursor {
+        display: none !important; /* Fuerza la desaparición */
+        opacity: 0 !important;
+        visibility: hidden !important;
+    }
+    body {
+        cursor: auto !important; /* Asegura que el sistema maneje el puntero */
+    }
+}
+
+/* Estilos de los anillos y puntos (Sin cambios) */
 .cursor-dot {
   position: absolute;
   width: var(--dot-size);
@@ -82,24 +96,39 @@ body {
 </style>
 
 <script is:inline>
+// DETECCIÓN ROBUSTA DE MÓVIL
+// Verifica si el dispositivo tiene capacidad táctil física
+const isTouch = (('ontouchstart' in window) || (navigator.maxTouchPoints > 0));
+
 const cursor = document.querySelector('.custom-cursor');
-const cursorDot = document.querySelector('.cursor-dot');
 
-let mouseX = 0, mouseY = 0;
-let posX = 0, posY = 0;
-const delay = 0.19;
+if (isTouch) {
+    // Si es táctil, eliminamos el elemento del DOM directamente para asegurar que no se vea
+    if(cursor) cursor.remove();
+} else {
+    // Solo activamos la lógica si NO es táctil (PC con mouse)
+    const cursorDot = document.querySelector('.cursor-dot');
+    let mouseX = 0, mouseY = 0;
+    let posX = 0, posY = 0;
+    const delay = 0.19;
 
-document.addEventListener('mousemove', e => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-});
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
 
-function animateCursor() {
-  posX += (mouseX - posX) * delay;
-  posY += (mouseY - posY) * delay;
-  cursor.style.transform = `translate(${posX}px, ${posY}px) translate(-50%, -50%)`;
-  requestAnimationFrame(animateCursor);
+    function animateCursor() {
+      posX += (mouseX - posX) * delay;
+      posY += (mouseY - posY) * delay;
+      
+      // Verificación extra por seguridad antes de mover
+      if (cursor) {
+        cursor.style.transform = `translate(${posX}px, ${posY}px) translate(-50%, -50%)`;
+        requestAnimationFrame(animateCursor);
+      }
+    }
+    
+    // Iniciar animación
+    animateCursor();
 }
-
-animateCursor();
 </script>
