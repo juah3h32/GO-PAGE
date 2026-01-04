@@ -8,39 +8,39 @@ import "../../styles/flechas.css";
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import CustomCursor from "../../components/CustomCursor.astro";
-import Navbar from "../../components/Nadbar.astro";
-import { translations } from "../../i18n/translations";
+// CORRECCIÓN: Nombre del archivo correcto (Navbar, no Nadbar)
+import Navbar from "../../components/Nadbar.astro"; 
+// CORRECCIÓN: Ruta de importación actualizada a la carpeta i18n
+import { languages, translations } from "../../i18n";
 
-// 2. GENERACIÓN DE RUTAS
+// 2. GENERACIÓN DE RUTAS DINÁMICA
+// Crea una página por cada idioma definido en src/i18n/index.ts
 export function getStaticPaths() {
-  return [
-    { params: { lang: 'es' } },
-    { params: { lang: 'en' } },
-    { params: { lang: 'zh' } },
-    { params: { lang: 'ar' } },
-    { params: { lang: 'pt' } },
-  ];
+  return Object.keys(languages).map((lang) => ({
+    params: { lang },
+  }));
 }
 
 // 3. LÓGICA DE IDIOMA
 const { lang } = Astro.params;
 
-// Seleccionamos el idioma correcto, o español si falla
-const t = translations[lang as keyof typeof translations] || translations['es'];
+// Seguridad: Validamos que el idioma exista, si no, usamos 'es'
+const currentLang = (lang && lang in translations) ? lang : 'es';
+const t = translations[currentLang as keyof typeof translations];
 
-// Extraemos los datos necesarios del archivo de traducción
-const navData = t.nav;             // Textos del menú
-const productsList = t.products_list; // La lista de productos traducida
-const seeMoreText = t.common.seeMore; // Texto del botón "Ver más"
+// Extraemos los datos necesarios
+// NOTA: Ya no necesitamos 'navData' aquí porque el Navbar lo obtiene solo.
+const productsList = t.products_list; 
+const seeMoreText = t.common.seeMore;
 ---
 
-<BaseLayout title={`Productos | Grupo Ortiz`}>
+<BaseLayout title={`${t.nav.products} | Grupo Ortiz`}>
   
-  <Navbar currentLang={lang} t={navData} />
+  <Navbar currentLang={currentLang} />
   
   <CustomCursor />
 
-  <main class="productos-main" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+  <main class="productos-main" dir={currentLang === 'ar' ? 'rtl' : 'ltr'}>
     <div class="carousel">
       <div class="list">
         
@@ -53,7 +53,7 @@ const seeMoreText = t.common.seeMore; // Texto del botón "Ver más"
               <div class="topic">{item.division}</div>
               <div class="des">{item.descripcion}</div>
               
-              <a href={`/${lang}/${item.slug}`} class="seeMore">
+              <a href={`/${currentLang}/${item.slug}`} class="seeMore">
                 {seeMoreText}
               </a>
             </div>

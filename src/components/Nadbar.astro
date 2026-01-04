@@ -1,31 +1,25 @@
 ---
 // src/components/Navbar.astro
-import { languages, translations } from '../i18n/translations';
+import { languages, translations } from '../i18n';
 
 interface Props {
-  currentLang?: string; // Lo hacemos opcional (?) para evitar errores de tipo
+  currentLang?: string;
 }
 
-// 1. SOLUCIÓN DEL ERROR: Asignamos 'es' por defecto si currentLang no llega
 const { currentLang = 'es' } = Astro.props;
 const { pathname } = Astro.url;
 
-// 2. SELECCIÓN DE TRADUCCIONES
-// Buscamos el idioma, si no existe usamos 'es'
-const langData = translations[currentLang as keyof typeof translations] || translations['es'];
+// SEGURIDAD DE IDIOMAS
+const safeLang = (currentLang in translations) ? currentLang : 'es';
+const langData = translations[safeLang as keyof typeof translations];
+const t = langData.nav;
 
-// 3. SELECCIÓN DE TEXTOS DEL NAVBAR
-// Accedemos a la propiedad .nav que definiste en tu archivo translations.ts
-const t = langData.nav; 
-
-// FUNCIÓN DE RUTAS (Se mantiene igual, pero ahora es segura gracias al valor por defecto)
+// FUNCIÓN DE RUTAS
 function getLangPath(targetLang: string) {
   if (pathname === '/' || pathname === '') return `/${targetLang}/`;
   const hasLangPrefix = Object.keys(languages).some(lang => pathname.startsWith(`/${lang}`));
-
   if (hasLangPrefix) {
-    // Usamos currentLang, que ahora garantizamos que tiene valor (ej: 'es')
-    return pathname.replace(new RegExp(`^/${currentLang}`), `/${targetLang}`);
+    return pathname.replace(new RegExp(`^/${safeLang}`), `/${targetLang}`);
   } else {
     return `/${targetLang}${pathname}`;
   }
@@ -37,76 +31,86 @@ function getLangPath(targetLang: string) {
 
     <div class="nav-left">
       <div class="logo">
-        <a href={`/${currentLang}/`}>
+        <a href={`/${safeLang}/`}>
             <img src="/images/logo/logo.png" alt="Logo" />
         </a>
       </div>
     </div>
 
     <div class="nav-links desktop-only">
-      <a href={`/${currentLang}/`} class="nav-item">{t.home}</a>
+      <a href={`/${safeLang}/`} class="nav-item">{t.home}</a>
       
       <div class="nav-item has-dropdown">
-        <a href={`/${currentLang}/productos`} class="nav-text-link">
+        <a href={`/${safeLang}/productos`} class="nav-text-link">
           {t.products}
           <svg class="chevron" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
         </a>
         <div class="dropdown-menu">
-           <a href={`/${currentLang}/productos`} class="dropdown-item">{t.products}</a>
-           <a href={`/${currentLang}/catalogo`} class="dropdown-item">{t.catalog}</a>
-           <a href={`/${currentLang}/promociones`} class="dropdown-item">{t.promos}</a>
+           <a href={`/${safeLang}/productos`} class="dropdown-item">{t.products}</a>
+           <a href={`/${safeLang}/catalogo`} class="dropdown-item">{t.catalog}</a>
+           <a href={`/${safeLang}/promociones`} class="dropdown-item">{t.promos}</a>
         </div>
       </div>
 
       <div class="nav-item has-dropdown">
-        <a href={`/${currentLang}/about`} class="nav-text-link">
+        <a href={`/${safeLang}/about`} class="nav-text-link">
           {t.about}
           <svg class="chevron" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
         </a>
         <div class="dropdown-menu">
-          <a href={`/${currentLang}/about`} class="dropdown-item">{t.company}</a>
-          <a href={`/${currentLang}/social`} class="dropdown-item">{t.social}</a>
+          <a href={`/${safeLang}/about`} class="dropdown-item">{t.company}</a>
+          <a href={`/${safeLang}/social`} class="dropdown-item">{t.social}</a>
         </div>
       </div>
 
-      <a href={`/${currentLang}/distribuidor`} class="nav-item">{t.distributor}</a>
+      <a href={`/${safeLang}/distribuidor`} class="nav-item">{t.distributor}</a>
     </div>
 
     <div class="nav-right">
+       
        <div class="desktop-actions desktop-only">
+         
+        <label class="theme-switch" aria-label="Cambiar tema">
+            <div class="theme-switch-outer">
+              <input id="theme-toggle" type="checkbox"> 
+              <div class="theme-button">
+                <span class="theme-toggle-icon"></span>
+                <span class="theme-indicator"></span>
+              </div>
+            </div>
+        </label>
          
          <div class="nav-item has-dropdown icon-only-dropdown">
             <button class="icon-btn globe-btn">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                <span>{languages[currentLang as keyof typeof languages]}</span>
+                <span>{languages[safeLang as keyof typeof languages]}</span>
             </button>
             <div class="dropdown-menu lang-menu-pos">
                 {Object.entries(languages).map(([code, label]) => (
-                    <a href={getLangPath(code)} class={`dropdown-item ${currentLang === code ? 'active-lang' : ''}`}>
+                    <a href={getLangPath(code)} class={`dropdown-item ${safeLang === code ? 'active-lang' : ''}`}>
                         {label}
                     </a>
                 ))}
             </div>
         </div>
 
-        <a href={`/${currentLang}/contacto`} class="nav-btn btn-primary">{t.contact}</a>
+        <a href={`/${safeLang}/contacto`} class="nav-btn btn-primary">{t.contact}</a>
       </div>
       
-      <div class="mobile-lang-wrapper mobile-only">
+      <div class="mobile-controls mobile-only">
          <button id="mobile-lang-trigger" class="lang-pill-btn">
-             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"></path></svg>
-             <span>{currentLang.toUpperCase()}</span>
+             <span>{safeLang.toUpperCase()}</span>
          </button>
          <div id="mobile-lang-dropdown" class="mobile-mini-dropdown">
             {Object.entries(languages).map(([code, label]) => (
-                <a href={getLangPath(code)} class={`mini-item ${currentLang === code ? 'active' : ''}`}>
+                <a href={getLangPath(code)} class={`mini-item ${safeLang === code ? 'active' : ''}`}>
                     {label}
                 </a>
             ))}
          </div>
       </div>
 
-      <button id="mobile-menu-toggle" class="hamburger" aria-label="Menu">
+      <button id="mobile-menu-toggle" class="hamburger mobile-only" aria-label="Menu">
         <span></span><span></span><span></span>
       </button>
 
@@ -115,7 +119,7 @@ function getLangPath(targetLang: string) {
 
   <div class="mobile-menu">
       <div class="mobile-scroll-container">
-        <a href={`/${currentLang}/`} class="mobile-link">{t.home}</a>
+        <a href={`/${safeLang}/`} class="mobile-link">{t.home}</a>
 
         <div class="mobile-accordion">
             <button class="mobile-link accordion-btn">
@@ -123,9 +127,9 @@ function getLangPath(targetLang: string) {
                 <svg class="chevron" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
             </button>
             <div class="accordion-content">
-                <a href={`/${currentLang}/productos`}>{t.products}</a>
-                <a href={`/${currentLang}/catalogo`}>{t.catalog}</a>
-                <a href={`/${currentLang}/promociones`}>{t.promos}</a>
+                <a href={`/${safeLang}/productos`}>{t.products}</a>
+                <a href={`/${safeLang}/catalogo`}>{t.catalog}</a>
+                <a href={`/${safeLang}/promociones`}>{t.promos}</a>
             </div>
         </div>
 
@@ -135,14 +139,27 @@ function getLangPath(targetLang: string) {
                 <svg class="chevron" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
             </button>
             <div class="accordion-content">
-                <a href={`/${currentLang}/about`}>{t.company}</a>
-                <a href={`/${currentLang}/social`}>{t.social}</a>
+                <a href={`/${safeLang}/about`}>{t.company}</a>
+                <a href={`/${safeLang}/social`}>{t.social}</a>
             </div>
         </div>
 
-        <a href={`/${currentLang}/distribuidor`} class="mobile-link">{t.distributor}</a>
+        <a href={`/${safeLang}/distribuidor`} class="mobile-link">{t.distributor}</a>
         
-        <a href={`/${currentLang}/contacto`} class="nav-btn btn-primary full-width" style="margin-top: 20px;">{t.contact}</a>
+        <div style="padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between;">
+            <span style="color: var(--text-main)">Modo Oscuro</span>
+            <label class="theme-switch" style="margin: 0;">
+                <div class="theme-switch-outer">
+                  <input id="mobile-theme-toggle" type="checkbox"> 
+                  <div class="theme-button">
+                    <span class="theme-toggle-icon"></span>
+                    <span class="theme-indicator"></span>
+                  </div>
+                </div>
+            </label>
+        </div>
+
+        <a href={`/${safeLang}/contacto`} class="nav-btn btn-primary full-width" style="margin-top: 20px;">{t.contact}</a>
       </div>
   </div>
 </header>
@@ -153,11 +170,53 @@ function getLangPath(targetLang: string) {
     const mobileToggle = document.getElementById("mobile-menu-toggle");
     const mobileMenu = document.querySelector(".mobile-menu");
     const accordions = document.querySelectorAll(".accordion-btn");
-    
     const langTrigger = document.getElementById("mobile-lang-trigger");
     const langDropdown = document.getElementById("mobile-lang-dropdown");
-  
-    // Scroll Effect
+
+    // --- LÓGICA DARK MODE (CHECKBOX) ---
+    // Seleccionamos ambos inputs (escritorio y el del menú móvil)
+    const themeInputs = document.querySelectorAll('#theme-toggle, #mobile-theme-toggle');
+    
+    const applyTheme = (isDark: boolean) => {
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+        // Sincronizar todos los checkboxes visualmente
+        themeInputs.forEach(input => {
+            if (input instanceof HTMLInputElement) input.checked = true;
+        });
+      } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+        themeInputs.forEach(input => {
+            if (input instanceof HTMLInputElement) input.checked = false;
+        });
+      }
+    };
+
+    // 1. Estado inicial
+    const storedTheme = localStorage.getItem('theme');
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (storedTheme === 'dark' || (!storedTheme && systemDark)) {
+       applyTheme(true);
+    } else {
+       applyTheme(false);
+    }
+
+    // 2. Event Listeners
+    themeInputs.forEach(input => {
+        // Clonamos para limpiar eventos previos de Astro
+        const newInput = input.cloneNode(true);
+        input.parentNode?.replaceChild(newInput, input);
+        
+        newInput.addEventListener('change', (e) => {
+             const target = e.target as HTMLInputElement;
+             applyTheme(target.checked);
+        });
+    });
+
+    // --- SCROLL EFFECT ---
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
             header?.classList.add('scrolled');
@@ -168,7 +227,7 @@ function getLangPath(targetLang: string) {
         }
     });
   
-    // Mobile Menu Toggle
+    // --- MOBILE MENU ---
     if (mobileToggle && mobileMenu) {
       mobileToggle.addEventListener("click", () => {
         mobileMenu.classList.toggle("active");
@@ -177,13 +236,12 @@ function getLangPath(targetLang: string) {
       });
     }
   
-    // Language Dropdown Mobile
+    // --- DROPDOWN IDIOMA MÓVIL ---
     if (langTrigger && langDropdown) {
         langTrigger.addEventListener("click", (e: Event) => {
             e.stopPropagation(); 
             langDropdown.classList.toggle("active");
         });
-  
         document.addEventListener("click", (e: Event) => {
             const target = e.target;
             if (target instanceof Node && !langTrigger.contains(target) && !langDropdown.contains(target)) {
@@ -192,7 +250,7 @@ function getLangPath(targetLang: string) {
         });
     }
   
-    // Accordions
+    // --- ACORDEONES MÓVIL ---
     accordions.forEach(acc => {
         acc.addEventListener("click", (e: Event) => {
             const btn = e.currentTarget; 
@@ -226,7 +284,10 @@ function getLangPath(targetLang: string) {
   --header-height: 80px;
   --max-width: 1600px;
 }
-html.dark {
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+
+/* GLOBAL DARK MODE */
+:global(html.dark) {
   --text-main: #ffffff;
 }
 body.no-scroll { overflow: hidden; }
@@ -286,8 +347,7 @@ body.no-scroll { overflow: hidden; }
 
 /* GLOBE BTN */
 .globe-btn {
-  background-color: var(--btn-bg);
-  color: #fff;
+  background-color: var(--btn-bg); color: #fff;
   border: none; cursor: pointer; height: 42px;
   padding: 0 20px; border-radius: 50px; display: flex;
   align-items: center; gap: 8px; font-family: inherit;
@@ -356,19 +416,14 @@ body.no-scroll { overflow: hidden; }
 .accordion-content a { display: block; padding: 12px 0; color: #999; text-decoration: none; font-size: 15px; }
 .accordion-content a:hover { color: var(--btn-bg); }
 
-.mobile-divider { margin: 30px 0; height: 1px; background: rgba(255,255,255,0.1); }
-.mobile-actions { display: flex; flex-direction: column; gap: 25px; }
-.full-width { width: 100%; text-align: center; }
+.mobile-controls { position: relative; margin-right: 15px; display: none; align-items: center; }
 
-/* MOBILE LANG SELECTOR */
-.mobile-lang-wrapper { position: relative; margin-right: 15px; display: none; }
 .lang-pill-btn {
   background-color: var(--btn-bg); color: #fff; border: none;
   border-radius: 50px; padding: 8px 16px; display: flex; align-items: center;
   gap: 8px; font-size: 14px; font-weight: 600; cursor: pointer;
   box-shadow: 0 4px 10px rgba(255, 102, 0, 0.3); transition: transform 0.2s ease;
 }
-.lang-pill-btn:active { transform: scale(0.95); }
 .mobile-mini-dropdown {
   position: absolute; top: 120%; right: 0; background: #222;
   border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 5px; width: 120px;
@@ -380,18 +435,48 @@ body.no-scroll { overflow: hidden; }
   color: #ccc; text-decoration: none; padding: 8px 12px;
   font-size: 14px; border-radius: 4px; text-align: center;
 }
-.mini-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
-.mini-item.active { color: var(--btn-bg); font-weight: bold; }
 
 @media (max-width: 1024px) {
   .desktop-only { display: none !important; }
-  .mobile-only { display: block !important; }
+  .mobile-only { display: block !important; display: flex !important; }
   .hamburger { display: flex; }
   .nav-right { display: flex; align-items: center; }
 }
 
-/* SOPORTE RTL (Árabe) */
+/* ========================================================
+   ESTILOS DEL BOTÓN TOGGLE (Interruptor)
+   ======================================================== */
+.theme-switch { display: flex; align-items: center; justify-content: center; margin: 0; height: 45px; cursor: pointer; }
+.theme-switch .theme-switch-outer {
+    height: 100%; background: #262626; width: 90px; border-radius: 165px;
+    box-shadow: inset 0px 5px 10px 0px #1a1a1a, 0px 3px 6px -2px #403f4e;
+    border: 1px solid #32303e; padding: 6px; box-sizing: border-box; cursor: pointer; position: relative;
+    display: flex; align-items: center;
+}
+.theme-switch .theme-switch-outer input[type="checkbox"] { opacity: 0; appearance: none; position: absolute; width: 100%; height: 100%; cursor: pointer; z-index: 10; margin: 0; }
+.theme-switch .theme-switch-outer .theme-button { 
+    width: 100%; height: 100%; display: flex; position: relative; pointer-events: none; 
+}
+.theme-switch .theme-switch-outer .theme-toggle-icon {
+    height: 30px; width: 30px; background: #ffffff;
+    border-radius: 100%; box-shadow: 0px 4px 15px 0px #0f0e17;
+    position: absolute; z-index: 2; transition: left 0.3s ease-in; left: 0; top: 0;
+}
+/* Cuando el checkbox (hermano anterior) está marcado, mueve el .theme-toggle */
+.theme-switch .theme-switch-outer input[type="checkbox"]:checked ~ .theme-button .theme-toggle-icon { left: calc(100% - 30px); }
+.theme-switch .theme-switch-outer input[type="checkbox"]:checked ~ .theme-button .theme-indicator { animation: theme-indicator 1s forwards; }
+
+.theme-switch .theme-switch-outer .theme-indicator {
+    height: 24px; width: 24px; top: 50%; transform: translateY(-50%); border-radius: 50%;
+    border: 2px solid var(--btn-bg); box-sizing: border-box; right: 5px; position: absolute;
+    opacity: 0;
+}
+/* Al activar el toggle, mostramos el indicador naranja brevemente o permanente */
+@keyframes theme-indicator {
+    0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; }
+}
+
+/* SOPORTE RTL */
 [dir="rtl"] .nav-links { flex-direction: row-reverse; }
-[dir="rtl"] .accordion-btn { flex-direction: row-reverse; }
 [dir="rtl"] .mobile-mini-dropdown { left: 0; right: auto; }
 </style>
