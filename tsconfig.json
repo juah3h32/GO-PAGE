@@ -10,7 +10,6 @@
   "compilerOptions": {
     "strictNullChecks": true,
     "jsx": "react-jsx",
-    "jsxImportSource": "react",
-    "types": ["@vite-pwa/astro/client"]
+    "jsxImportSource": "react"
   }
 }

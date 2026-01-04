@@ -175,12 +175,14 @@
   
     // 3. Dropdown de Idioma Móvil
     if (langTrigger && langDropdown) {
-        langTrigger.addEventListener("click", (e) => {
+        // CORRECCIÓN 1: Añadido ': Event'
+        langTrigger.addEventListener("click", (e: Event) => {
             e.stopPropagation(); 
             langDropdown.classList.toggle("active");
         });
   
-        document.addEventListener("click", (e) => {
+        // CORRECCIÓN 2: Añadido ': Event'
+        document.addEventListener("click", (e: Event) => {
             const target = e.target;
             if (target instanceof Node && !langTrigger.contains(target) && !langDropdown.contains(target)) {
                 langDropdown.classList.remove("active");
@@ -190,7 +192,8 @@
   
     // 4. Acordeones
     accordions.forEach(acc => {
-        acc.addEventListener("click", (e) => {
+        // CORRECCIÓN 3: Añadido ': Event'
+        acc.addEventListener("click", (e: Event) => {
             const btn = e.currentTarget; 
             if (btn instanceof HTMLElement) {
                btn.classList.toggle("active");
@@ -210,7 +213,8 @@
     const themeMain = document.getElementById('theme-toggle');
     const themeMobile = document.getElementById('theme-toggle-mobile');
   
-    function syncSwitches(e) {
+    // CORRECCIÓN 4: Añadido ': Event'
+    function syncSwitches(e: Event) {
         const target = e.target;
         if (target instanceof HTMLInputElement) {
             const isChecked = target.checked;
