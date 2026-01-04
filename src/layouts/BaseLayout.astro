@@ -1,15 +1,14 @@
 ---
 // src/layouts/Layout.astro
 
-// 1. Importamos el componente Loader
+// 1. IMPORTAMOS LO NECESARIO PARA PWA
+import { pwaInfo } from 'virtual:pwa-info';
+
+// 2. Importamos los componentes existentes
 import Loader from "../components/Loader.astro";
-
-// 2. IMPORTAMOS EL FONDO GLOBAL
 import FondoGlobal from "../components/FondoGlobal.astro";
-
-// 3. IMPORTAMOS EL BOT (Asegúrate que el archivo esté en components/BotGO.jsx)
 import BotGO from "../components/BotGO.jsx";
-import DockMenu from "../components/DockMenu.astro"; // <--- 1. IMPÓRTALO AQUÍ
+import DockMenu from "../components/DockMenu.astro";
 
 const { title = "Mi sitio" } = Astro.props;
 ---
@@ -18,25 +17,26 @@ const { title = "Mi sitio" } = Astro.props;
 <html lang="es">
   <head>
     <meta charset="utf-8" />
-    
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
     
     <meta name="theme-color" content="#ffffff" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="GO" />
     
     <title>{title}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
     <link rel="stylesheet" href="/styles/theme.css" />
 
     <link rel="apple-touch-icon" href="/pwa-192x192.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     
+    { pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} /> }
+
     <script is:inline>
       (function () {
         try {
@@ -54,9 +54,20 @@ const { title = "Mi sitio" } = Astro.props;
     <Loader />
 
     <slot />
+    
     <DockMenu />
 
     <BotGO client:load />
+
+    <script>
+      import { registerSW } from 'virtual:pwa-register';
+      registerSW({ 
+        immediate: true,
+        onRegisteredSW(swUrl) {
+          console.log('PWA: Service Worker activo en', swUrl);
+        }
+      });
+    </script>
 
     <script src="/scripts/theme-toggle.js" defer></script>
 
@@ -67,10 +78,10 @@ const { title = "Mi sitio" } = Astro.props;
           loader.style.opacity = '0';
           setTimeout(() => {
             loader.style.display = 'none';
-          }, 500); // 0.5s de transición suave
+          }, 500);
         }
       });
     </script>
     
-    </body>
+  </body>
 </html>
