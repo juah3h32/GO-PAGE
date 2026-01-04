@@ -1,60 +1,50 @@
 ---
-import "../styles/producto.css";
-import "../styles/carousel.css";
-import "../styles/flechas.css";
+// src/pages/[lang]/productos.astro
 
-import BaseLayout from "../layouts/BaseLayout.astro";
-import CustomCursor from "../components/CustomCursor.astro";
-import Navbar from "../components/Nadbar.astro";
+// 1. IMPORTACIONES
+import "../../styles/producto.css";
+import "../../styles/carousel.css";
+import "../../styles/flechas.css";
 
-const productos = [
-  { 
-    img: "img1.png", 
-    division: "STRETCH FILM", 
-    descripcion: "Fabricación de arpillas industriales para empaque agrícola.",
-    link: "/productos/stretch-film" 
-  },
-  { 
-    img: "img2.png", 
-    division: "CUERDAS", 
-    descripcion: "Cuerdas y cabos de alta resistencia para uso industrial.",
-    link: "/cuerdas" 
-  },
-  { 
-    img: "img3.png", 
-    division: "RAFIA", 
-    descripcion: "Soluciones de rafia para embalaje y carga.",
-    link: "/rafias" 
-  },
-  { 
-    img: "img4.png", 
-    division: "RAFIA", 
-    descripcion: "Empaques flexibles personalizados.",
-    link: "/productos/rafia-empaques" 
-  },
-  { 
-    img: "img5.png", 
-    division: "SACOS", 
-    descripcion: "Textiles técnicos industriales.",
-    link: "/productos/sacos" 
-  },
-  { 
-    img: "img6.png", 
-    division: "ESQUINEROS", 
-    descripcion: "Desarrollos a la medida.",
-    link: "/productos/esquineros" 
-  }
-];
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import CustomCursor from "../../components/CustomCursor.astro";
+import Navbar from "../../components/Nadbar.astro";
+import { translations } from "../../i18n/translations";
+
+// 2. GENERACIÓN DE RUTAS
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'es' } },
+    { params: { lang: 'en' } },
+    { params: { lang: 'zh' } },
+    { params: { lang: 'ar' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+// 3. LÓGICA DE IDIOMA
+const { lang } = Astro.params;
+
+// Seleccionamos el idioma correcto, o español si falla
+const t = translations[lang as keyof typeof translations] || translations['es'];
+
+// Extraemos los datos necesarios del archivo de traducción
+const navData = t.nav;             // Textos del menú
+const productsList = t.products_list; // La lista de productos traducida
+const seeMoreText = t.common.seeMore; // Texto del botón "Ver más"
 ---
 
-<BaseLayout title="Productos | Grupo Ortiz">
-  <Navbar />
+<BaseLayout title={`Productos | Grupo Ortiz`}>
+  
+  <Navbar currentLang={lang} t={navData} />
+  
   <CustomCursor />
 
-  <main class="productos-main">
+  <main class="productos-main" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
     <div class="carousel">
       <div class="list">
-        {productos.map((item) => (
+        
+        {productsList.map((item) => (
           <div class="item">
             <img src={`/images/${item.img}`} alt={item.division} />
 
@@ -63,12 +53,13 @@ const productos = [
               <div class="topic">{item.division}</div>
               <div class="des">{item.descripcion}</div>
               
-              <a href={item.link} class="seeMore">
-                Ver más
+              <a href={`/${lang}/${item.slug}`} class="seeMore">
+                {seeMoreText}
               </a>
             </div>
           </div>
         ))}
+
       </div>
 
       <div class="arrows">

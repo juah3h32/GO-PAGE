@@ -1,83 +1,38 @@
 ---
-import StarsBackground from "../components/StarsBackground.astro";
-import Header from "../components/Nadbar.astro";
-import BaseLayout from "../layouts/BaseLayout.astro";
+// src/pages/index.astro
+
+// 1. Obtener la preferencia de idioma del navegador/sistema del usuario
+// Esto devuelve una cadena como: "en-US,en;q=0.9,es;q=0.8"
+const acceptLanguage = Astro.request.headers.get('accept-language') || '';
+
+// 2. Convertir a minúsculas para facilitar la búsqueda
+const langHeader = acceptLanguage.toLowerCase();
+
+// 3. Definir el idioma por defecto (Fallback)
+let targetLang = 'es';
+
+// 4. Lógica de Detección
+// Verificamos si la cadena contiene los códigos de los idiomas que soportas.
+// El orden del 'if/else' define la prioridad si el usuario tiene varios.
+
+if (langHeader.includes('en')) {
+  // Detecta inglés (en-US, en-GB, etc.)
+  targetLang = 'en';
+} 
+else if (langHeader.includes('pt') || langHeader.includes('br')) {
+  // Detecta portugués o referencias a Brasil
+  targetLang = 'pt';
+} 
+else if (langHeader.includes('zh') || langHeader.includes('cn')) {
+  // Detecta chino
+  targetLang = 'zh';
+} 
+else if (langHeader.includes('ar')) {
+  // Detecta árabe
+  targetLang = 'ar';
+}
+// Si no cae en ninguno de los anteriores, se queda en 'es'
+
+// 5. Redirección automática
+return Astro.redirect(`/${targetLang}/`);
 ---
-
-<BaseLayout title="Inicio">
-  <StarsBackground />
-
-  <Header />
-
-  <main class="hero">
-    <div class="globe-back">
-    </div>
-
-    <div class="scroll-indicator">
-      <div class="mouse">
-        <span class="wheel"></span>
-      </div>
-    </div>
-  </main>
-
-  <style>
-    body {
-      margin: 0;
-      background: #0a0a0a;
-      font-family: sans-serif;
-      overflow-y: auto;
-    }
-
-    .hero {
-      position: relative;
-      width: 100%;
-      height: 100vh;
-      z-index: 10;
-    }
-
-    .scroll-indicator {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 999;
-      text-align: center;
-      color: rgba(255, 255, 255, 0.75);
-      font-size: 12px;
-      letter-spacing: 1px;
-      animation: fadeIn 2s ease forwards;
-    }
-
-    .mouse {
-      width: 26px;
-      height: 44px;
-      border: 2px solid rgba(255,255,255,0.8);
-      border-radius: 20px;
-      margin: 0 auto 6px;
-      position: relative;
-    }
-
-    .wheel {
-      width: 4px;
-      height: 8px;
-      background: white;
-      border-radius: 4px;
-      position: absolute;
-      top: 8px;
-      left: 50%;
-      transform: translateX(-50%);
-      animation: wheelMove 1.5s infinite;
-    }
-
-    @keyframes wheelMove {
-      0% { opacity: 0; transform: translate(-50%, 0); }
-      30% { opacity: 1; }
-      100% { opacity: 0; transform: translate(-50%, 10px); }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-  </style>
-</BaseLayout>

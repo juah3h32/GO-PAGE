@@ -1,146 +1,150 @@
+---
+// src/components/Navbar.astro
+import { languages, translations } from '../i18n/translations';
+
+interface Props {
+  currentLang?: string; // Lo hacemos opcional (?) para evitar errores de tipo
+}
+
+// 1. SOLUCIÓN DEL ERROR: Asignamos 'es' por defecto si currentLang no llega
+const { currentLang = 'es' } = Astro.props;
+const { pathname } = Astro.url;
+
+// 2. SELECCIÓN DE TRADUCCIONES
+// Buscamos el idioma, si no existe usamos 'es'
+const langData = translations[currentLang as keyof typeof translations] || translations['es'];
+
+// 3. SELECCIÓN DE TEXTOS DEL NAVBAR
+// Accedemos a la propiedad .nav que definiste en tu archivo translations.ts
+const t = langData.nav; 
+
+// FUNCIÓN DE RUTAS (Se mantiene igual, pero ahora es segura gracias al valor por defecto)
+function getLangPath(targetLang: string) {
+  if (pathname === '/' || pathname === '') return `/${targetLang}/`;
+  const hasLangPrefix = Object.keys(languages).some(lang => pathname.startsWith(`/${lang}`));
+
+  if (hasLangPrefix) {
+    // Usamos currentLang, que ahora garantizamos que tiene valor (ej: 'es')
+    return pathname.replace(new RegExp(`^/${currentLang}`), `/${targetLang}`);
+  } else {
+    return `/${targetLang}${pathname}`;
+  }
+}
+---
+
 <header class="montfort-header transparent">
   <nav class="montfort-nav">
 
     <div class="nav-left">
       <div class="logo">
-        <a href="/">
+        <a href={`/${currentLang}/`}>
             <img src="/images/logo/logo.png" alt="Logo" />
         </a>
       </div>
     </div>
 
     <div class="nav-links desktop-only">
-      <a href="/" class="nav-item">INICIO</a>
+      <a href={`/${currentLang}/`} class="nav-item">{t.home}</a>
       
       <div class="nav-item has-dropdown">
-        <a href="/productos" class="nav-text-link">
-          PRODUCTOS
-          <svg class="chevron" width="10" height="6" viewBox="0 0 10 6">
-            <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" fill="none"/>
-          </svg>
+        <a href={`/${currentLang}/productos`} class="nav-text-link">
+          {t.products}
+          <svg class="chevron" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
         </a>
         <div class="dropdown-menu">
-          <a href="/productos" class="dropdown-item">Productos</a>
-          <a href="/catalogo" class="dropdown-item">Catálogo</a>
-          <a href="/promociones" class="dropdown-item">Promociones</a>
+           <a href={`/${currentLang}/productos`} class="dropdown-item">{t.products}</a>
+           <a href={`/${currentLang}/catalogo`} class="dropdown-item">{t.catalog}</a>
+           <a href={`/${currentLang}/promociones`} class="dropdown-item">{t.promos}</a>
         </div>
       </div>
 
       <div class="nav-item has-dropdown">
-        <a href="/about" class="nav-text-link">
-          NOSOTROS
-          <svg class="chevron" width="10" height="6" viewBox="0 0 10 6">
-            <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" fill="none"/>
-          </svg>
+        <a href={`/${currentLang}/about`} class="nav-text-link">
+          {t.about}
+          <svg class="chevron" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
         </a>
         <div class="dropdown-menu">
-          <a href="/about" class="dropdown-item">Nosotros</a>
-          <a href="/impulso-social" class="dropdown-item">Impulso Social</a>
+          <a href={`/${currentLang}/about`} class="dropdown-item">{t.company}</a>
+          <a href={`/${currentLang}/social`} class="dropdown-item">{t.social}</a>
         </div>
       </div>
 
-      <a href="/distribuidor" class="nav-item">DISTRIBUIDOR</a>
+      <a href={`/${currentLang}/distribuidor`} class="nav-item">{t.distributor}</a>
     </div>
 
     <div class="nav-right">
-      
-      <div class="desktop-actions desktop-only">
-        
-        <label class="theme-switch" aria-label="Cambiar tema">
-          <div class="theme-switch-outer">
-            <input id="theme-toggle" type="checkbox">
-            <div class="theme-button">
-              <span class="theme-toggle"></span>
-              <span class="theme-indicator"></span>
-            </div>
-          </div>
-        </label>
-        
-        <div class="nav-item has-dropdown icon-only-dropdown">
+       <div class="desktop-actions desktop-only">
+         
+         <div class="nav-item has-dropdown icon-only-dropdown">
             <button class="icon-btn globe-btn">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                <span>Español</span>
+                <span>{languages[currentLang as keyof typeof languages]}</span>
             </button>
             <div class="dropdown-menu lang-menu-pos">
-                <a href="?lang=es" class="dropdown-item active-lang">Español</a>
-                <a href="?lang=en" class="dropdown-item">English</a>
+                {Object.entries(languages).map(([code, label]) => (
+                    <a href={getLangPath(code)} class={`dropdown-item ${currentLang === code ? 'active-lang' : ''}`}>
+                        {label}
+                    </a>
+                ))}
             </div>
         </div>
 
-        <a href="/contacto" class="nav-btn btn-primary">CONTACTO</a>
+        <a href={`/${currentLang}/contacto`} class="nav-btn btn-primary">{t.contact}</a>
       </div>
-
+      
       <div class="mobile-lang-wrapper mobile-only">
-        <button id="mobile-lang-trigger" class="lang-pill-btn">
+         <button id="mobile-lang-trigger" class="lang-pill-btn">
              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"></path></svg>
-             <span>Español</span>
-        </button>
-        <div id="mobile-lang-dropdown" class="mobile-mini-dropdown">
-            <a href="?lang=es" class="mini-item active">Español</a>
-            <a href="?lang=en" class="mini-item">English</a>
-        </div>
+             <span>{currentLang.toUpperCase()}</span>
+         </button>
+         <div id="mobile-lang-dropdown" class="mobile-mini-dropdown">
+            {Object.entries(languages).map(([code, label]) => (
+                <a href={getLangPath(code)} class={`mini-item ${currentLang === code ? 'active' : ''}`}>
+                    {label}
+                </a>
+            ))}
+         </div>
       </div>
 
-      <button id="mobile-menu-toggle" class="hamburger" aria-label="Abrir menú">
-        <span></span>
-        <span></span>
-        <span></span>
+      <button id="mobile-menu-toggle" class="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
       </button>
+
     </div>
-
-    <div class="mobile-menu">
-      <div class="mobile-scroll-container">
-        
-        <a href="/" class="mobile-link">Inicio</a>
-
-        <div class="mobile-accordion">
-            <button class="mobile-link accordion-btn">
-                Productos 
-                <svg class="chevron" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
-            </button>
-            <div class="accordion-content">
-                <a href="/productos">Ver todos</a>
-                <a href="/catalogo">Catálogo</a>
-                <a href="/promociones">Promociones</a>
-            </div>
-        </div>
-
-        <div class="mobile-accordion">
-            <button class="mobile-link accordion-btn">
-                Nosotros
-                <svg class="chevron" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
-            </button>
-            <div class="accordion-content">
-                <a href="/about">La Empresa</a>
-                <a href="/impulso-social">Impulso Social</a>
-            </div>
-        </div>
-
-        <a href="/distribuidor" class="mobile-link">Distribuidor</a>
-
-        <div class="mobile-divider"></div>
-
-        <div class="mobile-actions">
-            <div class="mobile-theme-row">
-                <span>Modo Oscuro</span>
-                <label class="theme-switch mobile-switch">
-                    <div class="theme-switch-outer">
-                        <input id="theme-toggle-mobile" type="checkbox">
-                        <div class="theme-button">
-                            <span class="theme-toggle"></span>
-                            <span class="theme-indicator"></span>
-                        </div>
-                    </div>
-                </label>
-            </div>
-
-            <a href="/contacto" class="nav-btn btn-primary full-width">CONTACTAR</a>
-        </div>
-
-      </div>
-    </div>
-
   </nav>
+
+  <div class="mobile-menu">
+      <div class="mobile-scroll-container">
+        <a href={`/${currentLang}/`} class="mobile-link">{t.home}</a>
+
+        <div class="mobile-accordion">
+            <button class="mobile-link accordion-btn">
+                {t.products}
+                <svg class="chevron" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+            </button>
+            <div class="accordion-content">
+                <a href={`/${currentLang}/productos`}>{t.products}</a>
+                <a href={`/${currentLang}/catalogo`}>{t.catalog}</a>
+                <a href={`/${currentLang}/promociones`}>{t.promos}</a>
+            </div>
+        </div>
+
+        <div class="mobile-accordion">
+            <button class="mobile-link accordion-btn">
+                {t.about}
+                <svg class="chevron" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+            </button>
+            <div class="accordion-content">
+                <a href={`/${currentLang}/about`}>{t.company}</a>
+                <a href={`/${currentLang}/social`}>{t.social}</a>
+            </div>
+        </div>
+
+        <a href={`/${currentLang}/distribuidor`} class="mobile-link">{t.distributor}</a>
+        
+        <a href={`/${currentLang}/contacto`} class="nav-btn btn-primary full-width" style="margin-top: 20px;">{t.contact}</a>
+      </div>
+  </div>
 </header>
 
 <script>
@@ -153,7 +157,7 @@
     const langTrigger = document.getElementById("mobile-lang-trigger");
     const langDropdown = document.getElementById("mobile-lang-dropdown");
   
-    // 1. Scroll
+    // Scroll Effect
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
             header?.classList.add('scrolled');
@@ -164,7 +168,7 @@
         }
     });
   
-    // 2. Hamburguesa
+    // Mobile Menu Toggle
     if (mobileToggle && mobileMenu) {
       mobileToggle.addEventListener("click", () => {
         mobileMenu.classList.toggle("active");
@@ -173,15 +177,13 @@
       });
     }
   
-    // 3. Dropdown de Idioma Móvil
+    // Language Dropdown Mobile
     if (langTrigger && langDropdown) {
-        // CORRECCIÓN 1: Añadido ': Event'
         langTrigger.addEventListener("click", (e: Event) => {
             e.stopPropagation(); 
             langDropdown.classList.toggle("active");
         });
   
-        // CORRECCIÓN 2: Añadido ': Event'
         document.addEventListener("click", (e: Event) => {
             const target = e.target;
             if (target instanceof Node && !langTrigger.contains(target) && !langDropdown.contains(target)) {
@@ -190,9 +192,8 @@
         });
     }
   
-    // 4. Acordeones
+    // Accordions
     accordions.forEach(acc => {
-        // CORRECCIÓN 3: Añadido ': Event'
         acc.addEventListener("click", (e: Event) => {
             const btn = e.currentTarget; 
             if (btn instanceof HTMLElement) {
@@ -208,23 +209,6 @@
             }
         });
     });
-  
-    // 5. Sincronización Switch
-    const themeMain = document.getElementById('theme-toggle');
-    const themeMobile = document.getElementById('theme-toggle-mobile');
-  
-    // CORRECCIÓN 4: Añadido ': Event'
-    function syncSwitches(e: Event) {
-        const target = e.target;
-        if (target instanceof HTMLInputElement) {
-            const isChecked = target.checked;
-            if (themeMain instanceof HTMLInputElement) themeMain.checked = isChecked;
-            if (themeMobile instanceof HTMLInputElement) themeMobile.checked = isChecked;
-        }
-    }
-  
-    if (themeMain) themeMain.addEventListener('change', syncSwitches);
-    if (themeMobile) themeMobile.addEventListener('change', syncSwitches);
   }
   
   document.addEventListener('DOMContentLoaded', initNavbar);
@@ -300,35 +284,20 @@ body.no-scroll { overflow: hidden; }
 
 .nav-right, .desktop-actions { display: flex; align-items: center; gap: 20px; }
 
-/* GLOBE BTN - MODIFICADO ESTILO BOTÓN NARANJA
-   Este bloque hace que se vea igual al botón de contacto
-*/
+/* GLOBE BTN */
 .globe-btn {
-  background-color: var(--btn-bg); /* Fondo Naranja */
-  color: #fff; /* Texto Blanco */
-  border: none;
-  cursor: pointer;
-  height: 42px; /* Misma altura que btn-primary */
-  padding: 0 20px; /* Relleno lateral */
-  border-radius: 50px; /* Forma de píldora */
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: inherit;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3);
+  background-color: var(--btn-bg);
+  color: #fff;
+  border: none; cursor: pointer; height: 42px;
+  padding: 0 20px; border-radius: 50px; display: flex;
+  align-items: center; gap: 8px; font-family: inherit;
+  transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3);
 }
-
 .globe-btn span {
-    font-size: 13.5px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-size: 13.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
 }
-
 .globe-btn:hover { 
-    background-color: #e65c00; /* Naranja más oscuro al hover */
-    transform: translateY(-2px);
+    background-color: #e65c00; transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(255, 102, 0, 0.5);
 }
 
@@ -339,7 +308,7 @@ body.no-scroll { overflow: hidden; }
   background: #1a1a1a; border: 1px solid rgba(255,255,255,0.1);
   border-radius: 12px; padding: 10px; min-width: 200px;
   opacity: 0; visibility: hidden; transition: all 0.25s ease;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5); z-index: 100;
 }
 .has-dropdown:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
 .dropdown-item {
@@ -348,30 +317,6 @@ body.no-scroll { overflow: hidden; }
 }
 .dropdown-item:hover { background: rgba(255,255,255,0.05); color: var(--btn-bg); }
 .active-lang { color: var(--btn-bg); font-weight: bold; }
-
-/* SWITCH TEMA */
-.theme-switch { display: flex; align-items: center; justify-content: center; margin: 0; height: 45px; }
-.theme-switch .theme-switch-outer {
-    height: 100%; background: #262626; width: 115px; border-radius: 165px;
-    box-shadow: inset 0px 5px 10px 0px #db6a00, 0px 3px 6px -2px #403f4e;
-    border: 1px solid #32303e; padding: 6px; box-sizing: border-box; cursor: pointer; position: relative;
-}
-.theme-switch .theme-switch-outer input[type="checkbox"] { opacity: 0; appearance: none; position: absolute; width: 100%; height: 100%; cursor: pointer; z-index: 10; left: 0; top: 0;}
-.theme-switch .theme-switch-outer .theme-toggle {
-    height: 30px; width: 30px; background: linear-gradient(#ffffff, #ffffff);
-    border-radius: 100%; box-shadow: inset 0px 5px 4px 0px #ffffff, 0px 4px 15px 0px #0f0e17;
-    position: relative; z-index: 2; transition: left 0.3s ease-in; left: 0;
-}
-.theme-switch .theme-switch-outer input[type="checkbox"]:checked+.theme-button .theme-toggle { left: 58%; }
-.theme-switch .theme-switch-outer input[type="checkbox"]:checked+.theme-button .theme-indicator { animation: theme-indicator 1s forwards; }
-.theme-switch .theme-switch-outer .theme-button { width: 100%; height: 100%; display: flex; justify-content: space-between; position: relative; pointer-events: none; }
-.theme-switch .theme-switch-outer .theme-indicator {
-    height: 25px; width: 25px; top: 50%; transform: translateY(-50%); border-radius: 50%;
-    border: 3px solid #ef565f; box-sizing: border-box; right: 10px; position: relative;
-}
-@keyframes theme-indicator {
-    30% { opacity: 0; } 0% { opacity: 1; } 100% { opacity: 1; border: 3px solid #60d480; left: -68%; }
-}
 
 /* MOBILE */
 .hamburger {
@@ -413,8 +358,6 @@ body.no-scroll { overflow: hidden; }
 
 .mobile-divider { margin: 30px 0; height: 1px; background: rgba(255,255,255,0.1); }
 .mobile-actions { display: flex; flex-direction: column; gap: 25px; }
-.mobile-theme-row { display: flex; justify-content: space-between; align-items: center; color: var(--text-main); }
-.mobile-switch { transform: scale(0.8); transform-origin: right center; }
 .full-width { width: 100%; text-align: center; }
 
 /* MOBILE LANG SELECTOR */
@@ -446,4 +389,9 @@ body.no-scroll { overflow: hidden; }
   .hamburger { display: flex; }
   .nav-right { display: flex; align-items: center; }
 }
+
+/* SOPORTE RTL (Árabe) */
+[dir="rtl"] .nav-links { flex-direction: row-reverse; }
+[dir="rtl"] .accordion-btn { flex-direction: row-reverse; }
+[dir="rtl"] .mobile-mini-dropdown { left: 0; right: auto; }
 </style>

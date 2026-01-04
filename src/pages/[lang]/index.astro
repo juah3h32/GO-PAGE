@@ -1,0 +1,62 @@
+---
+// src/pages/[lang]/index.astro
+
+// 1. CORRECCIÓN CRÍTICA: Cambiado 'Nadbar.astro' a 'Navbar.astro'
+import Navbar from '../../components/Nadbar.astro'; 
+import { translations } from '../../i18n/translations';
+
+// 2. Generación de rutas
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'es' } },
+    { params: { lang: 'en' } },
+    { params: { lang: 'zh' } },
+    { params: { lang: 'ar' } },
+    { params: { lang: 'pt' } },
+  ];
+}
+
+// 3. Obtener idioma
+const { lang } = Astro.params;
+
+// 4. Lógica de Traducción Segura
+// Primero intentamos cargar el idioma seleccionado
+const selectedTranslation = translations[lang as keyof typeof translations];
+// Si no existe, usamos español por defecto
+const t = selectedTranslation || translations['es'];
+
+// 5. SEGURIDAD EXTRA:
+// Si el idioma existe pero le falta la parte del menú (nav), usamos el menú en español para que no explote.
+const navData = t.nav || translations['es'].nav;
+// Lo mismo para los textos del hero
+const heroData = t.hero || translations['es'].hero;
+---
+
+<html lang={lang} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+  <head>
+    <meta charset="utf-8" />
+    <title>{heroData.title}</title> 
+    <meta name="viewport" content="width=device-width" />
+    
+    <style>
+        body { font-family: sans-serif; margin: 0; }
+        main { padding: 100px 20px; text-align: center; }
+    </style>
+  </head>
+  <body>
+    
+    <Navbar currentLang={lang} t={navData} />
+
+    <main>
+        <h1>{heroData.title}</h1>
+        <p>{heroData.subtitle}</p>
+        
+        <div style="margin-top: 20px; padding: 10px; background: #eee; display: inline-block;">
+            <p>Depuración:</p>
+            <p>Idioma URL: <strong>{lang}</strong></p>
+            <p>¿Existen traducciones?: <strong>{selectedTranslation ? 'Sí' : 'No (Usando ES)'}</strong></p>
+        </div>
+    </main>
+
+  </body>
+</html>
