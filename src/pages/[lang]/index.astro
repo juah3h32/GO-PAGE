@@ -1,13 +1,8 @@
 ---
 // src/pages/[lang]/index.astro
 
-import Navbar from '../../components/Nadbar.astro'; 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { languages, translations } from '../../i18n';
-
-import "../../styles/carousel.css";
-
-import CustomCursor from "../../components/CustomCursor.astro";
 
 // Generación de rutas DINÁMICA
 export function getStaticPaths() {
@@ -21,17 +16,13 @@ const { lang } = Astro.params;
 const currentLang = (lang && lang in translations) ? lang : 'es';
 const t = translations[currentLang as keyof typeof translations];
 
-// Título de la página (Pestaña del navegador)
+// Título de la página
 const pageTitle = `${t.hero.title} | ${languages[currentLang as keyof typeof languages]}`;
 ---
 
-<BaseLayout pageTitle={pageTitle} lang={currentLang}>
-    
-    <Navbar currentLang={currentLang} />
-    <CustomCursor />
+<BaseLayout title={pageTitle} currentLang={currentLang}>
 
-    <main>
-        
-    </main>
+  
+  
 
 </BaseLayout>

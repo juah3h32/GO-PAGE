@@ -49,7 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const carousel = document.querySelector(".carousel");
   const listHTML = document.querySelector(".carousel .list");
   const productosPage = document.querySelector(".productos-page");
-  
   const containerPage = productosPage || document.body; 
   const main = document.querySelector("main");
 
@@ -145,29 +144,22 @@ document.addEventListener("DOMContentLoaded", () => {
   ========================================= */
   let isDragging = false;
   let startX = 0;
-  // Umbral: distancia mínima en píxeles para considerar que fue un arrastre
   const DRAG_THRESHOLD = 50; 
 
-  // 1. Al presionar el click
   carousel.addEventListener("mousedown", (e) => {
-    // No activar si estamos viendo detalles o si se hizo click en un botón
     if (carousel.classList.contains("showDetail") || e.target.closest('button')) return;
 
     isDragging = true;
     startX = e.clientX;
-    carousel.classList.add("dragging"); // Útil si quieres cambiar el cursor con CSS
-    
-    // IMPORTANTE: Evita que el navegador seleccione texto o arrastre la imagen fantasma
+    carousel.classList.add("dragging");
     e.preventDefault(); 
   });
 
-  // 2. Al mover el mouse (solo prevenimos selección)
   window.addEventListener("mousemove", (e) => {
     if (!isDragging) return;
     e.preventDefault(); 
   });
 
-  // 3. Al soltar el click
   window.addEventListener("mouseup", (e) => {
     if (!isDragging) return;
     isDragging = false;
@@ -176,13 +168,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const endX = e.clientX;
     const diff = endX - startX;
 
-    // Si la distancia movida es mayor al umbral, cambiamos el slider
     if (Math.abs(diff) > DRAG_THRESHOLD) {
       if (diff > 0) {
-        // Arrastró hacia la derecha -> Ver anterior
         showSlider("prev");
       } else {
-        // Arrastró hacia la izquierda -> Ver siguiente
         showSlider("next");
       }
     }
@@ -217,4 +206,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Inicializar estado
   applyActiveProduct();
+
+  /* =========================
+     AÑADIR ESPERA PARA TRANSICIÓN ANTES DE CARGAR NUEVA PÁGINA
+  ========================= */
+  seeMoreButtons.forEach(button => {
+    button.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const link = button.getAttribute('href');
+      
+      // Inicia la animación
+      carousel.classList.add('transition-active');
+      
+      try {
+        // Esperar la animación de transición
+        await new Promise(resolve => setTimeout(resolve, 1350)); // tiempo de la animación
+
+        // Pre-cargar la página
+        const pageFetch = fetch(link);
+        await pageFetch;
+
+        // Cambiar de página después de la animación
+        window.location.href = link;
+      } catch (error) {
+        console.error("Error al precargar la página:", error);
+        setTimeout(() => {
+          window.location.href = link;
+        }, 1350);
+      }
+    });
+  });
+
 });

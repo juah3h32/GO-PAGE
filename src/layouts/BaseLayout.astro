@@ -6,15 +6,20 @@ import { pwaInfo } from 'virtual:pwa-info';
 
 // 2. Importamos los componentes existentes
 import Loader from "../components/Loader.astro";
+import Cursor from "../components/CustomCursor.astro";
+import Navbar  from '../components/Nadbar.astro';
+import AudioVisualizer from "../components/AudioVisualizer.astro"; // 1. Importar aquí
 import FondoGlobal from "../components/FondoGlobal.astro";
 import BotGO from "../components/BotGO.jsx";
 import DockMenu from "../components/DockMenu.astro";
+import AudioG from "../components/AudioVisualizer.astro"
 
-const { title = "Mi sitio" } = Astro.props;
+// MODIFICACIÓN 1: Recibimos currentLang en las props (default: "es")
+const { title = "Mi sitio", currentLang = "es" } = Astro.props;
 ---
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang={currentLang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
@@ -50,12 +55,25 @@ const { title = "Mi sitio" } = Astro.props;
 
   <body>
     <FondoGlobal />
+    <Cursor />
+    
+    <Navbar currentLang={currentLang} />
 
     <Loader />
+    <div 
+      id="global-audio-player" 
+      transition:persist
+      style="position: fixed; bottom: 30px; right: 96px; z-index: 9999;"
+    >
+       <AudioVisualizer />
+    </div>
 
     <slot />
     
     <DockMenu />
+    <AudioG />
+    
+     
 
     <BotGO client:load />
 

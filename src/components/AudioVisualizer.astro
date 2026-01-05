@@ -1,8 +1,8 @@
 ---
-/* AudioVisualizer.astro - El Gestor Maestro de Audio */
+/* src/components/AudioVisualizer.astro */
 ---
 
-<div id="audio-control" class="audio-visualizer" title="Silenciar / Reproducir">
+<div id="audio-control" class="audio-visualizer" title="Pausar / Reproducir">
   <svg viewBox="0 0 100 40" preserveAspectRatio="xMidYMid slice">
     <line x1="-50" y1="20" x2="150" y2="20" 
           stroke="#FF4500" 
@@ -18,22 +18,20 @@
 </div>
 
 <script>
-  // Definición de tipos para TypeScript
+  // Definición de tipos
   declare global {
     interface Window {
       _globalBgMusic?: HTMLAudioElement;
       _globalClickSound?: HTMLAudioElement;
-      _isGlobalMuted?: boolean; // Guardamos el estado del mute globalmente
       playGlobalClick: () => void;
     }
   }
 
-  // --- LÓGICA DE INICIALIZACIÓN (Se ejecuta en cada navegación) ---
-  document.addEventListener('astro:page-load', () => {
-    initAudioSystem();
-  });
-
-  // Si no usas View Transitions, esto asegura que corra la primera vez
+  // --- INICIALIZACIÓN ---
+  // Se ejecuta en carga inicial y en navegación por View Transitions
+  document.addEventListener('astro:page-load', initAudioSystem);
+  
+  // Respaldo para carga inicial normal
   if (document.readyState === 'complete') {
      initAudioSystem();
   } else {
@@ -41,12 +39,12 @@
   }
 
   function initAudioSystem() {
-    const audioControl = document.getElementById('audio-control');
-    if (!audioControl) return; // Si no hay botón en esta página, salimos.
+    const btn = document.getElementById('audio-control');
+    if (!btn) return;
 
-    // 1. SINGLETON: Crear los audios SOLO si no existen en window
+    // 1. CREAR AUDIO SINGLETON (Solo una vez)
     if (!window._globalBgMusic) {
-      window._globalBgMusic = new Audio("/FX/ambient.mp3");
+      window._globalBgMusic = new Audio("/FX/ambient.mp3"); // Asegura que la ruta sea correcta
       window._globalBgMusic.loop = true;
       window._globalBgMusic.volume = 0.3;
     }
@@ -56,104 +54,112 @@
       window._globalClickSound.volume = 0.5;
     }
 
-    // Inicializar estado de mute si no existe
-    if (typeof window._isGlobalMuted === 'undefined') {
-        window._isGlobalMuted = false;
-    }
+    // 2. LEER PREFERENCIA GUARDADA (La clave para que sea global)
+    // Estado por defecto: 'playing'
+    const savedState = localStorage.getItem('audioState') || 'playing';
 
-    // 2. SINCRONIZAR UI ACTUAL CON EL ESTADO REAL
-    // Esto es vital: Si vienes de otra página y ya estaba muteado, 
-    // el botón nuevo debe reflejarlo.
-    updateMuteState(window._isGlobalMuted);
-
-    // 3. EVENT LISTENER DEL BOTÓN
-    // Primero removemos para evitar duplicados si el script corre dos veces
-    const newControl = audioControl.cloneNode(true) as HTMLElement;
-    audioControl.parentNode?.replaceChild(newControl, audioControl);
-    
-    newControl.addEventListener('click', () => {
-      // Invertir estado
-      window._isGlobalMuted = !window._isGlobalMuted;
-      updateMuteState(window._isGlobalMuted);
-    });
-
-    // 4. INICIADOR DE AUTOPLAY (Hack para navegadores)
-    const startAudio = () => {
-      if (window._globalBgMusic && window._globalBgMusic.paused && !window._isGlobalMuted) {
-        window._globalBgMusic.play().catch(() => {
-            // Si falla el autoplay, no hacemos nada, esperamos siguiente click
-        });
-      }
-      // Limpiamos el evento una vez activado
-      document.removeEventListener('click', startAudio);
-      document.removeEventListener('keydown', startAudio);
-    };
-
-    document.addEventListener('click', startAudio);
-    document.addEventListener('keydown', startAudio);
-  }
-
-  // Función auxiliar para aplicar el estado de Mute
-  function updateMuteState(isMuted: boolean) {
-    const btn = document.getElementById('audio-control');
+    // 3. APLICAR ESTADO INICIAL
     const bgMusic = window._globalBgMusic;
-    const clickSound = window._globalClickSound;
 
-    // Aplicar a los audios
-    if (bgMusic) bgMusic.muted = isMuted;
-    if (clickSound) clickSound.muted = isMuted;
-
-    // Aplicar al botón (Visual)
-    if (btn) {
-        if (isMuted) {
-            btn.classList.add('muted');
-        } else {
-            btn.classList.remove('muted');
-            // Intentar reproducir si no está muteado y está pausado
-            if (bgMusic && bgMusic.paused) {
-                bgMusic.play().catch(() => {});
-            }
+    if (savedState === 'paused') {
+        // Si el usuario lo pausó antes, aseguramos que esté pausado visual y auditivamente
+        bgMusic.pause();
+        btn.classList.add('is-paused');
+    } else {
+        // Si debería sonar, intentamos reproducir
+        // Nota: Los navegadores pueden bloquear esto si no ha habido interacción previa
+        btn.classList.remove('is-paused');
+        const playPromise = bgMusic.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(() => {
+                // Si el navegador bloquea el autoplay, lo marcamos como pausado visualmente
+                // hasta que el usuario haga clic.
+                console.log("Esperando interacción del usuario para reproducir audio.");
+                btn.classList.add('is-paused');
+            });
         }
     }
+
+    // 4. MANEJAR CLIC (Toggle)
+    // Clonamos para eliminar listeners viejos en navegaciones
+    const newBtn = btn.cloneNode(true) as HTMLElement;
+    btn.parentNode?.replaceChild(newBtn, btn);
+
+    newBtn.addEventListener('click', () => {
+      // Efecto de sonido al click
+      if (window._globalClickSound) {
+          window._globalClickSound.currentTime = 0;
+          window._globalClickSound.play().catch(() => {});
+      }
+
+      if (bgMusic.paused) {
+        // --- ACTIVAR ---
+        bgMusic.play();
+        newBtn.classList.remove('is-paused');
+        localStorage.setItem('audioState', 'playing'); // GUARDAR DECISIÓN
+      } else {
+        // --- DETENER ---
+        bgMusic.pause();
+        newBtn.classList.add('is-paused');
+        localStorage.setItem('audioState', 'paused'); // GUARDAR DECISIÓN
+      }
+    });
+
+    // 5. HELPER PARA INTERACCIÓN INICIAL (Desbloqueo)
+    // Si el audio debía sonar pero el navegador lo bloqueó, al primer clic en CUALQUIER lado, intentamos activarlo
+    const unlockAudio = () => {
+      if (localStorage.getItem('audioState') !== 'paused' && bgMusic.paused) {
+         bgMusic.play().catch(() => {});
+         // Sincronizar UI si se logra reproducir
+         if(!bgMusic.paused) {
+             const currentBtn = document.getElementById('audio-control');
+             if(currentBtn) currentBtn.classList.remove('is-paused');
+         }
+      }
+      document.removeEventListener('click', unlockAudio);
+      document.removeEventListener('keydown', unlockAudio);
+    };
+
+    document.addEventListener('click', unlockAudio);
+    document.addEventListener('keydown', unlockAudio);
   }
 
-  // 5. EXPORTAR FUNCIÓN GLOBAL (Para usar en otros componentes)
+  // Exportar función global para efectos de click externos
   window.playGlobalClick = () => {
-    if (window._globalClickSound && !window._globalClickSound.muted) {
-      window._globalClickSound.currentTime = 0;
-      window._globalClickSound.play().catch(e => console.error(e));
+    if (window._globalClickSound) {
+        // Solo suena si el usuario NO ha pausado la música global (opcional)
+        // O quita el if si quieres que los efectos suenen siempre.
+        if (localStorage.getItem('audioState') !== 'paused') {
+            window._globalClickSound.currentTime = 0;
+            window._globalClickSound.play().catch(() => {});
+        }
     }
   };
 </script>
 
 <style>
-  /* === ESTILOS DEL VISUALIZADOR === */
+  /* === CONTENEDOR === */
   .audio-visualizer {
-    position: fixed;
-    bottom: 30px;
-    right: 96px; /* Ajusta según tu diseño */
+    /* Posición manejada por el padre o aquí mismo si es global */
     width: 80px;
     height: 40px;
-    z-index: 9999; /* Z-index alto para asegurar click */
     cursor: pointer;
     overflow: hidden;
     transition: opacity 0.3s ease;
-    /* Fondo opcional para depuración si no lo ves */
-    /* background: rgba(0,0,0,0.2); */ 
+    /* Para debug: background: rgba(0,0,0,0.1); */
   }
 
   .audio-visualizer:hover {
     opacity: 0.8;
   }
 
-  /* CONTROL DE ALTURA */
+  /* === ANIMACIÓN DE LA ONDA === */
   .wave-height-control {
     transform-origin: center 20px; 
     transform: scaleY(1); 
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* MOVIMIENTO */
   .wave-moving {
     stroke: #FB670B;
     stroke-width: 3;
@@ -166,13 +172,14 @@
     100% { transform: translateX(-100px); }
   }
 
-  /* === ESTADO: MUTEADO === */
-  :global(.audio-visualizer.muted) .wave-height-control {
-    transform: scaleY(0.1); 
+  /* === ESTADO PAUSADO === */
+  /* Cuando tiene la clase .is-paused, aplastamos la onda y paramos la animación */
+  :global(.audio-visualizer.is-paused) .wave-height-control {
+    transform: scaleY(0.05); /* Casi plana */
   }
 
-  :global(.audio-visualizer.muted) .wave-moving {
-    opacity: 0.3;
+  :global(.audio-visualizer.is-paused) .wave-moving {
+    opacity: 0.5;
     animation-play-state: paused; 
   }
 </style>

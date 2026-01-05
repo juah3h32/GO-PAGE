@@ -4,6 +4,13 @@
   --text-muted: #666666;
   --tech-orange: #FB670B;
   --nav-height: 100px;
+  --slide-gradient: linear-gradient(
+    to right,       
+    #ffffff 0%,     /* <--- Blanco */
+    #ffffff 20%,    /* <--- Blanco */
+    #fb670b 60%,    
+    #ff7a18 100%    
+  );
   
   /* AGREGA ESTO: Un gris suave para el modo claro (Negro al 8% de opacidad) */
   --thumb-bg: rgba(0, 0, 0, 0.08); 
@@ -13,6 +20,13 @@ html.dark {
   --body-bg: #111010;
   --text-color: #ffffff;
   --text-muted: #a1a1a1;
+  --slide-gradient: linear-gradient(
+    to right,       
+    #000000 0%,     /* <--- Negro */
+    #000000 20%,    /* <--- Negro */
+    #fb670b 60%,    
+    #ff7a18 100%    
+  );
 
   /* AGREGA ESTO: Tu color original (Blanco al 5% de opacidad) */
   --thumb-bg: rgba(255, 255, 255, 0.05); 
@@ -385,7 +399,33 @@ model-viewer.model-3d-custom {
 .mobile-app-dock {
   display: none;
 }
+/* =========================================
+   TRANSICIÓN SLIDE RIGHT (DINÁMICA)
+   ========================================= */
 
+.reveal-circle {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  pointer-events: none;
+
+  /* === CAMBIO AQUÍ: Usamos la variable dinámica === */
+  background: var(--slide-gradient);
+  
+  /* Estado Inicial: Escondido a la DERECHA */
+  transform: translateX(100%);
+  
+  /* Animación */
+  transition: transform 1s cubic-bezier(.77, 0, .175, 1);
+}
+
+/* Estado Activo */
+.reveal-circle.active {
+  pointer-events: all;
+  transform: translateX(0);
+}
 /* =================================================================
    LAYOUT TABLET/MÓVIL LIMPIO
    (Corregido para respetar el Navbar)
@@ -877,6 +917,13 @@ model-viewer.model-3d-custom {
     grid-template-columns: 1fr; /* Una sola columna */
     grid-template-rows: auto 1fr; /* Texto arriba, imagen abajo */
     padding-top: 80px;
+  }
+  /* Título específico */
+  .text-area h1 {
+    text-align: center !important;
+    width: 100%;
+    font-size: 2.2rem;              /* Tamaño ajustado para móvil */
+    margin-bottom: 0.5rem;
   }
   
   .wheel-container {

@@ -194,3 +194,14 @@ main {
   background-color: var(--productos-hover) !important;
   border: 1px solid var(--productos-border) !important;
 }
+/* Ajusta la suavidad del movimiento del producto */
+::view-transition-group(*) {
+  animation-duration: 0.8s;
+  animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+/* Evita que el resto de la página parpadee feo */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.4s;
+}

@@ -2,12 +2,10 @@
 // src/pages/[lang]/cuerdas.astro
 
 // 1. IMPORTACIONES
-import "../../styles/cuerdas.css";
+import "../../styles/cuerdas.css"; 
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import CustomCursor from "../../components/CustomCursor.astro";
-import AudioVisualizer from "../../components/AudioVisualizer.astro";
 import BuyButton from "../../components/BuyButton.astro";
-import Navbar from "../../components/Nadbar.astro"; 
+// ELIMINADO: import Navbar from "../../components/Nadbar.astro"; <--- YA NO LO NECESITAS AQUÍ
 import { languages, translations } from "../../i18n";
 
 // 2. GENERACIÓN DE RUTAS DINÁMICA
@@ -36,18 +34,16 @@ const specs = [
   { label: specsLabels.resist, id: "spec-grip",       tag: firstProduct.specs_values.resist },
   { label: specsLabels.charge, id: "spec-loadresist", tag: firstProduct.specs_values.charge },
 ];
-
-// Helper para estilos condicionales (ahorra código abajo)
-const rtlStyle = currentLang === 'ar' ? { textAlign: 'left' } : {};
-const dirValue = currentLang === 'ar' ? 'rtl' : 'ltr';
 ---
 
-<BaseLayout title={pageData.meta_title}>
-  <script is:inline type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
-  <script is:inline src="https://cdn.jsdelivr.net/npm/gsap@3.0.1/dist/gsap.min.js"></script>
+<BaseLayout title={pageData.meta_title} currentLang={currentLang}>
+  
+  <link rel="preload" as="image" href={firstProduct.img} slot="head" />
 
-  <Navbar currentLang={currentLang} />
-  <CustomCursor />
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.0.1/dist/gsap.min.js" defer></script>
+
+  <div id="reveal-circle" class="reveal-circle"></div>
 
   <main 
     class="main-container" 
@@ -55,7 +51,14 @@ const dirValue = currentLang === 'ar' ? 'rtl' : 'ltr';
   >
 
     <div class="content">
-      <a href={`/${currentLang}/productos`} class="back-arrow-btn" aria-label={pageData.back_aria}>
+      <a 
+        href={`/${currentLang}/productos`} 
+        class="back-arrow-btn" 
+        data-link
+        id="btn-regresar"
+        aria-label={pageData.back_aria}
+        style="position: relative; z-index: 10001; cursor: pointer;"
+      >
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="19" y1="12" x2="5" y2="12" />
@@ -63,40 +66,16 @@ const dirValue = currentLang === 'ar' ? 'rtl' : 'ltr';
         </svg>
       </a>
     
-      {/* CAMBIO 1: El contenedor padre (.text-area) se queda LIMPIO.
-          Sin 'dir' ni 'style'. Esto asegura que Flexbox siga alineando
-          todo a la izquierda (Start = Left en modo LTR).
-      */}
-      <div class="text-area">
-        
-         {/* CAMBIO 2: Aplicamos la lógica árabe individualmente al Título */}
-         <h1 
-            id="product-title" 
-            class="fade-in-text"
-            dir={dirValue}
-            style={rtlStyle}
-         >
+      <div class="text-area" style="max-width: 550px; align-items: flex-start;">
+         <h1 id="product-title" class="fade-in-text" style="text-align: left; width: 100%;">
             {firstProduct.name}
          </h1>
-
-         {/* CAMBIO 3: Aplicamos la lógica árabe individualmente a la Descripción */}
-         <p 
-            id="product-desc" 
-            class="fade-in-text"
-            dir={dirValue}
-            style={rtlStyle}
-         >
+         <p id="product-desc" class="fade-in-text" style="text-align: left; width: 100%; line-height: 1.5;">
             {firstProduct.description}
          </p>
 
-        {/* CAMBIO 4: Aplicamos la lógica árabe al contenedor de Specs */}
-        <div 
-            class="specs-container fade-in-text"
-            dir={dirValue}
-            style={rtlStyle}
-        >
+        <div class="specs-container fade-in-text" style="text-align: left; width: 100%;">
           <h3 class="specs-title">{pageData.specs_title}</h3>
-
           <div class="specs-grid">
             {specs.map((spec) => (
               <div class="spec-box">
@@ -107,26 +86,25 @@ const dirValue = currentLang === 'ar' ? 'rtl' : 'ltr';
           </div>
         </div>
 
-        {/* CAMBIO 5: Simplificamos el botón.
-            Como el padre (.text-area) ya es LTR, 'justify-start' SIEMPRE significa Izquierda.
-            Ya no necesitamos la condición ternaria compleja.
-        */}
-<div class="fade-in-text w-full flex justify-center lg:justify-start">
-  <BuyButton 
-      text={t.common.buy || 'Comprar'} 
-      redirecting={t.common.redirecting || 'Redirigiendo...'} 
-  />
-</div>
+        <div class="fade-in-text w-full flex justify-center lg:justify-start">
+          <BuyButton 
+              text={t.common.buy || 'Comprar'} 
+              redirecting={t.common.redirecting || 'Redirigiendo...'} 
+          />
+        </div>
       </div>
 
       <div class="thumbnails fade-in-text">
         {productsList.map((prod, index) => (
-          <div
-            class={`thumb-item ${index === 0 ? 'active' : ''}`}
-            data-index={index}
-            data-link={prod.link}
-          >
-            <img src={prod.img} alt={prod.name} />
+          <div class={`thumb-item ${index === 0 ? 'active' : ''}`} data-index={index} data-link-thumb={prod.link}>
+            <img 
+              src={prod.img} 
+              alt={prod.name} 
+              loading="lazy" 
+              decoding="async"
+              width="60" 
+              height="60"
+            />
           </div>
         ))}
       </div>
@@ -137,6 +115,8 @@ const dirValue = currentLang === 'ar' ? 'rtl' : 'ltr';
         <model-viewer
           id="rafia-3d"
           src="/models/rafiaNegra.glb"
+          loading="lazy" 
+          reveal="manual"
           alt="Modelo 3D"
           camera-orbit="0deg 90deg 180%"
           min-camera-orbit="auto auto 300%"
@@ -149,19 +129,55 @@ const dirValue = currentLang === 'ar' ? 'rtl' : 'ltr';
 
         {productsList.map((prod, index) => (
           <div class={`wheel-item item-${index} ${index === 0 ? 'active' : ''}`}>
-            <img src={prod.img} alt={prod.name} />
+            <img 
+              src={prod.img} 
+              alt={prod.name}
+              loading={index === 0 ? "eager" : "lazy"}
+              fetchpriority={index === 0 ? "high" : "auto"}
+              decoding="async"
+            />
           </div>
         ))}
       </div>
     </div>
 
-    <div style="position: fixed; bottom: 30px; right: 96px; z-index: 100; pointer-events: none;">
-         <div style="pointer-events: auto;">
-             <AudioVisualizer transition:persist />
-         </div>
-    </div>
+
 
   </main>
 
   <script src="/scripts/cuerdas.js" defer></script>
+
+  <script is:inline>
+    // Lógica de transición optimizada
+    function initTransition() {
+      const reveal = document.getElementById("reveal-circle");
+      const btn = document.getElementById("btn-regresar");
+
+      if (!reveal || !btn) return;
+
+      reveal.classList.remove("active");
+      
+      const newBtn = btn.cloneNode(true);
+      btn.parentNode.replaceChild(newBtn, btn);
+
+      newBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const url = newBtn.getAttribute("href");
+        reveal.classList.add("active");
+        setTimeout(() => {
+          window.location.href = url;
+        }, 1350); 
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initTransition);
+    } else {
+      initTransition();
+    }
+    
+    document.addEventListener("astro:page-load", initTransition);
+    document.addEventListener("astro:after-swap", initTransition);
+  </script>
+
 </BaseLayout>

@@ -1,15 +1,16 @@
 ---
 // src/pages/[lang]/productos.astro
 
+// Importa tus estilos
 import "../../styles/producto.css";
 import "../../styles/carousel.css";
 import "../../styles/flechas.css";
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import CustomCursor from "../../components/CustomCursor.astro";
-import Navbar from "../../components/Nadbar.astro"; 
+// ELIMINADO: import Navbar from "../../components/Nadbar.astro"; <--- YA NO SE NECESITA
 import { languages, translations } from "../../i18n";
 
+// Obtener las rutas disponibles
 export function getStaticPaths() {
   return Object.keys(languages).map((lang) => ({
     params: { lang },
@@ -22,32 +23,40 @@ const t = translations[currentLang as keyof typeof translations];
 
 const productsList = t.products_list; 
 const seeMoreText = t.common.seeMore;
+
+// Identificamos la primera imagen para pre-cargarla (Critical rendering path)
+const firstProductImg = productsList.length > 0 ? `/images/${productsList[0].img}` : null;
 ---
 
-<BaseLayout title={`${t.nav.products} | Grupo Ortiz`}>
+<BaseLayout title={`${t.nav.products} | Grupo Ortiz`} currentLang={currentLang}>
   
-  <Navbar currentLang={currentLang} />
-  <CustomCursor />
+  {firstProductImg && (
+    <link rel="preload" as="image" href={firstProductImg} slot="head" />
+  )}
+
+  <div id="reveal-container" class="reveal-container">
+    <div class="reveal-bg"></div> 
+    <div class="reveal-content">
+       <img id="reveal-img" src="" alt="" /> 
+    </div>
+  </div>
 
   <main class="productos-main">
     <div class="carousel">
       <div class="list">
-        
-        {productsList.map((item) => (
+        {productsList.map((item, index) => (
           <div class="item">
-            <img src={`/images/${item.img}`} alt={item.division} />
+            <img 
+              src={`/images/${item.img}`} 
+              alt={item.division} 
+              class="product-thumb"
+            
+              loading={index === 0 ? "eager" : "lazy"}
+              fetchpriority={index === 0 ? "high" : "auto"}
+              decoding="async"
+            />
 
-            {/* CORRECCIÓN DEFINITIVA:
-                1. Quitamos 'dir' y 'style' de este contenedor padre (.introduce).
-                   Al dejarlo por defecto (LTR), Flexbox alineará todo a la IZQUIERDA siempre.
-                   Esto soluciona que el botón se vaya a la derecha.
-            */}
             <div class="introduce">
-              
-              {/* 2. Aplicamos la lógica árabe INDIVIDUALMENTE a cada texto.
-                    - dir='rtl': Para que la puntuación (puntos, comas) se ponga en el lugar correcto.
-                    - textAlign: 'left': Para forzar visualmente que el texto se pegue a la izquierda.
-              */}
               <div 
                 class="title" 
                 dir={currentLang === 'ar' ? 'rtl' : 'ltr'} 
@@ -72,17 +81,18 @@ const seeMoreText = t.common.seeMore;
                 {item.descripcion}
               </div>
               
-              {/* 3. El botón se queda sin cambios. 
-                     Al estar en un contenedor LTR, se quedará alineado a la izquierda automáticamente.
-              */}
-              <a href={`/${currentLang}/${item.slug}`} class="seeMore">
+              <a
+                href={`/${currentLang}/${item.slug}`}
+                class="seeMore"
+                data-link
+              
+                rel="prefetch" 
+              >
                 {seeMoreText}
               </a>
-
             </div>
           </div>
         ))}
-
       </div>
 
       <div class="arrows">
@@ -103,6 +113,69 @@ const seeMoreText = t.common.seeMore;
       </div>
     </div>
   </main>
-
+  
   <script src="/scripts/producto.js" defer></script>
+
+  <script is:inline>
+    function initAnimations() {
+      const revealContainer = document.getElementById("reveal-container");
+      const revealImg = document.getElementById("reveal-img");
+
+      if (!revealContainer || !revealImg) return;
+
+      // Limpieza de eventos anteriores si existen (buena práctica en SPA/Astro)
+      const links = document.querySelectorAll("[data-link]");
+      
+      links.forEach(link => {
+        // Clonamos para eliminar listeners previos y evitar duplicados tras navegación
+        const newLink = link.cloneNode(true);
+        link.parentNode.replaceChild(newLink, link);
+
+        newLink.addEventListener("click", async (e) => {
+          e.preventDefault();
+
+          const url = newLink.getAttribute("href");
+          if (!url) return;
+
+          // 1. Configura la imagen de la animación
+          const item = newLink.closest('.item');
+          const originalImg = item ? item.querySelector('img') : null;
+
+          if (originalImg) {
+            revealImg.src = originalImg.src;
+          }
+
+          // 2. Activa la animación visual
+          revealContainer.classList.add("active");
+
+          // OPTIMIZACIÓN: Iniciamos el fetch inmediatamente
+          const pageFetch = fetch(url, { priority: 'high' }).catch(() => {});
+
+          try {
+            // Esperamos la duración de la animación (1.35s)
+            await new Promise(resolve => setTimeout(resolve, 1350));
+            
+            window.location.href = url;
+
+          } catch (error) {
+            window.location.href = url;
+          }
+        });
+      });
+    }
+
+    // Ejecutar en carga inicial y en navegación entre páginas (View Transitions)
+    document.addEventListener("DOMContentLoaded", initAnimations);
+    document.addEventListener("astro:page-load", initAnimations);
+
+    // Limpieza al cambiar de página
+    document.addEventListener("astro:after-swap", () => {
+      const revealContainer = document.getElementById("reveal-container");
+      if (revealContainer) {
+        revealContainer.classList.remove("active");
+        const revealImg = document.getElementById("reveal-img");
+        if(revealImg) revealImg.src = ""; 
+      }
+    });
+  </script>
 </BaseLayout>

@@ -1,0 +1,102 @@
+/* ===============================
+   PAGE REVEAL TRANSITION (CORREGIDO)
+================================ */
+:root {
+  /* ... tus variables existentes ... */
+  --body-bg: #ffffff;
+  --text-color: #1a1a1a;
+  
+  /* === AGREGAR ESTO PARA MODO CLARO (Termina en BLANCO) === */
+  --reveal-gradient: radial-gradient(
+    circle,
+    #ff7a18 0%,
+    #fb670b 45%,
+    #ffffff 100%  /* <--- Aquí está la clave: termina en blanco */
+  );
+}
+
+html.dark {
+  /* ... tus variables existentes ... */
+  --body-bg: #111010;
+  --text-color: #ffffff;
+
+  /* === AGREGAR ESTO PARA MODO OSCURO (Termina en NEGRO) === */
+  --reveal-gradient: radial-gradient(
+    circle,
+    #ff7a18 0%,
+    #fb670b 45%,
+    #000000 100% /* <--- Aquí termina en negro puro */
+  );
+}
+
+/* CAPA 1: El Fondo Dinámico */
+.reveal-bg {
+  position: absolute;
+  inset: 0;
+  
+  /* --- CAMBIO AQUÍ: Usamos la variable en lugar del código fijo --- */
+  background: var(--reveal-gradient);
+  
+  clip-path: circle(0% at 50% 50%);
+  transition: clip-path 1.35s cubic-bezier(.77, 0, .175, 1);
+}
+.reveal-container {
+position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999; /* Muy importante */
+    pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+/* CAPA 2: La Imagen del Producto */
+.reveal-content {
+  position: relative;
+  z-index: 2; 
+  width: 300px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reveal-content img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  
+  /* Estado inicial */
+  transform: scale(0.8); /* CAMBIO: 0.8 es más sutil que 0.5 */
+  opacity: 0;
+  
+  /* CAMBIO: Usamos 'ease-out' en lugar del 'cubic-bezier' de rebote 
+     para que sea más "suave" y elegante, menos caricaturesco. */
+  transition: opacity 0.18s ease-out, transform 0.8s ease-out; 
+}
+
+/* === ESTADO ACTIVO === */
+
+.reveal-container.active {
+  pointer-events: all;
+}
+
+.reveal-container.active .reveal-bg {
+  clip-path: circle(150% at 50% 50%);
+}
+
+.reveal-container.active .reveal-content img {
+  transform: scale(1);
+  opacity: 1;
+  
+  /* CAMBIO CRÍTICO: Aumentamos el delay.
+     El fondo tarda 1.35s en total. 
+     Con 0.45s esperamos a que el círculo ya esté abierto 
+     antes de empezar a mostrar la imagen. */
+  transition-delay: 0.45s; 
+}
