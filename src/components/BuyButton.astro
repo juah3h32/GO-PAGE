@@ -1,15 +1,25 @@
 ---
 /* src/components/BuyButton.astro */
+
+// 1. Recibimos los textos desde el componente padre (cuerdas.astro)
+// Si no llegan, usamos los valores por defecto en español.
+const { 
+  text = "Comprar", 
+  redirecting = "Redirigiendo..." 
+} = Astro.props;
 ---
 
 <button id="truck-cta-btn" class="cta-btn">
-  <span class="default">Comprar</span>
+  
+  <span class="default">{text}</span>
+  
   <span class="success">
-    Redirigiendo...
+    {redirecting}
     <svg viewBox="0 0 12 10">
       <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
     </svg>
   </span>
+
   <div class="truck">
     <div class="wheel"></div>
     <div class="back">
@@ -109,7 +119,7 @@
 
 <style>
   .cta-btn {
-    /* Mantenemos tus variables */
+    /* Variables originales */
     --color: #fff;
     --background: #2b3044;
     --tick: #16bf78;
@@ -133,7 +143,7 @@
     border: none;
     outline: none;
     
-    /* CAMBIO PRINCIPAL: Color forzado */
+    /* Forzamos color blanco */
     color: #ffffff !important; 
     
     background: var(--background);
@@ -146,7 +156,6 @@
     margin-top: 20px;
   }
 
-  /* REGLA ADICIONAL: Asegura el blanco en hover, focus y active */
   .cta-btn:hover,
   .cta-btn:focus,
   .cta-btn:active {
@@ -179,7 +188,6 @@
     line-height: 24px;
     opacity: var(--o, 1);
     transition: opacity 0.3s;
-    /* CAMBIO: Forzamos el color blanco en los hijos directos también */
     color: #ffffff !important; 
   }
 
@@ -207,7 +215,7 @@
     transition: stroke-dashoffset 0.4s ease 0.45s;
   }
 
-  /* --- CAMIÓN --- */
+  /* --- CAMIÓN (Sin cambios) --- */
   .cta-btn .truck {
     position: absolute;
     width: 80px;

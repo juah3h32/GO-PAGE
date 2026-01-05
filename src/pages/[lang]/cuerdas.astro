@@ -1,42 +1,61 @@
 ---
+// src/pages/[lang]/cuerdas.astro
+
+// 1. IMPORTACIONES
 import "../../styles/cuerdas.css";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import CustomCursor from "../../components/CustomCursor.astro";
 import AudioVisualizer from "../../components/AudioVisualizer.astro";
 import BuyButton from "../../components/BuyButton.astro";
-import Navbar from "../../components/Nadbar.astro";
+import Navbar from "../../components/Nadbar.astro"; 
+import { languages, translations } from "../../i18n";
 
-/* -------------------------------------------------------------------------- */
-/* DATOS */
-/* -------------------------------------------------------------------------- */
-const products = [
-  { id: 0, name: 'Cuerda', img: '/images/cuerdas/CuerdaT1.webp', active: true, link: '...' },
-  { id: 1, name: 'Strech', img: '/images/cuerdas/CuerdaNegra.webp', active: false, link: '...' },
-  { id: 2, name: 'Rafia', img: '/images/img3.png', active: false, link: '...' }
-];
+// 2. GENERACIÓN DE RUTAS DINÁMICA
+export function getStaticPaths() {
+  return Object.keys(languages).map((lang) => ({
+    params: { lang },
+  }));
+}
 
-// IDs fijos para JS
+// 3. LÓGICA DE IDIOMA Y DATOS
+const { lang } = Astro.params;
+const currentLang = (lang && lang in translations) ? lang : 'es';
+const t = translations[currentLang as keyof typeof translations];
+
+// Datos
+const pageData = t.cuerdas;
+const productsList = pageData.products; 
+const firstProduct = productsList[0];
+const specsLabels = pageData.specs_labels;
+
 const specs = [
-  { label: "Rendimiento", id: "spec-load", tag: "Alta" },
-  { label: "Unidad", id: "spec-diam", tag: "Pieza" },
-  { label: "Material", id: "spec-mat", tag: "100%" },
-  { label: "Peso", id: "spec-elong", tag: "Promedio" },
-  { label: "Resistencia", id: "spec-grip", tag: "Alta" },
-  { label: "Carga", id: "spec-loadresist", tag: "Buena" },
+  { label: specsLabels.load,   id: "spec-load",       tag: firstProduct.specs_values.load },
+  { label: specsLabels.unit,   id: "spec-diam",       tag: firstProduct.specs_values.unit },
+  { label: specsLabels.mat,    id: "spec-mat",        tag: firstProduct.specs_values.mat },
+  { label: specsLabels.weight, id: "spec-elong",      tag: firstProduct.specs_values.weight },
+  { label: specsLabels.resist, id: "spec-grip",       tag: firstProduct.specs_values.resist },
+  { label: specsLabels.charge, id: "spec-loadresist", tag: firstProduct.specs_values.charge },
 ];
+
+// Helper para estilos condicionales (ahorra código abajo)
+const rtlStyle = currentLang === 'ar' ? { textAlign: 'left' } : {};
+const dirValue = currentLang === 'ar' ? 'rtl' : 'ltr';
 ---
 
-<BaseLayout title="Cuerda | Grupo Ortiz">
+<BaseLayout title={pageData.meta_title}>
   <script is:inline type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
   <script is:inline src="https://cdn.jsdelivr.net/npm/gsap@3.0.1/dist/gsap.min.js"></script>
 
-  <Navbar />
+  <Navbar currentLang={currentLang} />
   <CustomCursor />
 
-  <main class="main-container">
+  <main 
+    class="main-container" 
+    data-products={JSON.stringify(productsList)}
+  >
 
     <div class="content">
-      <a href="/productos" class="back-arrow-btn" aria-label="Volver">
+      <a href={`/${currentLang}/productos`} class="back-arrow-btn" aria-label={pageData.back_aria}>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="19" y1="12" x2="5" y2="12" />
@@ -44,33 +63,66 @@ const specs = [
         </svg>
       </a>
     
+      {/* CAMBIO 1: El contenedor padre (.text-area) se queda LIMPIO.
+          Sin 'dir' ni 'style'. Esto asegura que Flexbox siga alineando
+          todo a la izquierda (Start = Left en modo LTR).
+      */}
       <div class="text-area">
-         <h1 id="product-title" class="fade-in-text">Cargando...</h1>
-         <p id="product-desc" class="fade-in-text"></p>
+        
+         {/* CAMBIO 2: Aplicamos la lógica árabe individualmente al Título */}
+         <h1 
+            id="product-title" 
+            class="fade-in-text"
+            dir={dirValue}
+            style={rtlStyle}
+         >
+            {firstProduct.name}
+         </h1>
 
-        <div class="specs-container fade-in-text">
-          <h3 class="specs-title">ESPECIFICACIONES TÉCNICAS</h3>
+         {/* CAMBIO 3: Aplicamos la lógica árabe individualmente a la Descripción */}
+         <p 
+            id="product-desc" 
+            class="fade-in-text"
+            dir={dirValue}
+            style={rtlStyle}
+         >
+            {firstProduct.description}
+         </p>
+
+        {/* CAMBIO 4: Aplicamos la lógica árabe al contenedor de Specs */}
+        <div 
+            class="specs-container fade-in-text"
+            dir={dirValue}
+            style={rtlStyle}
+        >
+          <h3 class="specs-title">{pageData.specs_title}</h3>
 
           <div class="specs-grid">
             {specs.map((spec) => (
               <div class="spec-box">
                 <span class="spec-label">{spec.label}</span>
-                <span class="spec-value" id={spec.id}>--</span>
-                <span class="spec-percent">{spec.tag}</span>
+                <span class="spec-value" id={spec.id}>{spec.tag}</span>
               </div>
             ))}
           </div>
         </div>
 
-  <div class="fade-in-text w-full flex justify-center lg:justify-start">
-     <BuyButton />
+        {/* CAMBIO 5: Simplificamos el botón.
+            Como el padre (.text-area) ya es LTR, 'justify-start' SIEMPRE significa Izquierda.
+            Ya no necesitamos la condición ternaria compleja.
+        */}
+<div class="fade-in-text w-full flex justify-center lg:justify-start">
+  <BuyButton 
+      text={t.common.buy || 'Comprar'} 
+      redirecting={t.common.redirecting || 'Redirigiendo...'} 
+  />
 </div>
       </div>
 
       <div class="thumbnails fade-in-text">
-        {products.map((prod, index) => (
+        {productsList.map((prod, index) => (
           <div
-            class={`thumb-item ${prod.active ? 'active' : ''}`}
+            class={`thumb-item ${index === 0 ? 'active' : ''}`}
             data-index={index}
             data-link={prod.link}
           >
@@ -82,7 +134,6 @@ const specs = [
 
     <div class="wheel-container">
       <div class="wheel" id="product-wheel">
-
         <model-viewer
           id="rafia-3d"
           src="/models/rafiaNegra.glb"
@@ -96,22 +147,19 @@ const specs = [
           style="display:none;"
         ></model-viewer>
 
-        {products.map((prod, index) => (
+        {productsList.map((prod, index) => (
           <div class={`wheel-item item-${index} ${index === 0 ? 'active' : ''}`}>
             <img src={prod.img} alt={prod.name} />
           </div>
         ))}
       </div>
-      
-  
     </div>
 
-<div style="position: fixed; bottom: 30px; right: 96px; z-index: 100; pointer-events: none;">
+    <div style="position: fixed; bottom: 30px; right: 96px; z-index: 100; pointer-events: none;">
          <div style="pointer-events: auto;">
              <AudioVisualizer transition:persist />
          </div>
     </div>
-
 
   </main>
 

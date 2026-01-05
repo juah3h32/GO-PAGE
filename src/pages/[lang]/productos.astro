@@ -1,35 +1,25 @@
 ---
 // src/pages/[lang]/productos.astro
 
-// 1. IMPORTACIONES
 import "../../styles/producto.css";
 import "../../styles/carousel.css";
 import "../../styles/flechas.css";
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import CustomCursor from "../../components/CustomCursor.astro";
-// CORRECCIÓN: Nombre del archivo correcto (Navbar, no Nadbar)
 import Navbar from "../../components/Nadbar.astro"; 
-// CORRECCIÓN: Ruta de importación actualizada a la carpeta i18n
 import { languages, translations } from "../../i18n";
 
-// 2. GENERACIÓN DE RUTAS DINÁMICA
-// Crea una página por cada idioma definido en src/i18n/index.ts
 export function getStaticPaths() {
   return Object.keys(languages).map((lang) => ({
     params: { lang },
   }));
 }
 
-// 3. LÓGICA DE IDIOMA
 const { lang } = Astro.params;
-
-// Seguridad: Validamos que el idioma exista, si no, usamos 'es'
 const currentLang = (lang && lang in translations) ? lang : 'es';
 const t = translations[currentLang as keyof typeof translations];
 
-// Extraemos los datos necesarios
-// NOTA: Ya no necesitamos 'navData' aquí porque el Navbar lo obtiene solo.
 const productsList = t.products_list; 
 const seeMoreText = t.common.seeMore;
 ---
@@ -37,10 +27,9 @@ const seeMoreText = t.common.seeMore;
 <BaseLayout title={`${t.nav.products} | Grupo Ortiz`}>
   
   <Navbar currentLang={currentLang} />
-  
   <CustomCursor />
 
-  <main class="productos-main" dir={currentLang === 'ar' ? 'rtl' : 'ltr'}>
+  <main class="productos-main">
     <div class="carousel">
       <div class="list">
         
@@ -48,14 +37,48 @@ const seeMoreText = t.common.seeMore;
           <div class="item">
             <img src={`/images/${item.img}`} alt={item.division} />
 
+            {/* CORRECCIÓN DEFINITIVA:
+                1. Quitamos 'dir' y 'style' de este contenedor padre (.introduce).
+                   Al dejarlo por defecto (LTR), Flexbox alineará todo a la IZQUIERDA siempre.
+                   Esto soluciona que el botón se vaya a la derecha.
+            */}
             <div class="introduce">
-              <div class="title">GRUPO ORTIZ</div>
-              <div class="topic">{item.division}</div>
-              <div class="des">{item.descripcion}</div>
               
+              {/* 2. Aplicamos la lógica árabe INDIVIDUALMENTE a cada texto.
+                    - dir='rtl': Para que la puntuación (puntos, comas) se ponga en el lugar correcto.
+                    - textAlign: 'left': Para forzar visualmente que el texto se pegue a la izquierda.
+              */}
+              <div 
+                class="title" 
+                dir={currentLang === 'ar' ? 'rtl' : 'ltr'} 
+                style={currentLang === 'ar' ? { textAlign: 'left' } : {}}
+              >
+                GRUPO ORTIZ
+              </div>
+              
+              <div 
+                class="topic" 
+                dir={currentLang === 'ar' ? 'rtl' : 'ltr'}
+                style={currentLang === 'ar' ? { textAlign: 'left' } : {}}
+              >
+                {item.division}
+              </div>
+              
+              <div 
+                class="des" 
+                dir={currentLang === 'ar' ? 'rtl' : 'ltr'}
+                style={currentLang === 'ar' ? { textAlign: 'left' } : {}}
+              >
+                {item.descripcion}
+              </div>
+              
+              {/* 3. El botón se queda sin cambios. 
+                     Al estar en un contenedor LTR, se quedará alineado a la izquierda automáticamente.
+              */}
               <a href={`/${currentLang}/${item.slug}`} class="seeMore">
                 {seeMoreText}
               </a>
+
             </div>
           </div>
         ))}
