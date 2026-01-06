@@ -1,0 +1,282 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+/* --- CONFIGURACIÓN PARA FOOTER SIEMPRE ABAJO --- */
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+footer {
+  margin-top: auto; /* Empuja el footer al fondo */
+  width: 100%;
+}
+
+/* --- 1. REDUCCIÓN DE ALTURA GENERAL --- */
+.minimal-footer {
+  background-color: #262626;
+  color: #ffffff;
+  /* Antes era 70px 0 40px. Lo bajamos a 40px y 20px para hacerlo más compacto */
+  padding: 40px 0 20px 0; 
+  font-size: 13px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* --- 2. AJUSTE DE LA SECCIÓN SUPERIOR --- */
+.top-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  /* Reducimos la separación con la línea divisoria (antes 50px) */
+  padding-bottom: 30px; 
+  text-align: left;
+}
+
+/* --- 3. LOGO Y CONTACTO --- */
+.brand-area {
+  width: 25%;
+  margin: 0;
+}
+
+.brand-area .logo {
+  font-size: 26px;
+  line-height: 1; /* Reduce la altura de línea del logo para que no "flote" */
+  margin-bottom: 8px;
+  color: #FF6600;
+  margin-top: -4px; /* Pequeño ajuste visual para alinear con el tope del texto */
+}
+
+.brand-area .slogan {
+  display: block;
+  font-size: 11px;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 3px; /* Espaciado amplio para elegancia */
+}
+
+/* Área de Columnas */
+.links-area {
+  display: flex;
+  justify-content: flex-end; /* Empuja el contenido a la derecha */
+  gap: 40px; /* Espacio entre columnas */
+  flex: 1; /* Ocupa el resto del espacio */
+}
+
+.links-area .col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px; /* Espacio vertical entre los links */
+}
+
+/* Estilos de los Enlaces */
+.links-area a, 
+.links-area .phone {
+  color: #b0b0b0;
+  text-decoration: none;
+
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+.links-area a:hover {
+  color: #ffffff;
+}
+
+/* --- BOTÓN DISTRIBUIDOR (COLUMNA 4) --- */
+.btn-orange {
+  display: inline-block;
+  background-color: #FF6600;
+  color: #ffffff !important;
+  padding: 10px 20px; /* Padding equilibrado */
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  border: 2px solid #FF6600;
+  text-align: center;
+  transition: all 0.3s ease;
+  
+  /* CLAVE PARA TU PROBLEMA: */
+  margin-top: 0;      /* Elimina espacio arriba */
+  margin-bottom: 10px; /* Espacio solo abajo hacia el teléfono */
+  line-height: normal; /* Evita que el texto herede alturas raras */
+}
+.btn-orange:hover {
+  background-color: transparent;
+  color: #FF6600 !important;
+}
+
+/* Ajuste específico para el botón */
+.distribute-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* IMPORTANTE: Aseguramos que esta columna no tenga margen superior extra */
+  margin-top: 0; 
+}
+
+.distribute-col .phone {
+  color: #b0b0b0;
+  font-size: 12px;
+  margin-top: 5px;
+  text-align: left;
+}
+
+/* --- LÍNEA SEPARADORA --- */
+.separator-line {
+  width: 100%;
+  height: 1px;
+  background-color: #333;
+  margin-bottom: 40px;
+}
+
+/* --- SECCIÓN INFERIOR (SOCIAL + COPYRIGHT) --- */
+.bottom-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+}
+
+/* Iconos Sociales */
+.social-icons {
+  display: flex;
+  gap: 15px;
+}
+
+.social-icons a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #555;
+  border-radius: 50%;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+  background-color: #FF6600;
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+.copyright {
+  color: #666;
+  font-size: 11px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+/* --- ESTILOS PARA CONTACTO BAJO EL LOGO --- */
+
+.brand-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 5px; /* Poca separación entre email y teléfono */
+  
+  /* Reducimos la separación con el logo (antes 25px, ahora 15px) */
+  margin-top: 15px; 
+}
+
+.brand-contact .contact-item {
+  color: #b0b0b0;
+  text-decoration: none;
+  font-size: 12px; /* Texto un poco más compacto */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.3s ease;
+}
+
+/* Efecto Hover (opcional: cambia a naranja al pasar el mouse) */
+.brand-contact .contact-item:hover {
+  color: #FF6600;
+}
+
+.brand-contact .contact-item i {
+  font-size: 12px; /* Iconos sutiles */
+  opacity: 0.8;
+}
+/* --- RESPONSIVE --- */
+@media (max-width: 900px) {
+  .links-area {
+    gap: 30px;
+  }
+  .links-area .col {
+    width: 45%; /* En tablets, 2 columnas */
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .links-area {
+    flex-direction: column;
+    gap: 40px;
+  }
+  .links-area .col {
+    width: 100%; /* En móviles, 1 columna */
+  }
+}
+@media (max-width: 768px) {
+  
+  .top-section {
+    flex-direction: column; /* Apila todo verticalmente */
+    align-items: center;    /* Centra los elementos horizontalmente */
+    text-align: center;     /* Centra el texto */
+    padding-bottom: 20px;
+  }
+
+  .brand-area {
+    width: 100%; /* Ocupa todo el ancho */
+    margin-bottom: 30px; /* Separación entre el bloque del logo y los links */
+    
+    /* Para centrar el contenido flex interno (el contacto) */
+    display: flex; 
+    flex-direction: column;
+    align-items: center; 
+  }
+
+  .links-area {
+    width: 100%;
+    flex-direction: column; /* Una sola columna de links */
+    gap: 25px;              /* Espacio entre grupos de links */
+    align-items: center;    /* Asegura que las columnas se centren */
+  }
+
+  .links-area .col {
+    width: 100%;
+    align-items: center; /* Centra los enlaces (a) dentro de cada columna */
+  }
+
+  /* Ajuste específico para el botón de distribuidor en móvil */
+  .distribute-col {
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  /* Centramos también los items de contacto (email/tel) */
+  .brand-contact {
+    align-items: center; 
+  }
+}
