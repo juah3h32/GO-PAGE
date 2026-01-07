@@ -9,7 +9,7 @@ const mainContainer = document.querySelector(".main-container");
 const title = document.getElementById("product-title");
 const desc = document.getElementById("product-desc");
 const textArea = document.querySelector(".text-area");
-const rafiaModel = document.getElementById("rafia-3d");
+// ELIMINADO: const rafiaModel = ... (Ya no existe)
 
 // ESPECIFICACIONES TÉCNICAS
 const specLoad = document.getElementById("spec-load");       // Rendimiento
@@ -23,13 +23,12 @@ const specLoadResist = document.getElementById("spec-loadresist"); // Carga
 /* 2. OBTENCIÓN Y FUSIÓN DE DATOS */
 /* -------------------------------------------------------------------------- */
 
-// A. Configuración Visual (Esto NO cambia con el idioma)
-// El orden debe coincidir con el array 'products' en tus archivos de traducción
+// A. Configuración Visual (Solo 3 productos, sin 3D)
+// Asegúrate de que el orden coincida con el array 'products' en tus archivos de traducción
 const visualConfig = [
-  { bg: "var(--bg-cuerda)", is3D: false }, // Producto 0
-  { bg: "var(--bg-strech)", is3D: false }, // Producto 1
-  { bg: "var(--bg-rafia)",  is3D: true  }, // Producto 2 (3D)
-  { bg: "var(--bg-arpilla)",is3D: false }  // Producto 3
+  { bg: "var(--bg-cuerda)" }, // Producto 0
+  { bg: "var(--bg-strech)" }, // Producto 1
+  { bg: "var(--bg-arpilla)"}  // Producto 2 (Antes era el 4to, ajusta el color si es necesario)
 ];
 
 // B. Obtener datos traducidos desde el HTML
@@ -54,7 +53,7 @@ try {
 
 } catch (error) {
   console.error("Error al leer los datos de productos traducidos:", error);
-  // Fallback: usamos solo la config visual para no romper la página
+  // Fallback
   productData = visualConfig; 
 }
 
@@ -70,14 +69,12 @@ function updateProduct(index) {
   // 1. Fondo
   if (data.bg) mainContainer.style.background = data.bg;
 
-  // 2. Lógica 3D vs Imagen
+  // 2. Lógica de Imágenes (Simplificada, sin 3D)
   productImages.forEach((img) => img.classList.remove("active"));
-  if (rafiaModel) rafiaModel.style.display = "none";
-
-  if (data.is3D) {
-    if (rafiaModel) rafiaModel.style.display = "block";
-  } else {
-    if (productImages[index]) productImages[index].classList.add("active");
+  
+  // Siempre mostramos la imagen correspondiente
+  if (productImages[index]) {
+    productImages[index].classList.add("active");
   }
 
   // 3. Textos (Validamos que existan antes de asignarlos)

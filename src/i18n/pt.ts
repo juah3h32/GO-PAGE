@@ -105,34 +105,20 @@ export const pt = {
           }
         },
         { 
-          // ID 2 (Modelo 3D)
-          name: 'CORDA ECO', 
-          img: '/images/img3.png', 
-          link: '#',
-          description: "Corda de polipropileno em múltiplos calibres, cores e apresentações, com ou sem reforço. Solução versátil para uso geral em indústrias, armazéns, ferragens, oficinas, usinagem e mercados de abastecimento.",
-          specs_values: { 
-            load: "1200 kg", 
-            unit: "10 mm", 
-            mat: "Eco-Fib", 
-            weight: "6%", 
-            resist: "Média", 
-            charge: "Moderada" 
-          }
-        },
-        { 
-           // ID 3
-          name: 'ARPILLA (REDE)', 
-          img: '/images/img5.png', 
-          link: '#',
-          description: "Máxima carga de ruptura para garantir a segurança dos seus produtos durante o transporte e armazenamento.",
-          specs_values: { 
-            load: "2500 kg", 
-            unit: "16 mm", 
-            mat: "Nylon-X", 
-            weight: "1%", 
-            resist: "Alta", 
-            charge: "Excelente" 
-          }
+            // ID 3
+            name: 'Corda UV 8',
+            img: '/images/cuerdas/CuerdaNegra.webp',
+            link: '#',
+            description: "Cabo de polipropileno com filtro UV, projetado para suportar alta exposição solar em ambientes marítimos e agrícolas. Garante firmeza elevada e longa vida útil em macrotúneis, sendo ideal para o cultivo de berries, pimentão e para uso marítimo.",
+            specs_values: {
+              load: "2500 kg",
+              unit: "16 mm",
+              mat: "Nylon-X",
+              weight: "1%",
+              resist: "Alta",
+              charge: "Excelente"
+            }
+
         }
       ]
     }

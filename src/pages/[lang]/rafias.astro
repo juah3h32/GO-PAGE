@@ -1,0 +1,183 @@
+---
+// src/pages/[lang]/cuerdas.astro
+
+// 1. IMPORTACIONES
+import "../../styles/cuerdas.css"; 
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import BuyButton from "../../components/BuyButton.astro";
+// ELIMINADO: import Navbar from "../../components/Nadbar.astro"; <--- YA NO LO NECESITAS AQUÍ
+import { languages, translations } from "../../i18n";
+
+// 2. GENERACIÓN DE RUTAS DINÁMICA
+export function getStaticPaths() {
+  return Object.keys(languages).map((lang) => ({
+    params: { lang },
+  }));
+}
+
+// 3. LÓGICA DE IDIOMA Y DATOS
+const { lang } = Astro.params;
+const currentLang = (lang && lang in translations) ? lang : 'es';
+const t = translations[currentLang as keyof typeof translations];
+
+// Datos
+const pageData = t.cuerdas;
+const productsList = pageData.products; 
+const firstProduct = productsList[0];
+const specsLabels = pageData.specs_labels;
+
+const specs = [
+  { label: specsLabels.load,   id: "spec-load",       tag: firstProduct.specs_values.load },
+  { label: specsLabels.unit,   id: "spec-diam",       tag: firstProduct.specs_values.unit },
+  { label: specsLabels.mat,    id: "spec-mat",        tag: firstProduct.specs_values.mat },
+  { label: specsLabels.weight, id: "spec-elong",      tag: firstProduct.specs_values.weight },
+  { label: specsLabels.resist, id: "spec-grip",       tag: firstProduct.specs_values.resist },
+  { label: specsLabels.charge, id: "spec-loadresist", tag: firstProduct.specs_values.charge },
+];
+---
+
+<BaseLayout title={pageData.meta_title} currentLang={currentLang}>
+  
+  <link rel="preload" as="image" href={firstProduct.img} slot="head" />
+
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.0.1/dist/gsap.min.js" defer></script>
+
+  <div id="reveal-circle" class="reveal-circle"></div>
+
+  <main 
+    class="main-container" 
+    data-products={JSON.stringify(productsList)}
+  >
+
+    <div class="content">
+      <a 
+        href={`/${currentLang}/productos`} 
+        class="back-arrow-btn" 
+        data-link
+        id="btn-regresar"
+        aria-label={pageData.back_aria}
+        style="position: relative; z-index: 10001; cursor: pointer;"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12" />
+          <polyline points="12 19 5 12 12 5" />
+        </svg>
+      </a>
+    
+      <div class="text-area" style="max-width: 550px; align-items: flex-start;">
+         <h1 id="product-title" class="fade-in-text" style="text-align: left; width: 100%;">
+            {firstProduct.name}
+         </h1>
+         <p id="product-desc" class="fade-in-text" style="text-align: left; width: 100%; line-height: 1.5;">
+            {firstProduct.description}
+         </p>
+
+        <div class="specs-container fade-in-text" style="text-align: left; width: 100%;">
+          <h3 class="specs-title">{pageData.specs_title}</h3>
+          <div class="specs-grid">
+            {specs.map((spec) => (
+              <div class="spec-box">
+                <span class="spec-label">{spec.label}</span>
+                <span class="spec-value" id={spec.id}>{spec.tag}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="fade-in-text w-full flex justify-center lg:justify-start">
+          <BuyButton 
+              text={t.common.buy || 'Comprar'} 
+              redirecting={t.common.redirecting || 'Redirigiendo...'} 
+          />
+        </div>
+      </div>
+
+      <div class="thumbnails fade-in-text">
+        {productsList.map((prod, index) => (
+          <div class={`thumb-item ${index === 0 ? 'active' : ''}`} data-index={index} data-link-thumb={prod.link}>
+            <img 
+              src={prod.img} 
+              alt={prod.name} 
+              loading="lazy" 
+              decoding="async"
+              width="60" 
+              height="60"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="wheel-container">
+      <div class="wheel" id="product-wheel">
+        <model-viewer
+          id="rafia-3d"
+          src="/models/rafiaNegra.glb"
+          loading="lazy" 
+          reveal="manual"
+          alt="Modelo 3D"
+          camera-orbit="0deg 90deg 180%"
+          min-camera-orbit="auto auto 300%"
+          camera-controls
+          auto-rotate
+          interaction-prompt="none"
+          class="model-3d-custom" 
+          style="display:none;"
+        ></model-viewer>
+
+        {productsList.map((prod, index) => (
+          <div class={`wheel-item item-${index} ${index === 0 ? 'active' : ''}`}>
+            <img 
+              src={prod.img} 
+              alt={prod.name}
+              loading={index === 0 ? "eager" : "lazy"}
+              fetchpriority={index === 0 ? "high" : "auto"}
+              decoding="async"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+
+
+
+  </main>
+
+  <script src="/scripts/cuerdas.js" defer></script>
+
+  <script is:inline>
+    // Lógica de transición optimizada
+    function initTransition() {
+      const reveal = document.getElementById("reveal-circle");
+      const btn = document.getElementById("btn-regresar");
+
+      if (!reveal || !btn) return;
+
+      reveal.classList.remove("active");
+      
+      const newBtn = btn.cloneNode(true);
+      btn.parentNode.replaceChild(newBtn, btn);
+
+      newBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const url = newBtn.getAttribute("href");
+        reveal.classList.add("active");
+        setTimeout(() => {
+          window.location.href = url;
+        }, 1350); 
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initTransition);
+    } else {
+      initTransition();
+    }
+    
+    document.addEventListener("astro:page-load", initTransition);
+    document.addEventListener("astro:after-swap", initTransition);
+  </script>
+
+</BaseLayout>

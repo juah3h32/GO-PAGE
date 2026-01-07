@@ -91,7 +91,7 @@ export const en = {
         },
         { 
           // ID 1
-          name: 'ROPE UV', 
+          name: 'UV 6 Rope', 
           img: '/images/cuerdas/CuerdaNegra.webp', 
           link: '#',
           description: "Polypropylene cable with UV filter, designed to resist high solar exposure at sea and in the field. Guarantees firmness and long service life in macrotunnels, ideal for berry crops, peppers, and maritime use.",
@@ -105,34 +105,20 @@ export const en = {
           }
         },
         { 
-          // ID 2 (3D Model)
-          name: 'ROPE ECO', 
-          img: '/images/img3.png', 
+          // ID 3
+          name: 'UV 8 Rope',
+          img: '/images/cuerdas/CuerdaNegra.webp',
           link: '#',
-          description: "Polypropylene rope in multiple gauges, colors, and presentations, with or without reinforcement. Versatile solution for general use in industries, warehouses, hardware stores, workshops, machining, and wholesale markets.",
-          specs_values: { 
-            load: "1200 kg", 
-            unit: "10 mm", 
-            mat: "Eco-Fib", 
-            weight: "6%", 
-            resist: "Medium", 
-            charge: "Moderate" 
+          description: "Polypropylene cable with UV filter, designed to withstand high solar exposure in marine and agricultural environments. It ensures strong firmness and long service life in macrotunnels, making it ideal for berry and pepper crops, as well as marine use.",
+          specs_values: {
+            load: "2500 kg",
+            unit: "16 mm",
+            mat: "Nylon-X",
+            weight: "1%",
+            resist: "High",
+            charge: "Excellent"
           }
-        },
-        { 
-           // ID 3
-          name: 'MESH BAG (ARPILLA)', 
-          img: '/images/img5.png', 
-          link: '#',
-          description: "Maximum breaking load to secure your products during transport and storage.",
-          specs_values: { 
-            load: "2500 kg", 
-            unit: "16 mm", 
-            mat: "Nylon-X", 
-            weight: "1%", 
-            resist: "High", 
-            charge: "Excellent" 
-          }
+
         }
       ]
     }

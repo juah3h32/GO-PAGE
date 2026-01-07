@@ -94,7 +94,7 @@ export const es = {
         },
         { 
           // ID 1
-          name: 'CUERDA UV', 
+          name: 'CUERDA UV 6', 
           img: '/images/cuerdas/CuerdaNegra.webp', 
           link: '#',
           description: "Cable de polipropileno con filtro UV, diseñado para resistir alta exposición solar en mar y campo. Garantiza firmeza y larga vida útil en macrotúneles, ideal para cultivos de berries, pimiento y uso marítimo.",
@@ -107,27 +107,13 @@ export const es = {
             charge: "Excelente" 
           }
         },
-        { 
-          // ID 2 (Este activa el modelo 3D en la config visual)
-          name: 'CUERDA ECO', 
-          img: '/images/img3.png', 
-          link: '#',
-          description: "Cuerda de polipropileno en múltiples calibres, colores y presentaciones, con o sin refuerzo. Solución versátil para uso general en industrias, bodegas, ferreterías, talleres, maquinados y mercado de abastos.",
-          specs_values: { 
-            load: "1200 kg", 
-            unit: "10 mm", 
-            mat: "Eco-Fib", 
-            weight: "6%", 
-            resist: "Media", 
-            charge: "Moderada" 
-          }
-        },
+
         { 
            // ID 3
-          name: 'ARPILLA', 
-          img: '/images/img5.png', // Puse img5 por defecto, ajusta si es otra
+          name: 'CUERDA UV 8', 
+          img: '/images/cuerdas/CuerdaNegra.webp', // Puse img5 por defecto, ajusta si es otra
           link: '#',
-          description: "Máxima carga de ruptura para asegurar tus productos en el transporte y almacenamiento.",
+          description: "Cable de polipropileno con filtro UV, diseñado para resistir alta exposición solar en mar y campo. Garantiza firmeza y larga vida útil en macrotúneles, ideal para cultivos de berries, pimiento y uso marítimo.",
           specs_values: { 
             load: "2500 kg", 
             unit: "16 mm", 

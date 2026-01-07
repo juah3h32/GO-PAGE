@@ -91,7 +91,7 @@ export const zh = {
         },
         { 
           // ID 1
-          name: 'UV 绳索', 
+          name: 'UV 6 绳索', 
           img: '/images/cuerdas/CuerdaNegra.webp', 
           link: '#',
           description: "带紫外线过滤器的聚丙烯缆绳，专为抵抗海洋和田野中的高强度日晒而设计。保证在大型隧道中的牢固性和长使用寿命，是浆果、辣椒作物和海事用途的理想选择。",
@@ -105,34 +105,20 @@ export const zh = {
           }
         },
         { 
-          // ID 2 (3D 模型)
-          name: 'ECO 绳索', 
-          img: '/images/img3.png', 
+          // ID 3
+          name: 'UV 8 繩索',
+          img: '/images/cuerdas/CuerdaNegra.webp',
           link: '#',
-          description: "多种规格、颜色和包装的聚丙烯绳索，带或不带加固。适用于工业、仓库、五金店、车间、机械加工和批发市场的通用多功能解决方案。",
-          specs_values: { 
-            load: "1200 kg", 
-            unit: "10 mm", 
-            mat: "Eco-Fib", 
-            weight: "6%", 
-            resist: "中等", 
-            charge: "适中" 
+          description: "採用聚丙烯材質並具備抗紫外線濾層的纜繩，專為承受海洋與農業環境中的高強度日照而設計。於大型農業拱棚（Macrotunnel）中可提供穩固的固定力與長久的使用壽命，適用於莓果、甜椒種植及海事用途。",
+          specs_values: {
+            load: "2500 公斤",
+            unit: "16 毫米",
+            mat: "尼龍-X",
+            weight: "1%",
+            resist: "高",
+            charge: "優異"
           }
-        },
-        { 
-           // ID 3
-          name: '网袋 (ARPILLA)', 
-          img: '/images/img5.png', 
-          link: '#',
-          description: "最大断裂载荷，确保您的产品在运输和储存过程中的安全。",
-          specs_values: { 
-            load: "2500 kg", 
-            unit: "16 mm", 
-            mat: "Nylon-X", 
-            weight: "1%", 
-            resist: "高", 
-            charge: "优秀" 
-          }
+
         }
       ]
     }
