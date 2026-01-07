@@ -154,7 +154,7 @@ const { title = "Mi sitio", currentLang = "es" } = Astro.props;
     
     <DockMenu />
    
-    <BotGO client:load />
+    <BotGO client:idle language={currentLang} />
 
     <script>
       import { registerSW } from 'virtual:pwa-register';
