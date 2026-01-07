@@ -13,32 +13,47 @@ export const en = {
     hero: { title: "Welcome", subtitle: "Quality that lasts" },
     common: { 
         seeMore: "See more", 
-        buy: "Buy Now", 
+        buy: "Buy", 
         redirecting: "Redirecting..." 
-      },
+    },
+
+    // =================================================
+    // NEW SECTION: CHATBOT (BotGo)
+    // =================================================
+    chatbot: {
+      greeting: 'Hello! I am BotGo 🤖. How can I assist you today?',
+      placeholder: 'Type a message...',
+      listening: 'Listening...',
+      error: 'Connection error.',
+      salesBtn: 'Get Quote',
+      voiceCode: 'en-US', // Código para voz en inglés
+      waStart: 'Hello Grupo Ortiz, I am interested in a quote for'
+    },
+
+    // Main list for /products carousel
     products_list: [
       { 
         img: "img1.png", 
         division: "STRETCH FILM", 
-        descripcion: "Manufacture of industrial mesh bags for agricultural packaging.",
+        descripcion: "Manufacturing of industrial mesh bags for agricultural packaging.",
         slug: "productos/stretch-film" 
       },
       { 
         img: "img2.png", 
         division: "ROPES", 
-        descripcion: "High resistance ropes and cords for industrial use.",
+        descripcion: "High-resistance ropes and cords for industrial use.",
         slug: "cuerdas" 
       },
       { 
         img: "img3.png", 
         division: "RAFFIA", 
-        descripcion: "Raffia solutions for packaging and loading.",
+        descripcion: "Raffia solutions for packaging and cargo.",
         slug: "rafias" 
       },
       { 
         img: "img4.png", 
         division: "RAFFIA", 
-        descripcion: "Custom flexible packaging.",
+        descripcion: "Customized flexible packaging.",
         slug: "productos/rafia-empaques" 
       },
       { 
@@ -49,30 +64,30 @@ export const en = {
       },
       { 
         img: "img6.png", 
-        division: "CORNERS", 
+        division: "CORNER GUARDS", 
         descripcion: "Custom developments.",
         slug: "productos/esquineros" 
       }
     ],
   
-    // --- NEW SECTION: ROPE PAGE DATA (CUERDAS) ---
+    // --- SPECIFIC DATA FOR ROPES PAGE (Cuerdas) ---
     cuerdas: {
       meta_title: "Ropes | Grupo Ortiz",
-      back_aria: "Back",
+      back_aria: "Go back",
       loading: "Loading...",
       specs_title: "TECHNICAL SPECIFICATIONS",
       
-      // Table labels
+      // Fixed table labels
       specs_labels: {
-        load: "Performance",    // Rendimiento
-        unit: "Unit",           // Unidad
-        mat: "Material",        // Material
-        weight: "Weight / Elongation", // Peso / Elongación
-        resist: "Resistance",   // Resistencia
-        charge: "Load / Strength" // Carga
+        load: "Performance",
+        unit: "Unit",
+        mat: "Material",
+        weight: "Weight / Elongation",
+        resist: "Resistance",
+        charge: "Load / Resistance"
       },
   
-      // Translated Products Array
+      // Product Array
       products: [
         { 
           // ID 0
@@ -91,10 +106,10 @@ export const en = {
         },
         { 
           // ID 1
-          name: 'UV 6 Rope', 
+          name: 'ROPE UV 6', 
           img: '/images/cuerdas/CuerdaNegra.webp', 
           link: '#',
-          description: "Polypropylene cable with UV filter, designed to resist high solar exposure at sea and in the field. Guarantees firmness and long service life in macrotunnels, ideal for berry crops, peppers, and maritime use.",
+          description: "Polypropylene cable with UV filter, designed to resist high solar exposure at sea and field. Guarantees firmness and long lifespan in macro-tunnels, ideal for berry crops, peppers, and maritime use.",
           specs_values: { 
             load: "3,240 m", 
             unit: "1", 
@@ -105,21 +120,20 @@ export const en = {
           }
         },
         { 
-          // ID 3
-          name: 'UV 8 Rope',
-          img: '/images/cuerdas/CuerdaNegra.webp',
+           // ID 2
+          name: 'ROPE UV 8', 
+          img: '/images/cuerdas/CuerdaNegra.webp', 
           link: '#',
-          description: "Polypropylene cable with UV filter, designed to withstand high solar exposure in marine and agricultural environments. It ensures strong firmness and long service life in macrotunnels, making it ideal for berry and pepper crops, as well as marine use.",
-          specs_values: {
-            load: "2500 kg",
-            unit: "16 mm",
-            mat: "Nylon-X",
-            weight: "1%",
-            resist: "High",
-            charge: "Excellent"
+          description: "Polypropylene cable with UV filter, designed to resist high solar exposure at sea and field. Guarantees firmness and long lifespan in macro-tunnels, ideal for berry crops, peppers, and maritime use.",
+          specs_values: { 
+            load: "2500 kg", 
+            unit: "16 mm", 
+            mat: "Nylon-X", 
+            weight: "1%", 
+            resist: "High", 
+            charge: "Excellent" 
           }
-
         }
-      ]
+      ]    
     }
-  };
+};

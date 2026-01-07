@@ -14,9 +14,21 @@ export const es = {
     common: { 
         seeMore: "Ver más", 
         buy: "Comprar", 
-        redirecting: "Redirigiendo..." //
-      },
-    
+        redirecting: "Redirigiendo..." 
+    },
+
+    // =================================================
+    // NUEVA SECCIÓN: CHATBOT (BotGo)
+    // =================================================
+    chatbot: {
+      greeting: '¡Hola! Soy BotGo 🤖. ¿En qué puedo asesorarte hoy?',
+      placeholder: 'Escribe un mensaje...',
+      listening: 'Escuchando...',
+      error: 'Error de conexión.',
+      salesBtn: 'Cotizar',
+      voiceCode: 'es-ES', // Código importante para la voz en español
+      waStart: 'Hola Grupo Ortiz, me interesa cotizar'
+    },
     
     // Lista principal para el carrusel de /productos
     products_list: [
@@ -58,7 +70,7 @@ export const es = {
       }
     ],
   
-    // --- NUEVA SECCIÓN: DATOS ESPECÍFICOS DE LA PÁGINA DE CUERDAS ---
+    // --- DATOS ESPECÍFICOS DE LA PÁGINA DE CUERDAS ---
     cuerdas: {
       meta_title: "Cuerdas | Grupo Ortiz",
       back_aria: "Volver",
@@ -75,13 +87,13 @@ export const es = {
         charge: "Carga / Resistencia"
       },
   
-      // Array con la info de cada producto que tenías en JS
+      // Array con la info de cada producto
       products: [
         { 
           // ID 0
           name: 'CUERDA T1', 
-          img: '/images/cuerdas/CuerdaT1.webp', // Asegúrate que esta ruta exista
-          link: '#', // Link de compra si lo tienes
+          img: '/images/cuerdas/CuerdaT1.webp', 
+          link: '#', 
           description: "Cuerda versátil y duradera fabricada con materiales de primera calidad. Diseñada para soportar desde cargas ligeras hasta trabajo pesado industrial. Su construcción de 3 y 4 cabos ofrece un equilibrio perfecto.",
           specs_values: { 
             load: "939 m", 
@@ -107,11 +119,10 @@ export const es = {
             charge: "Excelente" 
           }
         },
-
         { 
-           // ID 3
+           // ID 2
           name: 'CUERDA UV 8', 
-          img: '/images/cuerdas/CuerdaNegra.webp', // Puse img5 por defecto, ajusta si es otra
+          img: '/images/cuerdas/CuerdaNegra.webp', 
           link: '#',
           description: "Cable de polipropileno con filtro UV, diseñado para resistir alta exposición solar en mar y campo. Garantiza firmeza y larga vida útil en macrotúneles, ideal para cultivos de berries, pimiento y uso marítimo.",
           specs_values: { 
@@ -123,6 +134,6 @@ export const es = {
             charge: "Excelente" 
           }
         }
-      ]
+      ]    
     }
-  };
+};

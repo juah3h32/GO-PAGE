@@ -4,23 +4,38 @@ export const pt = {
       products: 'PRODUTOS',
       catalog: 'Catálogo',
       promos: 'Promoções',
-      about: 'NÓS',
+      about: 'SOBRE NÓS',
       company: 'A Empresa',
       social: 'Impulso Social',
       distributor: 'DISTRIBUIDOR',
       contact: 'CONTATO'
     },
-    hero: { title: "Bem-vindo", subtitle: "Qualidade que perdura" },
+    hero: { title: "Bem-vindos", subtitle: "Qualidade que perdura" },
     common: { 
         seeMore: "Ver mais", 
         buy: "Comprar", 
         redirecting: "Redirecionando..." 
-      },
+    },
+
+    // =================================================
+    // NOVA SEÇÃO: CHATBOT (BotGo) - PORTUGUÊS
+    // =================================================
+    chatbot: {
+      greeting: 'Olá! Eu sou o BotGo 🤖. Como posso ajudar você hoje?',
+      placeholder: 'Digite uma mensagem...',
+      listening: 'Ouvindo...',
+      error: 'Erro de conexão.',
+      salesBtn: 'Solicitar Cotação',
+      voiceCode: 'pt-BR', // Código para voz em Português do Brasil
+      waStart: 'Olá Grupo Ortiz, estou interessado em cotar'
+    },
+
+    // Lista principal para o carrossel de /produtos
     products_list: [
       { 
         img: "img1.png", 
         division: "FILME STRETCH", 
-        descripcion: "Fabricação de sacos de malha industrial para embalagens agrícolas.",
+        descripcion: "Fabricação de sacos de malha industriais para embalagem agrícola.",
         slug: "productos/stretch-film" 
       },
       { 
@@ -49,20 +64,20 @@ export const pt = {
       },
       { 
         img: "img6.png", 
-        division: "CANTONEIRAS", 
+        division: "CANTONEIRAS", // Esquineros em PT
         descripcion: "Desenvolvimentos sob medida.",
         slug: "productos/esquineros" 
       }
     ],
   
-    // --- NOVA SEÇÃO: DADOS ESPECÍFICOS DA PÁGINA DE CORDAS ---
+    // --- DADOS ESPECÍFICOS DA PÁGINA DE CORDAS (Cuerdas) ---
     cuerdas: {
       meta_title: "Cordas | Grupo Ortiz",
       back_aria: "Voltar",
       loading: "Carregando...",
       specs_title: "ESPECIFICAÇÕES TÉCNICAS",
       
-      // Rótulos da tabela
+      // Etiquetas fixas da tabela
       specs_labels: {
         load: "Rendimento",
         unit: "Unidade",
@@ -72,7 +87,7 @@ export const pt = {
         charge: "Carga / Resistência"
       },
   
-      // Array de produtos traduzidos
+      // Array de produtos
       products: [
         { 
           // ID 0
@@ -91,10 +106,10 @@ export const pt = {
         },
         { 
           // ID 1
-          name: 'CORDA UV', 
+          name: 'CORDA UV 6', 
           img: '/images/cuerdas/CuerdaNegra.webp', 
           link: '#',
-          description: "Cabo de polipropileno com filtro UV, projetado para resistir à alta exposição solar no mar e no campo. Garante firmeza e longa vida útil em macrotúneis, ideal para cultivos de frutas vermelhas (berries), pimentão e uso marítimo.",
+          description: "Cabo de polipropileno com filtro UV, projetado para resistir à alta exposição solar no mar e no campo. Garante firmeza e longa vida útil em macrotúneis, ideal para cultivos de berries, pimentão e uso marítimo.",
           specs_values: { 
             load: "3.240 m", 
             unit: "1", 
@@ -105,21 +120,20 @@ export const pt = {
           }
         },
         { 
-            // ID 3
-            name: 'Corda UV 8',
-            img: '/images/cuerdas/CuerdaNegra.webp',
-            link: '#',
-            description: "Cabo de polipropileno com filtro UV, projetado para suportar alta exposição solar em ambientes marítimos e agrícolas. Garante firmeza elevada e longa vida útil em macrotúneis, sendo ideal para o cultivo de berries, pimentão e para uso marítimo.",
-            specs_values: {
-              load: "2500 kg",
-              unit: "16 mm",
-              mat: "Nylon-X",
-              weight: "1%",
-              resist: "Alta",
-              charge: "Excelente"
-            }
-
+           // ID 2
+          name: 'CORDA UV 8', 
+          img: '/images/cuerdas/CuerdaNegra.webp', 
+          link: '#',
+          description: "Cabo de polipropileno com filtro UV, projetado para resistir à alta exposição solar no mar e no campo. Garante firmeza e longa vida útil em macrotúneis, ideal para cultivos de berries, pimentão e uso marítimo.",
+          specs_values: { 
+            load: "2500 kg", 
+            unit: "16 mm", 
+            mat: "Nylon-X", 
+            weight: "1%", 
+            resist: "Alta", 
+            charge: "Excelente" 
+          }
         }
-      ]
+      ]    
     }
-  };
+};
