@@ -374,10 +374,13 @@ model-viewer.model-3d-custom {
    ========================================================= */
 @media screen and (max-width: 1024px) {
 
-  /* 1. LIMPIEZA DE BASE */
+  /* =========================================
+     1. BASE (DISEÑO MÓVIL) - Tu código original
+     ========================================= */
+  
+  /* LIMPIEZA DE BASE */
   html, body {
     overflow: hidden !important;
-   
     height: 100vh !important;
   }
 
@@ -390,13 +393,13 @@ model-viewer.model-3d-custom {
     background: transparent !important;
   }
 
-  /* 2. IMAGEN SUPERIOR (Centrada) */
+  /* IMAGEN SUPERIOR (Centrada) */
   .wheel-container {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 55%; /* Un poco menos de altura para dar espacio a la info */
+    height: 55%; 
     z-index: 1;
     display: flex;
     justify-content: center;
@@ -405,12 +408,13 @@ model-viewer.model-3d-custom {
   }
 
   .wheel-item img {
-    max-height: 35vh !important; /* Imagen contenida */
+    max-height: 35vh !important;
     max-width: 80% !important;
     filter: drop-shadow(0 15px 25px rgba(0,0,0,0.15));
+    transition: all 0.3s ease; /* Suavidad al cambiar de tamaño */
   }
 
-  /* 3. MINIATURAS (A la izquierda, limpias) */
+  /* MINIATURAS (A la izquierda) */
   .thumbnails {
     position: absolute;
     top: 90px;
@@ -433,34 +437,30 @@ model-viewer.model-3d-custom {
   }
   
   .thumb-item.active {
-    border-color: #FB670B;
+    border-color: #fb670b;
     transform: scale(1.1);
   }
 
-  /* 4. TARJETA INFERIOR (INFO Y SPECS) */
+  /* TARJETA INFERIOR (INFO Y SPECS) */
   .text-area {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100% !important;
     height: auto;
-    max-height: 80%; /* Más altura para que quepa todo */
-    overflow-y: auto; /* SCROLL ACTIVADO */
-    
+    max-height: 80%;
+    overflow-y: auto; 
     background: #ffffff !important;
     z-index: 0;
     border-radius: 30px 30px 0 0;
     box-shadow: 0 -5px 30px rgba(0,0,0,0.08);
-    
-    /* PADDING CLAVE: 100px abajo para que el botón no tape nada al scrollear */
     padding: 50px 10px 10px 10px; 
-    
     display: flex !important;
     flex-direction: column;
-    align-items: center !important; /* CENTRAR TODO HORIZONTALMENTE */
+    align-items: center !important;
   }
 
-  /* --- TÍTULO Y DESCRIPCIÓN (Centrados) --- */
+  /* TÍTULO Y DESCRIPCIÓN */
   .text-area h1, #product-title {
     color: #000000 !important;
     font-size: 1.8rem !important;
@@ -481,11 +481,11 @@ model-viewer.model-3d-custom {
     line-height: 1.4;
   }
 
-  /* --- CORRECCIÓN: TÍTULO "ESPECIFICACIONES TÉCNICAS" CENTRADO --- */
+  /* TÍTULO SPECS */
   .specs-title {
     width: 100%;
-    text-align: center !important; /* FORZAR CENTRADO */
-    border-left: none !important; /* QUITAR LA BARRA NARANJA LATERAL */
+    text-align: center !important;
+    border-left: none !important;
     padding-left: 0 !important;
     margin-bottom: 15px !important;
     font-size: 0.8rem !important;
@@ -495,7 +495,7 @@ model-viewer.model-3d-custom {
     display: block !important;
   }
 
-  /* --- GRID DE SPECS (3 Columnas x 2 Filas = 6 Items) --- */
+  /* GRID DE SPECS */
   .specs-container {
     width: 100%;
     margin-bottom: 20px;
@@ -503,9 +503,8 @@ model-viewer.model-3d-custom {
   
   .specs-grid {
     display: grid;
-    /* 3 columnas iguales para que queden 3 arriba y 3 abajo */
     grid-template-columns: repeat(3, 1fr) !important; 
-    gap: 8px !important; /* Espacio pequeño entre cajas */
+    gap: 8px !important;
     width: 100%;
   }
 
@@ -513,20 +512,18 @@ model-viewer.model-3d-custom {
     background: #f7f7f7 !important;
     border: 1px solid #eeeeee;
     border-radius: 10px;
-    /* Padding reducido para que quepa en pantallas angostas */
     padding: 8px 2px !important; 
-    
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    min-height: 60px; /* Altura mínima para uniformidad */
+    min-height: 60px;
   }
 
   .spec-value {
     color: #000 !important;
-    font-size: 0.95rem !important; /* Texto un poco más pequeño para que no se corte */
+    font-size: 0.95rem !important; 
     font-weight: 800;
     line-height: 1.2;
     margin-bottom: 2px;
@@ -534,12 +531,12 @@ model-viewer.model-3d-custom {
   
   .spec-label {
     color: #666 !important;
-    font-size: 0.6rem !important; /* Letra pequeña para el título "PESO", "MATERIAL" */
+    font-size: 0.6rem !important;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
 
-  /* --- BOTÓN DE COMPRA (GRANDE Y ABAJO) --- */
+  /* BOTÓN DE COMPRA */
   .text-area > div:last-child, 
   .btn-container {
     width: 100%;
@@ -548,11 +545,11 @@ model-viewer.model-3d-custom {
   }
 
   .text-area button, .buy-btn {
-    background: #000000 !important; /* Negro solido */
+    background: #fb670b !important;
     color: #ffffff !important;
     width: 100% !important;
     border-radius: 15px;
-    padding: 18px 0; /* Botón alto */
+    padding: 18px 0;
     font-size: 1.1rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -561,31 +558,23 @@ model-viewer.model-3d-custom {
     cursor: pointer;
     border: none;
   }
-/* =================================================================
-     ESTILO MÓVIL (Transformación a botón flotante blanco)
-     ================================================================= */
+
+  /* BOTÓN VOLVER (ESTILO MÓVIL) */
   .back-arrow-btn {
-    /* CAMBIO A POSICIÓN FIJA (FLOTANTE) */
     position: fixed !important;
-    
     top: 28px;
     left: 25px;
     margin-bottom: 0;
-    z-index: 4000; /* Siempre encima de la imagen y el scroll */
-
-    /* CAMBIO DE FORMA (De círculo a cuadrado redondeado) */
+    z-index: 4000;
     width: 44px;
     height: 44px;
     border-radius: 12px; 
-
-    /* CAMBIO DE COLOR (Blanco sólido con flecha negra) */
     background: #ffffff !important;
-    border: none !important; /* Quitamos el borde naranja */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Sombra suave */
-    color: #000000 !important; /* Flecha negra obligatoria */
+    border: none !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    color: #000000 !important;
   }
 
-  /* Ajuste del icono/SVG para asegurar que sea negro */
   .back-arrow-btn svg,
   .back-arrow-btn i {
     stroke: #000000 !important;
@@ -594,19 +583,201 @@ model-viewer.model-3d-custom {
     height: 20px;
   }
 
-  /* Efecto click en móvil */
   .back-arrow-btn:active {
     transform: scale(0.92);
     background: #f5f5f5 !important;
   }
   
-  /* Eliminar hover de escritorio en móvil para evitar bugs visuales */
   .back-arrow-btn:hover {
     background: #ffffff !important;
     transform: none;
   }
 
+
+  /* =================================================================
+     2. AJUSTES ESPECÍFICOS PARA TABLET (Min-width: 600px hasta 1024px)
+     Esto "infla" el diseño móvil para llenar mejor la pantalla de la tablet
+     ================================================================= */
+
 }
+/* =================================================================
+     2. AJUSTES TABLET: ICONOS Y PRODUCTO GRANDES
+     ================================================================= */
+  @media screen and (min-width: 600px) and (max-width: 1024px) {
+    
+    /* --- CONFIGURACIÓN GENERAL --- */
+    
+    /* 1. MINIATURAS (ICONOS) MÁS GRANDES */
+    .thumbnails {
+        gap: 25px !important; /* Más separación entre ellos */
+    }
+    .thumb-item {
+        width: 90px !important;  /* ANTES: 65px -> AHORA: 80px (Más grandes) */
+        height: 90px !important;
+    }
+
+    /* 2. TARJETA (BASE) */
+    .text-area {
+        left: 50% !important; 
+        transform: translateX(-50%) !important; 
+        box-sizing: border-box !important; 
+        border-radius: 40px 40px 0 0 !important;
+        top: auto;
+        z-index: 0 !important; /* Encima de la imagen */
+        box-shadow: 0 -10px 40px rgba(0,0,0,0.15); 
+        padding-top: 50px !important;
+    }
+
+    /* Textos */
+    .text-area h1 { font-size: 2.4rem !important; margin-bottom: 10px !important; }
+    .text-area p { font-size: 1.1rem !important; max-width: 85%; }
+    .specs-grid { gap: 15px !important; }
+    .spec-value { font-size: 1.3rem !important; }
+    
+    /* Botón flotante */
+    .back-arrow-btn { width: 60px; height: 60px; top: 35px; left: 35px; }
+
+
+    /* =========================================
+       CASO A: VERTICAL (Portrait)
+       ========================================= */
+    @media (orientation: portrait) {
+        
+        /* IMAGEN PRINCIPAL GRANDE */
+        .wheel-item img {
+            max-height: 80vh !important; /* AUMENTADO (Antes 25vh) */
+            max-width: 100% !important;   /* Más ancha */
+            margin-top: -50px;   
+                    /* Subimos un poco para centrarla en el hueco libre */
+        }
+        
+        /* CONTENEDOR DE MINIATURAS (BARRA FLOTANTE) */
+  .thumbnails {
+    /* 1. POSICIONAMIENTO */
+    position: absolute;
+    left: 30px;
+    /* Centrado verticalmente automático si usas top: 50% + transform */
+    top: 28%; 
+    transform: translateY(-50%); 
+    
+    /* 2. ESTETICA "CRISTAL" (GLASSMORPHISM) */
+    background: rgba(255, 255, 255, 0.65); /* Blanco semitransparente */
+    backdrop-filter: blur(15px);           /* El truco: desenfoca lo que hay detrás */
+    -webkit-backdrop-filter: blur(15px);   /* Soporte para Safari/iPhone */
+    border: 1px solid rgba(255, 255, 255, 0.8); /* Borde blanco sutil */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1); /* Sombra suave y difusa */
+    
+    /* 3. FORMA Y ESPACIADO */
+    border-radius: 50px; /* Forma de píldora redondeada */
+    padding: 15px 12px;  /* Espacio interno cómodo */
+    display: flex;
+    flex-direction: column;
+    gap: 20px !important; /* Separación entre bolitas */
+    z-index: 100;
+  }
+
+  /* ESTILO DE LAS BOLITAS (ITEMS) */
+  .thumb-item {
+    width: 70px !important; /* Ajusta este tamaño según necesites */
+    height: 70px !important;
+    border-radius: 50%;
+    cursor: pointer;
+    
+    /* Sombra suave para cada bolita */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    border: 3px solid transparent; /* Prepara el borde para el active */
+    transition: all 0.3s ease;
+  }
+
+  /* ESTILO ACTIVO (SELECCIONADO) */
+  .thumb-item.active {
+    border-color: #ff8000; /* O tu color naranja #FB670B */
+    transform: scale(1.15); /* Crece un poquito */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2); /* Sombra más fuerte al seleccionar */
+  }
+
+        .text-area {
+            width: 90% !important; 
+            max-width: 750px !important; 
+            max-height: 80% !important; /* Tarjeta alta */
+            padding: 60px 40px 20px 40px !important; 
+        }
+    }
+
+
+    /* =========================================
+       CASO B: HORIZONTAL (Landscape)
+       ========================================= */
+    @media (orientation: landscape) {
+        
+        /* IMAGEN PRINCIPAL GRANDE */
+        .wheel-container { height: 50% !important; top: 0; }
+        .wheel-item img {
+            max-height: 35vh !important; /* AUMENTADO (Antes 22vh) */
+            max-width: 45% !important;
+        }
+
+        /* CONTENEDOR DE MINIATURAS (BARRA FLOTANTE) */
+  .thumbnails {
+    /* 1. POSICIONAMIENTO */
+    position: absolute;
+    left: 30px;
+    /* Centrado verticalmente automático si usas top: 50% + transform */
+    top: 50%; 
+    transform: translateY(-50%); 
+    
+    /* 2. ESTETICA "CRISTAL" (GLASSMORPHISM) */
+    background: rgba(255, 255, 255, 0.65); /* Blanco semitransparente */
+    backdrop-filter: blur(15px);           /* El truco: desenfoca lo que hay detrás */
+    -webkit-backdrop-filter: blur(15px);   /* Soporte para Safari/iPhone */
+    border: 1px solid rgba(255, 255, 255, 0.8); /* Borde blanco sutil */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1); /* Sombra suave y difusa */
+    
+    /* 3. FORMA Y ESPACIADO */
+    border-radius: 50px; /* Forma de píldora redondeada */
+    padding: 15px 12px;  /* Espacio interno cómodo */
+    display: flex;
+    flex-direction: column;
+    gap: 20px !important; /* Separación entre bolitas */
+    z-index: 100;
+  }
+
+  /* ESTILO DE LAS BOLITAS (ITEMS) */
+  .thumb-item {
+    width: 60px !important; /* Ajusta este tamaño según necesites */
+    height: 60px !important;
+    border-radius: 50%;
+    cursor: pointer;
+    
+    /* Sombra suave para cada bolita */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    border: 3px solid transparent; /* Prepara el borde para el active */
+    transition: all 0.3s ease;
+  }
+
+  /* ESTILO ACTIVO (SELECCIONADO) */
+  .thumb-item.active {
+    border-color: #ff8000; /* O tu color naranja #FB670B */
+    transform: scale(1.15); /* Crece un poquito */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2); /* Sombra más fuerte al seleccionar */
+  }
+
+        .text-area {
+            width: 85% !important; 
+            max-width: 900px !important; 
+            top: auto;
+            max-height: 70% !important; /* Tarjeta alta */
+            padding: 40px 50px 20px 50px !important; 
+        }
+        
+        .text-area button { padding: 15px 0 !important; }
+    }
+
+  }
+
+
+
+
 @media screen and (min-width: 1025px) {
   /* Solución para grid que se ajusta al contenido (FIX Solicitado) */
   .specs-grid { 

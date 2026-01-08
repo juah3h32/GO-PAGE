@@ -101,7 +101,7 @@ footer {
 /* --- BOTÓN DISTRIBUIDOR (COLUMNA 4) --- */
 .btn-orange {
   display: inline-block;
-  background-color: #FF6600;
+  background-color: #fb670b;
   color: #ffffff !important;
   padding: 10px 20px; /* Padding equilibrado */
   border-radius: 4px;
@@ -109,7 +109,7 @@ footer {
   font-weight: 700;
   font-size: 11px;
   letter-spacing: 0.5px;
-  border: 2px solid #FF6600;
+  border: 2px solid #fb670b;
   text-align: center;
   transition: all 0.3s ease;
   
@@ -120,7 +120,7 @@ footer {
 }
 .btn-orange:hover {
   background-color: transparent;
-  color: #FF6600 !important;
+  color: #fb670b !important;
 }
 
 /* Ajuste específico para el botón */
@@ -176,7 +176,7 @@ footer {
 }
 
 .social-icons a:hover {
-  background-color: #FF6600;
+  background-color: #fb670b;
   color: #ffffff;
   border-color: #ffffff;
 }

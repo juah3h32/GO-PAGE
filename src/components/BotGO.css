@@ -20,7 +20,7 @@
 /* Botón flotante Original */
 .botgo-button {
   width: 60px; height: 60px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary-orange), #ff7e50);
+  background: linear-gradient(135deg, var(--primary-orange), #fb670b);
   border: 3px solid #fff; 
   
   /* MANITA ACTIVA AQUÍ */

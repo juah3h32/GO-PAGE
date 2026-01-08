@@ -52,7 +52,7 @@
    TRANSICIÓN 2 – LIQUIDA TOP → BOTTOM
 ================================ */
 .reveal-circle.liquid {
-  background: linear-gradient(180deg, #ff7a18, #000);
+  background: linear-gradient(180deg, #fb670b, #000);
   clip-path: inset(0 0 100% 0);
   transition: clip-path 1.1s cubic-bezier(.65,0,.35,1);
 }
@@ -65,7 +65,7 @@
    TRANSICIÓN 3 – WIPE DIAGONAL
 ================================ */
 .reveal-circle.diagonal {
-  background: linear-gradient(135deg, #ff7a18, #000);
+  background: linear-gradient(135deg, #fb670b, #000);
   clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
   transition: clip-path 1.2s ease-in-out;
 }
@@ -78,7 +78,7 @@
    TRANSICIÓN 4 – SLIDE LEFT
 ================================ */
 .reveal-circle.slide {
-  background: #ff7a18;
+  background: #fb670b;
   transform: translateX(-100%);
   transition: transform 1s cubic-bezier(.77,0,.175,1);
 }

@@ -7,7 +7,7 @@
      --body-bg : #ffffff;
      --productos-text: #000000;
      --productos-text-muted: #000000;
-     --productos-hover: #e8610d;
+     --productos-hover: #fb670b;
      
      
      /* Variables de animación */
@@ -134,13 +134,13 @@
      /* Estilos visuales */
      margin-top: 1.2em;
      color: #ffffff; 
-     background-color: #ff6600; 
+     background-color: #fb670b;
      text-decoration: none;
      transition: transform 0.3s, background-color 0.3s; 
      border: none; 
      cursor: pointer;
    }
-   .carousel .list .item .introduce .seeMore:hover { background-color: #e55a00; transform: translateY(-2px); }
+   .carousel .list .item .introduce .seeMore:hover { background-color: #fb670b;; transform: translateY(-2px); }
    
    /* =========================================
       6. ANIMACIONES
@@ -327,7 +327,7 @@
     font-size: 1rem;
     font-weight: 600;
     color: #ffffff;
-    background-color: #FB670B;
+    background-color: #fb670b;
     
     border: none;
     border-radius: 25px;

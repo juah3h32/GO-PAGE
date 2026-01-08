@@ -44,17 +44,22 @@ export default defineConfig({
         ]
       },
       workbox: {
-        maximumFileSizeToCacheInBytes: 45000000, // Soporta archivos de hasta 45MB
+        maximumFileSizeToCacheInBytes: 45000000, 
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webp}'],
       }
     })
   ],
 
+  // --- AQUÍ HICE EL CAMBIO ---
   vite: {
+    server: {
+      allowedHosts: true, // Esto permite que el túnel funcione
+    },
     define: {
       CESIUM_BASE_URL: JSON.stringify('/cesium')
     }
   },
+  // ---------------------------
 
   adapter: node({
     mode: 'standalone'
