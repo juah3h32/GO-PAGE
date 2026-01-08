@@ -365,306 +365,206 @@ model-viewer.model-3d-custom {
 }
 
 /* =========================================================
-   1. BASE TABLET / PORTÁTIL (MAX-WIDTH: 1024px)
-   Define la estructura de columna y el orden visual
+   DISEÑO LIMPIO: FONDO BLANCO, CENTRADO Y SCROLL EN TARJETA
+   Aplica a pantallas menores a 1024px
+   ========================================================= */
+/* =========================================================
+   DISEÑO CORREGIDO: TODO CENTRADO Y SPECS EN 2 FILAS
+   Aplica a pantallas menores a 1024px
    ========================================================= */
 @media screen and (max-width: 1024px) {
 
-  /* --- AJUSTES GLOBALES --- */
+  /* 1. LIMPIEZA DE BASE */
   html, body {
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    height: auto !important;
-    touch-action: pan-y !important;
-    cursor: auto !important;
-    -webkit-overflow-scrolling: touch;
+    overflow: hidden !important;
+   
+    height: 100vh !important;
   }
-  
-  .back-arrow-btn, .cursor, .cursor-dot, .custom-cursor { 
-    display: none !important; 
-  }
-  * { cursor: auto !important; }
 
-  /* --- LAYOUT PRINCIPAL --- */
   .main-container {
-    display: flex !important;
-    flex-direction: column;
-    align-items: center !important;
-    padding-top: 65px; 
-    padding-bottom: 90px; 
-    padding-left: 20px;
-    padding-right: 20px;
-    height: auto !important;
-    min-height: 100vh;
-    gap: 15px;
-  }
-  
-  .content, .text-area { display: contents !important; }
-
-  /* --- ORDEN 1: IMAGEN --- */
-  .wheel-container {
-    order: 1;
+    display: block !important;
     width: 100%;
-    height: auto;
-    max-height: 35vh; 
-    min-height: 250px;
-    margin-bottom: 0;
-    position: relative;
+    height: 100vh;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+  }
+
+  /* 2. IMAGEN SUPERIOR (Centrada) */
+  .wheel-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 55%; /* Un poco menos de altura para dar espacio a la info */
+    z-index: 1;
     display: flex;
     justify-content: center;
     align-items: center;
+    background: transparent !important;
+  }
+
+  .wheel-item img {
+    max-height: 35vh !important; /* Imagen contenida */
+    max-width: 80% !important;
+    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.15));
+  }
+
+  /* 3. MINIATURAS (A la izquierda, limpias) */
+  .thumbnails {
+    position: absolute;
+    top: 90px;
+    left: 7px;
+    z-index: 100;
+    flex-direction: column !important;
+    width: auto !important;
+    height: auto !important;
+    background: rgba(0,0,0,0.03);
+    border-radius: 30px;
+    padding: 8px;
+    gap: 10px !important;
+  }
+
+  .thumb-item {
+    width: 55px !important;
+    height: 55px !important;
+    border-radius: 50%;
+    border: 2px solid transparent;
   }
   
-  .wheel-item img {
-    width: auto;
-    height: auto;
-    max-width: 85%; 
-    max-height: 35vh; 
-    object-fit: contain;
-    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.4)); 
-  }
-
-  /* --- ORDEN 2: TÍTULO --- */
-  .text-area h1,
-  #product-title {
-    order: 2;
-    width: 100%;
-    text-align: center !important;
-    /* Clamp ajustado para que no sea gigante en tablets */
-    font-size: clamp(3rem, 8vw, 4.5rem) !important; 
-    font-weight: 900;
-    line-height: 1;
-    text-transform: uppercase;
-    margin-top: -10px;
-    margin-bottom: 15px; 
-    color: var(--text-color);
-  }
-
-  /* --- ORDEN 3: ICONOS (Thumbnails) --- */
-  .thumbnails {
-    order: 3;
-    width: 100%;
-    display: flex;
-    justify-content: center !important;
-    gap: 15px; 
-    margin-bottom: 20px; 
-    height: auto; 
-    margin-top: 0;
-  }
-  .thumb-item {
-    width: 16vw; height: 16vw;
-    max-width: 80px; max-height: 80px;
-    min-width: 60px; min-height: 60px;
-    border-radius: 12px;
-    border: 2px solid rgba(251, 103, 11, 0.5); 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    background: rgba(0,0,0,0.2);
-  }
   .thumb-item.active {
     border-color: #FB670B;
-    background: rgba(251, 103, 11, 0.1);
+    transform: scale(1.1);
   }
 
-  /* --- ORDEN 4: DESCRIPCIÓN --- */
-  .text-area p,
-  #product-desc {
-    order: 4;
+  /* 4. TARJETA INFERIOR (INFO Y SPECS) */
+  .text-area {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100% !important;
+    height: auto;
+    max-height: 80%; /* Más altura para que quepa todo */
+    overflow-y: auto; /* SCROLL ACTIVADO */
+    
+    background: #ffffff !important;
+    z-index: 0;
+    border-radius: 30px 30px 0 0;
+    box-shadow: 0 -5px 30px rgba(0,0,0,0.08);
+    
+    /* PADDING CLAVE: 100px abajo para que el botón no tape nada al scrollear */
+    padding: 50px 10px 10px 10px; 
+    
+    display: flex !important;
+    flex-direction: column;
+    align-items: center !important; /* CENTRAR TODO HORIZONTALMENTE */
+  }
+
+  /* --- TÍTULO Y DESCRIPCIÓN (Centrados) --- */
+  .text-area h1, #product-title {
+    color: #000000 !important;
+    font-size: 1.8rem !important;
+    font-weight: 900;
     text-align: center !important;
-    width: 95%; 
-    max-width: 600px;
-    margin: 0 auto 20px auto; 
-    font-size: 0.95rem;
-    color: var(--text-muted);
+    margin-bottom: 10px !important;
+    width: 100%;
+    line-height: 1.1;
   }
 
-  /* --- ORDEN 5: SPECS --- */
-  .specs-container {
-    order: 5;
+  .text-area p, #product-desc {
+    color: #444444 !important;
+    font-size: 0.85rem !important;
+    text-align: center !important;
+    margin-bottom: 20px !important;
     width: 100%;
-    max-width: 650px;
-    margin-bottom: 25px; 
+    max-width: 90%;
+    line-height: 1.4;
   }
+
+  /* --- CORRECCIÓN: TÍTULO "ESPECIFICACIONES TÉCNICAS" CENTRADO --- */
+  .specs-title {
+    width: 100%;
+    text-align: center !important; /* FORZAR CENTRADO */
+    border-left: none !important; /* QUITAR LA BARRA NARANJA LATERAL */
+    padding-left: 0 !important;
+    margin-bottom: 15px !important;
+    font-size: 0.8rem !important;
+    color: #000 !important;
+    font-weight: 800;
+    letter-spacing: 1px;
+    display: block !important;
+  }
+
+  /* --- GRID DE SPECS (3 Columnas x 2 Filas = 6 Items) --- */
+  .specs-container {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
   .specs-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 10px;
-    justify-content: center;
-  }
-  .spec-box {
-    padding: 10px 5px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 8px;
+    /* 3 columnas iguales para que queden 3 arriba y 3 abajo */
+    grid-template-columns: repeat(3, 1fr) !important; 
+    gap: 8px !important; /* Espacio pequeño entre cajas */
+    width: 100%;
   }
 
-  /* --- ORDEN 6: BOTÓN --- */
-  .text-area > div:last-child,
-  .text-area > .btn-container {
-    order: 6;
-    width: 100%;
+  .spec-box {
+    background: #f7f7f7 !important;
+    border: 1px solid #eeeeee;
+    border-radius: 10px;
+    /* Padding reducido para que quepa en pantallas angostas */
+    padding: 8px 2px !important; 
+    
     display: flex;
-    justify-content: center !important;
-    margin-bottom: 30px; 
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 60px; /* Altura mínima para uniformidad */
   }
-  .text-area button, .buy-btn {
+
+  .spec-value {
+    color: #000 !important;
+    font-size: 0.95rem !important; /* Texto un poco más pequeño para que no se corte */
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 2px;
+  }
+  
+  .spec-label {
+    color: #666 !important;
+    font-size: 0.6rem !important; /* Letra pequeña para el título "PESO", "MATERIAL" */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* --- BOTÓN DE COMPRA (GRANDE Y ABAJO) --- */
+  .text-area > div:last-child, 
+  .btn-container {
     width: 100%;
-    max-width: 350px;
-    padding: 15px 0;
-    border-radius: 30px;
-  }
-}
-
-/* =========================================================
-   2. MÓVIL GENERAL (MAX-WIDTH: 768px)
-   Expande anchos para aprovechar pantallas verticales
-   ========================================================= */
-@media screen and (max-width: 768px) {
-  
-  .main-container {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-    width: 100% !important;
-    padding-top: 120px;
+    margin-top: 10px;
+    padding-bottom: 10px;
   }
 
-  /* Liberar ancho máximo de textos */
-  #product-desc, 
-  .specs-container,
-  .text-area p {
-    width: 100% !important;
-    max-width: 100% !important; 
-  }
-
-  /* Imagen más ancha e imponente */
-  .wheel-item img {
-    max-width: 95% !important; 
-    width: 95% !important;
-    max-height: 40vh; 
-  }
-
-  /* Título optimizado */
-  .text-area h1, #product-title {
-    width: 100%;
-    font-size: clamp(2.5rem, 10vw, 4rem) !important;
-    margin-bottom: 10px;
-  }
-  
-  /* Grid más compacto */
-  .specs-grid {
-    gap: 6px !important;
-  }
-  
-  /* Botón casi full width */
   .text-area button, .buy-btn {
-    max-width: 90% !important;
-  }
-}
-
-/* =========================================================
-   3. MOBILE REAL (MAX-WIDTH: 430px)
-   Ajustes para iPhone Pro Max / Samsung S23/24 Ultra
-   ========================================================= */
-@media screen and (max-width: 430px) {
-
-  .main-container {
-    /* Un poco más de aire arriba en móviles modernos */
-    padding-top: 90px; 
-    padding-bottom: 80px;
-  }
-
-  /* Ajustar tamaño del título para que no salte a 3 líneas */
-  .text-area h1, #product-title {
-    font-size: clamp(2.2rem, 9vw, 3.5rem) !important;
-    margin-bottom: 12px;
-  }
-
-  /* Descripción un poco más pequeña para legibilidad */
-  .text-area p, #product-desc {
-    font-size: 0.9rem !important;
-    line-height: 1.4;
-    padding: 0 5px; /* Evita que el texto toque los bordes físicos */
-  }
-
-  /* Ajuste de thumbnails para que entren bien sin overflow */
-  .thumb-item {
-    width: 18vw; 
-    height: 18vw;
-    max-width: 70px;
-    max-height: 70px;
-  }
-
-  .specs-grid {
-    /* Forzar que las specs se mantengan en grid de 3 incluso aquí */
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 5px !important;
-  }
-  
-  .spec-box {
-    /* Texto más pequeño dentro de las specs */
-    font-size: 0.8rem; 
-    padding: 8px 2px;
-  }
-}
-
-/* =========================================================
-   4. MOBILE PEQUEÑO (MAX-WIDTH: 360px)
-   Modo supervivencia: Pantallas muy angostas (Galaxy Fold, iPhone SE)
-   ========================================================= */
-@media screen and (max-width: 360px) {
-
-  .main-container {
-    padding-left: 5px !important;
-    padding-right: 5px !important;
-    padding-top: 40px;
-  }
-
-  /* Título drásticamente más pequeño para evitar cortes */
-  .text-area h1, #product-title {
-    font-size: 2rem !important; /* Fijo para seguridad */
-    margin-top: -5px;
-  }
-
-  /* Imagen más contenida */
-  .wheel-container {
-    min-height: 200px; /* Reducir altura mínima */
-    max-height: 30vh;
-  }
-  
-  .wheel-item img {
-    max-height: 30vh;
-  }
-
-  /* Thumbnails reducidos al máximo */
-  .thumbnails {
-    gap: 8px; /* Menos espacio entre iconos */
-  }
-  .thumb-item {
-    min-width: 50px;
-    min-height: 50px;
-    width: 15vw;
-    height: 15vw;
-  }
-
-  /* Specs Grid al límite */
-  .specs-grid {
-    gap: 4px !important;
-  }
-  
-  .spec-box {
-    font-size: 0.75rem; /* Texto muy pequeño */
-    padding: 6px 2px;
-  }
-
-  /* Botón ocupa todo el ancho disponible */
-  .text-area button, .buy-btn {
+    background: #000000 !important; /* Negro solido */
+    color: #ffffff !important;
     width: 100% !important;
-    max-width: 100% !important;
-    font-size: 0.9rem; /* Texto del botón ajustado */
-    padding: 12px 0;
+    border-radius: 15px;
+    padding: 18px 0; /* Botón alto */
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    cursor: pointer;
+    border: none;
   }
+
+  /* Ocultar elementos sobrantes */
+  .reveal-circle, .back-arrow-btn { display: none !important; }
 }
-/* =================================================================
-   11. MEDIA QUERIES: ESCRITORIO (MIN-WIDTH: 1025px)
-================================================================= */
 @media screen and (min-width: 1025px) {
   /* Solución para grid que se ajusta al contenido (FIX Solicitado) */
   .specs-grid { 
