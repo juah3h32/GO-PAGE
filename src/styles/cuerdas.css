@@ -571,7 +571,7 @@ model-viewer.model-3d-custom {
     top: 28px;
     left: 25px;
     margin-bottom: 0;
-    z-index: 2000; /* Siempre encima de la imagen y el scroll */
+    z-index: 4000; /* Siempre encima de la imagen y el scroll */
 
     /* CAMBIO DE FORMA (De círculo a cuadrado redondeado) */
     width: 44px;

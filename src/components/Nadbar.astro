@@ -272,6 +272,7 @@ function getLangPath(targetLang: string) {
 body.no-scroll { overflow: hidden; }
 
 .montfort-header {
+  z-index: 3000 !important; /* Mayor que 2000 */
   position: fixed; top: 0; left: 0; width: 100%;
   height: var(--header-height); z-index: 1000;
   transition: all 0.4s ease; padding-top: 25px;
