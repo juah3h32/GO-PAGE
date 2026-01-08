@@ -249,7 +249,7 @@
     
     /* Dimensiones Elásticas */
     width: 85%;
-    max-width: auto; /* Corregido de 'auto' a pixel fijo según comentario */
+    max-width: auto; 
     height: auto;
     min-height: 35vh;
     
@@ -316,7 +316,7 @@
   }
 
   /* =========================================
-     5. BOTONES Y UI
+     5. BOTONES Y UI (Carousel)
      ========================================= */
   .carousel .list .item .introduce .seeMore {
     align-self: flex-end;
@@ -335,8 +335,10 @@
     transform: none;
   }
 
-  /* Ocultar flechas de navegación en móvil */
+  /* Ocultar flechas de navegación del carousel en móvil */
   .arrows {
     display: none;
   }
+
+  
 }

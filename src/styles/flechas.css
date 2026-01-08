@@ -7,33 +7,32 @@ body {
   cursor: none;
 }
 
-/* --- CONTENEDOR PRINCIPAL --- */
+/* --- CONTENEDOR PRINCIPAL (ESCRITORIO) --- */
 .arrows {
   position: absolute;
-  /* Centrado verticalmente en la pantalla */
   top: 50%;
   left: 0;
   width: 100%;
-  height: 0; /* Altura 0 para no bloquear clicks en el centro */
+  height: 0;
   transform: translateY(-50%);
   z-index: 100; 
   display: flex;
-  justify-content: space-between; /* Fuerza separación extrema */
-  pointer-events: none; /* IMPORTANTE: Deja pasar clicks en el hueco del medio */
-  padding: 0 2%; /* Un pequeño margen general */
+  justify-content: space-between; 
+  pointer-events: none; 
+  padding: 0 2%; 
 }
 
-/* --- ESTILOS DE LOS BOTONES --- */
+/* --- ESTILOS DE LOS BOTONES (ESCRITORIO) --- */
 .arrows button {
-  pointer-events: auto; /* Reactiva el click SOLO en los botones */
-  position: relative; /* Relative porque el padre ya usa flex space-between */
+  pointer-events: auto; 
+  position: relative; 
   
   /* TAMAÑO PEQUEÑO */
   width: 70px;
   height: 70px;
   border-radius: 50%;
   
-  /* Estilos Visuales (Glassmorphism) */
+  /* Estilos Visuales (Glassmorphism Naranja) */
   border: 1px solid rgba(255, 145, 0, 0.35);
   background: linear-gradient(
     145deg,
@@ -58,43 +57,65 @@ body {
   width: 20px;
   height: 20px;
   stroke-width: 2;
+  stroke: #fff; /* Blanco en escritorio */
 }
 
-/* --- IDS ESPECÍFICOS (Por si se requiere ajuste fino) --- */
-#prev {
-  /* No necesitamos left/right aquí porque el flex space-between lo hace solo */
-}
-
-#next {
-  /* No necesitamos left/right aquí */
-}
-
-/* --- HOVER --- */
+/* --- HOVER (ESCRITORIO) --- */
 .arrows button:hover {
   transform: scale(1.1);
   background-color: rgba(255, 255, 255, 0.2);
   border-color: #fff;
 }
 
-/* =========================================
-   MEDIA QUERIES (MÓVIL)
-   ========================================= */
-@media (max-width: 768px) {
+
+/* =================================================================
+   MEDIA QUERIES (MÓVIL Y TABLET - HASTA 1024PX)
+   Aplicando estilo: Botón Flotante Blanco Cuadrado
+   ================================================================= */
+@media screen and (max-width: 1024px) {
+    
     .arrows {
-      /* En móvil subimos un poco las flechas para que se alineen 
-         más con la imagen y no con el hueco vacío */
-      top: 40%; 
-      padding: 0 10px; /* Pegadas a la orilla (10px de margen) */
+      /* Ajustamos posición para móvil */
+      top: 50%; 
+      padding: 0 15px; /* Un poco más de margen lateral */
+      width: 100%;
     }
 
     .arrows button {
-      width: 35px; /* Un pelín más chicas en móvil si prefieres, o déjalas en 40px */
-      height: 35px;
-      background: rgba(0, 0, 0, 0.5); /* Fondo un poco más oscuro para contraste */
+      /* 1. CAMBIO DE FORMA (De círculo a cuadrado redondeado) */
+      width: 44px;
+      height: 44px;
+      border-radius: 12px; 
+
+      /* 2. CAMBIO DE COLOR (Blanco sólido) */
+      background: #FB670B !important;
+      border: none !important;
+      
+      /* 3. SOMBRA Y ESTILOS */
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      color: #000000 !important;
+      
+      /* Quitamos efectos de glassmorphism de escritorio */
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
     }
     
+    /* 4. ICONO NEGRO */
     .arrows button svg {
-      width: 18px;
-      height: 18px;
+      stroke: #ffffff !important; /* Forzamos color negro */
+      width: 20px;
+      height: 20px;
+    }
+
+    /* 5. EFECTO CLICK (Feedback táctil) */
+    .arrows button:active {
+      transform: scale(0.92); /* Efecto de pulsación */
+      background: #f5f5f5 !important;
+    }
+
+    /* Eliminar efecto hover de escritorio para evitar bugs en touch */
+    .arrows button:hover {
+      transform: none;
+      background: #000000 !important;
     }
 }

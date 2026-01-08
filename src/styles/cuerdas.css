@@ -561,9 +561,51 @@ model-viewer.model-3d-custom {
     cursor: pointer;
     border: none;
   }
+/* =================================================================
+     ESTILO MÓVIL (Transformación a botón flotante blanco)
+     ================================================================= */
+  .back-arrow-btn {
+    /* CAMBIO A POSICIÓN FIJA (FLOTANTE) */
+    position: fixed !important;
+    
+    top: 28px;
+    left: 25px;
+    margin-bottom: 0;
+    z-index: 2000; /* Siempre encima de la imagen y el scroll */
 
-  /* Ocultar elementos sobrantes */
-  .reveal-circle, .back-arrow-btn { display: none !important; }
+    /* CAMBIO DE FORMA (De círculo a cuadrado redondeado) */
+    width: 44px;
+    height: 44px;
+    border-radius: 12px; 
+
+    /* CAMBIO DE COLOR (Blanco sólido con flecha negra) */
+    background: #ffffff !important;
+    border: none !important; /* Quitamos el borde naranja */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Sombra suave */
+    color: #000000 !important; /* Flecha negra obligatoria */
+  }
+
+  /* Ajuste del icono/SVG para asegurar que sea negro */
+  .back-arrow-btn svg,
+  .back-arrow-btn i {
+    stroke: #000000 !important;
+    fill: none;
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Efecto click en móvil */
+  .back-arrow-btn:active {
+    transform: scale(0.92);
+    background: #f5f5f5 !important;
+  }
+  
+  /* Eliminar hover de escritorio en móvil para evitar bugs visuales */
+  .back-arrow-btn:hover {
+    background: #ffffff !important;
+    transform: none;
+  }
+
 }
 @media screen and (min-width: 1025px) {
   /* Solución para grid que se ajusta al contenido (FIX Solicitado) */

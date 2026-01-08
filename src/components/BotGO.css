@@ -199,7 +199,7 @@
   .botgo-container {
     right: 0;
     left: auto;
-    top: 50%;
+    top: 20%;
     bottom: auto;
     transform: translateY(-50%);
     width: auto;

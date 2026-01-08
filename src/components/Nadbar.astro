@@ -1,12 +1,14 @@
 ---
+
 // src/components/Navbar.astro
 import { languages, translations } from '../i18n';
 
 interface Props {
   currentLang?: string;
+  moveLogoMobile?: boolean; // <--- Agrega esto
 }
 
-const { currentLang = 'es' } = Astro.props;
+const { currentLang = 'es', moveLogoMobile = false } = Astro.props; // <--- Extrae esto
 const { pathname } = Astro.url;
 
 // SEGURIDAD DE IDIOMAS
@@ -26,7 +28,7 @@ function getLangPath(targetLang: string) {
 }
 ---
 
-<header class="montfort-header transparent">
+<header class={`montfort-header transparent ${moveLogoMobile ? 'logo-shifted' : ''}`}>
   <nav class="montfort-nav">
 
     <div class="nav-left">
@@ -456,4 +458,9 @@ body.no-scroll { overflow: hidden; }
 
 [dir="rtl"] .nav-links { flex-direction: row-reverse; }
 [dir="rtl"] .mobile-mini-dropdown { left: 0; right: auto; }
+
+.montfort-header.logo-shifted .logo {
+   display: none; /* <--- Esto hace que desaparezca y no ocupe espacio */
+}
+
 </style>

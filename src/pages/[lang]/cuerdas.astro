@@ -36,7 +36,11 @@ const specs = [
 ];
 ---
 
-<BaseLayout title={pageData.meta_title} currentLang={currentLang}>
+<BaseLayout 
+    title={pageData.meta_title} 
+    currentLang={currentLang} 
+    moveLogoMobile={true}
+>
   
   <link rel="preload" as="image" href={firstProduct.img} slot="head" />
 
@@ -50,14 +54,13 @@ const specs = [
     data-products={JSON.stringify(productsList)}
   >
 
-    <div class="content">
+<div class="content">
       <a 
         href={`/${currentLang}/productos`} 
         class="back-arrow-btn" 
         data-link
         id="btn-regresar"
         aria-label={pageData.back_aria}
-        style="position: relative; z-index: 10001; cursor: pointer;"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

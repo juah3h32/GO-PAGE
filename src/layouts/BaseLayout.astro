@@ -1,5 +1,5 @@
 ---
-// src/layouts/Layout.astro
+// src/layouts/BaseLayout.astro
 
 // 1. IMPORTAMOS LO NECESARIO PARA PWA
 import { pwaInfo } from 'virtual:pwa-info';
@@ -7,14 +7,19 @@ import { pwaInfo } from 'virtual:pwa-info';
 // 2. Importamos componentes
 import Loader from "../components/Loader.astro";
 import Cursor from "../components/CustomCursor.astro";
-import Navbar  from '../components/Nadbar.astro';
+import Navbar from '../components/Nadbar.astro'; // <--- CORREGIDO (decía Nadbar)
 import AudioVisualizer from "../components/AudioVisualizer.astro"; 
 import FondoGlobal from "../components/FondoGlobal.astro";
 import BotGO from "../components/BotGO.jsx";
 import DockMenu from "../components/DockMenu.astro";
 
 // Props
-const { title = "Mi sitio", currentLang = "es" } = Astro.props;
+// AQUI AGREGAMOS 'moveLogoMobile' para recibir la orden de la página
+const { 
+  title = "Mi sitio", 
+  currentLang = "es", 
+  moveLogoMobile = false 
+} = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -47,90 +52,81 @@ const { title = "Mi sitio", currentLang = "es" } = Astro.props;
       })();
     </script>
 
-<style is:global>
-  /* =========================================
-     1. VARIABLES GLOBALES
-     ========================================= */
-  :root {
-    --body-bg: #ffffff;
-    
-    /* Tu gradiente exacto (Modo Claro) */
-    --slide-gradient: linear-gradient(
-      to right,       
-      #ffffff 0%,     
-      #ffffff 20%,    
-      #fb670b 60%,    
-      #ff7a18 100%    
-    );
-    
-    --thumb-bg: rgba(0, 0, 0, 0.08); 
-  }
+    <style is:global>
+      /* =========================================
+         1. VARIABLES GLOBALES
+         ========================================= */
+      :root {
+        --body-bg: #ffffff;
+        
+        /* Tu gradiente exacto (Modo Claro) */
+        --slide-gradient: linear-gradient(
+          to right,       
+          #ffffff 0%,     
+          #ffffff 20%,    
+          #fb670b 60%,    
+          #ff7a18 100%    
+        );
+        
+        --thumb-bg: rgba(0, 0, 0, 0.08); 
+      }
 
-  html.dark {
-    --body-bg: #111010;
-    /* Tu gradiente exacto (Modo Oscuro) */
-    --slide-gradient: linear-gradient(
-      to right,       
-      #000000 0%,     
-      #000000 20%,    
-      #fb670b 60%,    
-      #ff7a18 100%    
-    );
-  }
+      html.dark {
+        --body-bg: #111010;
+        /* Tu gradiente exacto (Modo Oscuro) */
+        --slide-gradient: linear-gradient(
+          to right,       
+          #000000 0%,     
+          #000000 20%,    
+          #fb670b 60%,    
+          #ff7a18 100%    
+        );
+      }
 
-  /* =========================================
-     2. RESET BÁSICO
-     ========================================= */
-  html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    min-height: 100vh;
-    font-family: 'Poppins', sans-serif;
-    overflow-x: hidden; 
-  }
+      /* =========================================
+         2. RESET BÁSICO
+         ========================================= */
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        min-height: 100vh;
+        font-family: 'Poppins', sans-serif;
+        overflow-x: hidden; 
+      }
 
-  /* =========================================
-     3. ANIMACIÓN WIPE (DE ARRIBA A ABAJO)
-     ========================================= */
-  @keyframes wipe-in-top-down {
-    from {
-      /* Empieza como una línea en el techo: 
-         Punto 1 y 2 (Arriba), Punto 3 y 4 (También Arriba) */
-      clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
-    }
-    to {
-      /* Termina cubriendo todo: 
-         Punto 1 y 2 (Arriba), Punto 3 y 4 (Abajo) */
-      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-    }
-  }
+      /* =========================================
+         3. ANIMACIÓN WIPE (DE ARRIBA A ABAJO)
+         ========================================= */
+      @keyframes wipe-in-top-down {
+        from {
+          clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+        }
+        to {
+          clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+      }
 
-  /* =========================================
-     4. CORTINA DE TRANSICIÓN
-     ========================================= */
-  .home-curtain {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 99999;
-    pointer-events: none;
+      /* =========================================
+         4. CORTINA DE TRANSICIÓN
+         ========================================= */
+      .home-curtain {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 99999;
+        pointer-events: none;
+        background: var(--slide-gradient); 
+        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+      }
 
-    background: var(--slide-gradient); 
-    
-    /* ESTADO INICIAL: Invisible (Pegado arriba) */
-    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
-  }
-
-  /* ESTADO ACTIVO: Cae hacia abajo */
-  .home-curtain.active {
-    pointer-events: all;
-    /* He cambiado el nombre de la animación aquí */
-    animation: 2.5s cubic-bezier(.25, 1, .30, 1) wipe-in-top-down both;
-  }
-</style>
+      .home-curtain.active {
+        pointer-events: all;
+        animation: 2.5s cubic-bezier(.25, 1, .30, 1) wipe-in-top-down both;
+      }
+    </style>
   </head>
 
   <body>
@@ -139,7 +135,7 @@ const { title = "Mi sitio", currentLang = "es" } = Astro.props;
     <FondoGlobal />
     <Cursor />
     
-    <Navbar currentLang={currentLang} />
+    <Navbar currentLang={currentLang} moveLogoMobile={moveLogoMobile} />
 
     <Loader />
     <div 
@@ -180,7 +176,7 @@ const { title = "Mi sitio", currentLang = "es" } = Astro.props;
       });
     </script>
 
-<script is:inline>
+    <script is:inline>
       document.addEventListener('DOMContentLoaded', () => {
         const curtain = document.getElementById('home-transition-curtain');
         
@@ -189,25 +185,17 @@ const { title = "Mi sitio", currentLang = "es" } = Astro.props;
           if (!link) return;
 
           const href = link.getAttribute('href');
-          const target = link.getAttribute('target'); // Detectar si abre en nueva pestaña
+          const target = link.getAttribute('target'); 
           
-          // Lógica para detectar si vamos al home o navegación interna
           const isHomeLink = 
              href === '/' || 
              href === '/es' || 
              href === '/en' ||
              link.classList.contains('js-trigger-home');
 
-          // Solo activamos si NO es ctrl/meta click y no abre en otra pestaña
           if (isHomeLink && !e.ctrlKey && !e.metaKey && target !== '_blank' && curtain) {
             e.preventDefault(); 
-            
-            // 1. Activar animación
             curtain.classList.add('active');
-
-            // 2. Navegar ESPERANDO a que la cortina baje.
-            // La animación dura 2000ms (2s). Ponemos el timeout en 1900ms
-            // para que cambie justo cuando la pantalla está negra.
             setTimeout(() => {
               window.location.href = href;
             }, 1900);
