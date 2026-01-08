@@ -1,14 +1,13 @@
 ---
-
 // src/components/Navbar.astro
 import { languages, translations } from '../i18n';
 
 interface Props {
   currentLang?: string;
-  moveLogoMobile?: boolean; // <--- Agrega esto
+  moveLogoMobile?: boolean;
 }
 
-const { currentLang = 'es', moveLogoMobile = false } = Astro.props; // <--- Extrae esto
+const { currentLang = 'es', moveLogoMobile = false } = Astro.props;
 const { pathname } = Astro.url;
 
 // SEGURIDAD DE IDIOMAS
@@ -148,19 +147,6 @@ function getLangPath(targetLang: string) {
 
         <a href={`/${safeLang}/distribuidor`} class="mobile-link">{t.distributor}</a>
         
-        <div style="padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between;">
-            <span style="color: var(--text-main)">Modo Oscuro</span>
-            <label class="theme-switch" style="margin: 0;">
-                <div class="theme-switch-outer">
-                  <input id="mobile-theme-toggle" type="checkbox"> 
-                  <div class="theme-button">
-                    <span class="theme-toggle-icon"></span>
-                    <span class="theme-indicator"></span>
-                  </div>
-                </div>
-            </label>
-        </div>
-
         <a href={`/${safeLang}/contacto`} class="nav-btn btn-primary full-width" style="margin-top: 20px;">{t.contact}</a>
       </div>
   </div>
@@ -175,7 +161,8 @@ function getLangPath(targetLang: string) {
     const langTrigger = document.getElementById("mobile-lang-trigger");
     const langDropdown = document.getElementById("mobile-lang-dropdown");
 
-    const themeInputs = document.querySelectorAll('#theme-toggle, #mobile-theme-toggle');
+    // MODIFICADO: Solo seleccionamos el botón de escritorio
+    const themeInputs = document.querySelectorAll('#theme-toggle');
     
     const applyTheme = (isDark: boolean) => {
       if (isDark) {
@@ -203,6 +190,7 @@ function getLangPath(targetLang: string) {
     }
 
     themeInputs.forEach(input => {
+        // Clonar nodo para limpiar listeners previos
         const newInput = input.cloneNode(true);
         input.parentNode?.replaceChild(newInput, input);
         
@@ -460,7 +448,6 @@ body.no-scroll { overflow: hidden; }
 [dir="rtl"] .mobile-mini-dropdown { left: 0; right: auto; }
 
 .montfort-header.logo-shifted .logo {
-   display: none; /* <--- Esto hace que desaparezca y no ocupe espacio */
+   display: none; 
 }
-
 </style>

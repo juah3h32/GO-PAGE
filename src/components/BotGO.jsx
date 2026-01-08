@@ -125,8 +125,13 @@ export default function BotGO({ language = 'es' }) {
     };
   }, [isOpen]);
 
-  useEffect(() => {
-    if (isOpen) setTimeout(() => inputRef.current?.focus(), 100);
+useEffect(() => {
+    // Verificamos si la pantalla es mayor a 1024px (PC/Laptop)
+    const esPC = window.innerWidth > 1024;
+
+    if (isOpen && esPC) {
+       setTimeout(() => inputRef.current?.focus(), 100);
+    }
   }, [isOpen]);
 
   useEffect(() => {
