@@ -198,35 +198,66 @@ const {
       const closeBtn = document.getElementById('pwa-close-btn');
       let deferredPrompt;
 
-      // CONFIGURACIÓN ANTI-MOLESTIA
-      const DIAS_ESPERA = 3; // Días que tarda en volver a salir si lo cierran
-      const PROBABILIDAD_RANDOM = 0.8; // 80% de probabilidad de salir si cumple los días
+      // CONFIGURACIÓN
+      const MINUTOS_REINTENTO = 1; // Tiempo corto (si fue accidente)
+      const DIAS_ESPERA_LARGO = 3; // Tiempo largo (si cerró 2 veces)
+      const PROBABILIDAD_RANDOM = 0.8; // Probabilidad de salir tras el periodo largo
 
-      // Función para verificar si podemos mostrar el aviso
+      // =================================================================
+      // LÓGICA DE TIEMPOS
+      // =================================================================
       function debeMostrarNotificacion() {
-        const lastDismiss = localStorage.getItem('pwa-dismiss-timestamp');
+        const lastTimestamp = localStorage.getItem('pwa-dismiss-timestamp');
+        const dismissCount = parseInt(localStorage.getItem('pwa-dismiss-count') || '0');
         
-        // Si nunca lo ha cerrado, mostrar
-        if (!lastDismiss) return true;
+        // Si nunca se ha cerrado, mostrar
+        if (!lastTimestamp) return true;
 
-        // Calcular días pasados
         const ahora = Date.now();
-        const diasPasados = (ahora - parseInt(lastDismiss)) / (1000 * 60 * 60 * 24);
+        const tiempoPasadoMs = ahora - parseInt(lastTimestamp);
+        const minutosPasados = tiempoPasadoMs / (1000 * 60);
+        const diasPasados = tiempoPasadoMs / (1000 * 60 * 60 * 24);
 
-        // Si no han pasado los días de espera, NO mostrar
-        if (diasPasados < DIAS_ESPERA) return false;
+        // CASO 1: Primera vez que lo cerró (Intento de "oops, fue accidente")
+        if (dismissCount === 1) {
+           // Si no ha pasado 1 minuto todavía, no mostrar
+           if (minutosPasados < MINUTOS_REINTENTO) {
+             console.log(`PWA: En pausa corta. Faltan ${MINUTOS_REINTENTO - minutosPasados} minutos.`);
+             return false;
+           }
+           // Si ya pasó 1 minuto, mostrar (segunda oportunidad)
+           return true; 
+        }
 
-        // Si ya pasaron los días, añadir un factor aleatorio para que no sea tan robótico
-        return Math.random() < PROBABILIDAD_RANDOM;
+        // CASO 2: Ya lo cerró 2 o más veces (Castigo largo)
+        if (dismissCount >= 2) {
+           // Si no han pasado los 3 días, no mostrar
+           if (diasPasados < DIAS_ESPERA_LARGO) {
+             console.log(`PWA: En pausa larga. Faltan ${DIAS_ESPERA_LARGO - diasPasados} días.`);
+             return false;
+           }
+           
+           // Si ya pasaron los días, reseteamos el contador para reiniciar el ciclo
+           // y aplicamos el factor random si quieres
+           if (Math.random() < PROBABILIDAD_RANDOM) {
+              localStorage.setItem('pwa-dismiss-count', '0'); // Reiniciamos ciclo
+              return true;
+           } else {
+              return false; // Mala suerte, no salió por el random
+           }
+        }
+
+        return true;
       }
 
-      // 1. FILTROS DE DISPOSITIVO Y ESTADO
+      // =================================================================
+      // FILTROS Y EVENTOS
+      // =================================================================
+      
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
                            window.navigator.standalone === true;
-      
       const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-      // Si ya es PWA o es PC de escritorio -> Bloquear y limpiar
       if (isStandalone || !isMobileDevice) {
          if (pwaNotification) {
             pwaNotification.style.display = 'none';
@@ -234,21 +265,19 @@ const {
          }
       } 
       else {
-        // Escuchar evento de instalación
         window.addEventListener('beforeinstallprompt', (e) => {
           e.preventDefault();
           deferredPrompt = e;
           
-          // Verificar lógica de tiempo/molestia
           if (debeMostrarNotificacion() && pwaNotification) {
             setTimeout(() => {
               pwaNotification.style.display = 'flex';
-            }, 3000); // 3 seg de retraso para no tapar contenido inmediatamente
+            }, 3000); 
           }
         });
       }
 
-      // 2. ACCIONES DE BOTONES
+      // BOTÓN INSTALAR
       if (installBtn) {
         installBtn.addEventListener('click', async () => {
           if (!deferredPrompt) return;
@@ -258,23 +287,34 @@ const {
           deferredPrompt = null;
           if (pwaNotification) pwaNotification.style.display = 'none';
           
-          // Si instala, borramos el "castigo" de tiempo por si acaso
+          // Si instala, limpiamos todo rastro de bloqueos
           localStorage.removeItem('pwa-dismiss-timestamp');
+          localStorage.removeItem('pwa-dismiss-count');
         });
       }
 
+      // BOTÓN CERRAR (Aquí está la magia del contador)
       if (closeBtn) {
         closeBtn.addEventListener('click', () => {
           if (pwaNotification) pwaNotification.style.display = 'none';
-          // GUARDAR LA FECHA ACTUAL PARA NO MOSTRAR POR UNOS DÍAS
+          
+          // 1. Obtenemos cuántas veces ha cerrado
+          let count = parseInt(localStorage.getItem('pwa-dismiss-count') || '0');
+          
+          // 2. Sumamos 1
+          count++;
+
+          // 3. Guardamos los datos
+          localStorage.setItem('pwa-dismiss-count', count.toString());
           localStorage.setItem('pwa-dismiss-timestamp', Date.now().toString());
+
+          console.log(`PWA: Aviso cerrado. Contador de cierres: ${count}`);
         });
       }
 
       window.addEventListener('appinstalled', () => {
         if (pwaNotification) pwaNotification.style.display = 'none';
         deferredPrompt = null;
-        console.log('¡PWA Instalada con éxito!');
       });
     </script>
 
