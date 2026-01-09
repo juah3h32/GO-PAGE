@@ -23,7 +23,12 @@ export default defineConfig({
         background_color: '#ffffff',
         display: 'standalone',
         orientation: 'portrait',
+        
+        // --- CONFIGURACIÓN DE NAVEGACIÓN ---
         start_url: '/',
+        scope: '/',  // <--- ¡ESTA ES LA LÍNEA NUEVA IMPORTANTE!
+        // -----------------------------------
+
         icons: [
           {
             src: 'pwa-192x192.png',
@@ -46,22 +51,37 @@ export default defineConfig({
       workbox: {
         maximumFileSizeToCacheInBytes: 45000000, 
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webp}'],
+        
+        // Estrategia de caché para SSR (Server Side Rendering)
+        runtimeCaching: [
+          {
+            urlPattern: ({ request }) => request.mode === 'navigate',
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'pages-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 7, // 1 semana
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          }
+        ],
       }
     })
   ],
 
-  // --- AQUÍ HICE EL CAMBIO ---
-vite: {
+  vite: {
     server: {
-      // Agregamos la dirección exacta que te dio el error
-      allowedHosts: ['feat-enquiry-turbo-solely.trycloudflare.com'],
-      host: true // Esto ayuda a exponer la red
+      allowedHosts: true, 
+      host: true 
     },
     define: {
       CESIUM_BASE_URL: JSON.stringify('/cesium')
     }
   },
-  // ---------------------------
 
   adapter: node({
     mode: 'standalone'
