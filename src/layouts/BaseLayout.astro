@@ -7,14 +7,13 @@ import { pwaInfo } from 'virtual:pwa-info';
 // 2. Importamos componentes
 import Loader from "../components/Loader.astro";
 import Cursor from "../components/CustomCursor.astro";
-import Navbar from '../components/Nadbar.astro'; // <--- CORREGIDO (decía Nadbar)
+import Navbar from '../components/Nadbar.astro'; 
 import AudioVisualizer from "../components/AudioVisualizer.astro"; 
 import FondoGlobal from "../components/FondoGlobal.astro";
 import BotGO from "../components/BotGO.jsx";
 import DockMenu from "../components/DockMenu.astro";
 
 // Props
-// AQUI AGREGAMOS 'moveLogoMobile' para recibir la orden de la página
 const { 
   title = "Mi sitio", 
   currentLang = "es", 
@@ -54,12 +53,10 @@ const {
 
     <style is:global>
       /* =========================================
-         1. VARIABLES GLOBALES
+         VARIABLES Y ESTILOS GLOBALES
          ========================================= */
       :root {
         --body-bg: #ffffff;
-        
-        /* Tu gradiente exacto (Modo Claro) */
         --slide-gradient: linear-gradient(
           to right,       
           #ffffff 0%,     
@@ -67,13 +64,11 @@ const {
           #fb670b 60%,    
           #ff7a18 100%    
         );
-        
         --thumb-bg: rgba(0, 0, 0, 0.08); 
       }
 
       html.dark {
         --body-bg: #111010;
-        /* Tu gradiente exacto (Modo Oscuro) */
         --slide-gradient: linear-gradient(
           to right,       
           #000000 0%,     
@@ -83,9 +78,6 @@ const {
         );
       }
 
-      /* =========================================
-         2. RESET BÁSICO
-         ========================================= */
       html, body {
         margin: 0;
         padding: 0;
@@ -95,21 +87,13 @@ const {
         overflow-x: hidden; 
       }
 
-      /* =========================================
-         3. ANIMACIÓN WIPE (DE ARRIBA A ABAJO)
-         ========================================= */
+      /* ANIMACIÓN WIPE */
       @keyframes wipe-in-top-down {
-        from {
-          clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
-        }
-        to {
-          clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-        }
+        from { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); }
+        to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
       }
 
-      /* =========================================
-         4. CORTINA DE TRANSICIÓN
-         ========================================= */
+      /* CORTINA */
       .home-curtain {
         position: fixed;
         top: 0;
@@ -193,13 +177,19 @@ const {
              href === '/en' ||
              link.classList.contains('js-trigger-home');
 
-          if (isHomeLink && !e.ctrlKey && !e.metaKey && target !== '_blank' && curtain) {
+          // DETECTAR SI ES MOVIL (Usamos 1024px igual que en tu CSS del DockMenu)
+          const isMobile = window.matchMedia('(max-width: 1024px)').matches;
+
+          // MODIFICAMOS EL IF:
+          // Solo activamos la cortina si es HomeLink Y NO estamos en móvil (!isMobile)
+          if (isHomeLink && !isMobile && !e.ctrlKey && !e.metaKey && target !== '_blank' && curtain) {
             e.preventDefault(); 
             curtain.classList.add('active');
             setTimeout(() => {
               window.location.href = href;
             }, 1900);
           }
+          // Si es móvil, el código salta este bloque y hace la navegación normal instantánea.
         });
       });
     </script>

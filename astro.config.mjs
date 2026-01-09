@@ -51,9 +51,11 @@ export default defineConfig({
   ],
 
   // --- AQUÍ HICE EL CAMBIO ---
-  vite: {
+vite: {
     server: {
-      allowedHosts: true, // Esto permite que el túnel funcione
+      // Agregamos la dirección exacta que te dio el error
+      allowedHosts: ['feat-enquiry-turbo-solely.trycloudflare.com'],
+      host: true // Esto ayuda a exponer la red
     },
     define: {
       CESIUM_BASE_URL: JSON.stringify('/cesium')
