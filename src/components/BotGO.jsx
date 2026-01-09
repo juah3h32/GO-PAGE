@@ -160,6 +160,26 @@ export default function BotGO({ language = 'es' }) {
     }
   }, [messages, loading]); 
 
+  // ==========================================
+  // [NUEVO] AUTO-FOCUS AL ABRIR EL CHAT (SOLO PC)
+  // ==========================================
+  useEffect(() => {
+    if (isOpen) {
+        // Detectar si es PC (pantalla mayor a 768px)
+        const isPC = window.innerWidth > 768;
+        
+        if (isPC) {
+            // Un pequeño delay asegura que el CSS (animación) haya comenzado/terminado
+            // para que el input sea "visitable" por el foco.
+            setTimeout(() => {
+                if (inputRef.current) {
+                    inputRef.current.focus();
+                }
+            }, 300); 
+        }
+    }
+  }, [isOpen]);
+
   const detectingProducto = (texto) => {
     const txt = texto.toLowerCase();
     if (txt.includes('rafia') || txt.includes('fibrilada') || txt.includes('raffia') || txt.includes('رافيا')) return 'Rafia';
@@ -188,7 +208,7 @@ export default function BotGO({ language = 'es' }) {
   };
 
   // ==========================================
-  // FUNCIÓN DE ENVÍO (LÓGICA PC/MÓVIL ACTUALIZADA)
+  // FUNCIÓN DE ENVÍO
   // ==========================================
   const sendMessage = async (e = null, textOverride = null) => {
     if (e) e.preventDefault();
@@ -237,19 +257,11 @@ export default function BotGO({ language = 'es' }) {
     } finally {
       setLoading(false);
       
-      // ========================================================
-      // LÓGICA MÓVIL VS PC
-      // ========================================================
-      // Detectamos si es móvil (pantalla pequeña <= 768px)
+      // Lógica de foco post-envío (distinta a la de apertura)
       const isMobile = window.innerWidth <= 768;
-
       if (isMobile) {
-          // EN MÓVIL: Quitamos el foco (blur) para cerrar el teclado 
-          // y permitir ver la respuesta completa.
           if (inputRef.current) inputRef.current.blur();
       } else {
-          // EN PC: Mantenemos el foco con un pequeño delay 
-          // para asegurar que el usuario pueda seguir escribiendo.
           setTimeout(() => {
               if (inputRef.current) inputRef.current.focus();
           }, 50);
