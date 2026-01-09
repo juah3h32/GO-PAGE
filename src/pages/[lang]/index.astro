@@ -2,7 +2,7 @@
 // src/pages/[lang]/index.astro
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import Footer from "../../components/Footer.astro";
+
 import { languages, translations } from '../../i18n';
 
 // Generación de rutas DINÁMICA
@@ -26,6 +26,6 @@ const pageTitle = `${t.hero.title} | ${languages[currentLang as keyof typeof lan
   
 
 
-  <Footer currentLang={currentLang} />
+  
 
 </BaseLayout>
