@@ -1,10 +1,7 @@
 ---
 // src/layouts/BaseLayout.astro
 
-// 1. IMPORTAMOS LO NECESARIO PARA PWA
 import { pwaInfo } from 'virtual:pwa-info';
-
-// 2. Importamos componentes
 import Loader from "../components/Loader.astro";
 import Cursor from "../components/CustomCursor.astro";
 import Navbar from '../components/Nadbar.astro'; 
@@ -13,11 +10,11 @@ import FondoGlobal from "../components/FondoGlobal.astro";
 import BotGO from "../components/BotGO.jsx";
 import DockMenu from "../components/DockMenu.astro";
 
-// Props
 const { 
   title = "Mi sitio", 
   currentLang = "es", 
-  moveLogoMobile = false 
+  moveLogoMobile = false,
+  pwaIcon = "/pwa-192x192.png" 
 } = Astro.props;
 ---
 
@@ -28,6 +25,7 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#ffffff" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="GO" />
     
     <title>{title}</title>
@@ -36,6 +34,7 @@ const {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/styles/theme.css" />
+    
     <link rel="apple-touch-icon" href="/pwa-192x192.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     
@@ -52,64 +51,88 @@ const {
     </script>
 
     <style is:global>
-      /* =========================================
-         VARIABLES Y ESTILOS GLOBALES
-         ========================================= */
+      /* ... (Tus estilos anteriores se mantienen igual) ... */
       :root {
         --body-bg: #ffffff;
-        --slide-gradient: linear-gradient(
-          to right,       
-          #ffffff 0%,     
-          #ffffff 20%,    
-          #fb670b 60%,    
-          #ff7a18 100%    
-        );
-        --thumb-bg: rgba(0, 0, 0, 0.08); 
+        --slide-gradient: linear-gradient(to right, #ffffff 0%, #ffffff 20%, #fb670b 60%, #ff7a18 100%);
       }
-
       html.dark {
         --body-bg: #111010;
-        --slide-gradient: linear-gradient(
-          to right,       
-          #000000 0%,     
-          #000000 20%,    
-          #fb670b 60%,    
-          #ff7a18 100%    
-        );
+        --slide-gradient: linear-gradient(to right, #000000 0%, #000000 20%, #fb670b 60%, #ff7a18 100%);
       }
-
       html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        min-height: 100vh;
-        font-family: 'Poppins', sans-serif;
-        overflow-x: hidden; 
+        margin: 0; padding: 0; width: 100%; min-height: 100vh;
+        font-family: 'Poppins', sans-serif; overflow-x: hidden; 
       }
-
-      /* ANIMACIÓN WIPE */
       @keyframes wipe-in-top-down {
         from { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); }
         to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
       }
-
-      /* CORTINA */
       .home-curtain {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: 99999;
-        pointer-events: none;
-        background: var(--slide-gradient); 
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 99999;
+        pointer-events: none; background: var(--slide-gradient); 
         clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
       }
-
       .home-curtain.active {
-        pointer-events: all;
-        animation: 2.5s cubic-bezier(.25, 1, .30, 1) wipe-in-top-down both;
+        pointer-events: all; animation: 2.5s cubic-bezier(.25, 1, .30, 1) wipe-in-top-down both;
       }
+
+      /* ESTILOS DEL TOAST (Mismos que tenías) */
+      .pwa-toast {
+        position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-200%);
+        z-index: 100001; background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; padding: 12px 16px;
+        width: 90%; max-width: 380px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        display: flex; flex-direction: column; gap: 12px; font-family: 'Poppins', sans-serif;
+      }
+      html.dark .pwa-toast { background: rgba(20, 20, 20, 0.95); border: 1px solid rgba(255,255,255,0.1); }
+      .pwa-toast.show { transform: translateX(-50%) translateY(0); }
+      .pwa-content { display: flex; align-items: center; gap: 12px; }
+      .pwa-icon img { border-radius: 10px; background: #f0f0f0; }
+      .pwa-details { display: flex; flex-direction: column; }
+      .pwa-title { font-weight: 600; font-size: 0.9rem; color: #000; }
+      html.dark .pwa-title { color: #fff; }
+      .pwa-desc { font-size: 0.75rem; color: #666; line-height: 1.2; }
+      html.dark .pwa-desc { color: #aaa; }
+      .pwa-actions { display: flex; gap: 10px; justify-content: flex-end; }
+      .pwa-btn { border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Poppins', sans-serif; }
+      .pwa-btn.secondary { background: transparent; color: #666; }
+      html.dark .pwa-btn.secondary { color: #aaa; }
+      .pwa-btn.secondary:hover { background: rgba(0,0,0,0.05); }
+      .pwa-btn.primary { background: #fb670b; color: white; box-shadow: 0 4px 12px rgba(251, 103, 11, 0.4); }
+      .pwa-btn.primary:active { transform: scale(0.96); }
+      @media (min-width: 1025px) { .pwa-toast { display: none !important; } }
+
+      /* =========================================
+         NUEVO: LÓGICA DE VISIBILIDAD DEL DOCK
+         ========================================= */
+      
+      /* 1. Por defecto, ocultamos el contenedor del Dock */
+      #dock-menu-wrapper {
+       /* display: none;  <--- COMENTA O BORRA ESTA LÍNEA */
+        display: block; /* <--- AGREGA ESTO TEMPORALMENTE PARA VERLO */
+      }
+
+      /* 2. Si es MODO APP (Standalone), lo mostramos automáticamente */
+      @media all and (display-mode: standalone) {
+        #dock-menu-wrapper {
+          display: block !important;
+        }
+      }
+
+      /* 3. Clase auxiliar para forzar mostrarlo vía JS (cuando se instala en vivo) */
+      #dock-menu-wrapper.is-installed {
+        display: block !important;
+        animation: fade-in-up 0.8s ease forwards;
+      }
+
+      @keyframes fade-in-up {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
     </style>
   </head>
 
@@ -132,67 +155,133 @@ const {
 
     <slot />
     
-    <DockMenu />
+    <div id="dock-menu-wrapper">
+        <DockMenu />
+    </div>
    
+    <div id="pwa-toast" class="pwa-toast">
+      <div class="pwa-content">
+        <div class="pwa-icon">
+          <img src={pwaIcon} alt="App Icon" width="40" height="40" />
+        </div>
+        <div class="pwa-details">
+          <span class="pwa-title">Instalar Aplicación</span>
+          <span class="pwa-desc">Obtén el menú móvil exclusivo.</span>
+        </div>
+      </div>
+      <div class="pwa-actions">
+        <button id="pwa-dismiss-btn" class="pwa-btn secondary">Ahora no</button>
+        <button id="pwa-install-btn" class="pwa-btn primary">Instalar</button>
+      </div>
+    </div>
+
     <BotGO client:idle language={currentLang} />
 
     <script>
       import { registerSW } from 'virtual:pwa-register';
+
+      let deferredPrompt: any = null;
+      
+      const pwaToast = document.getElementById('pwa-toast');
+      const installBtn = document.getElementById('pwa-install-btn');
+      const dismissBtn = document.getElementById('pwa-dismiss-btn');
+      
+      // NUEVO: Referencia al Dock
+      const dockWrapper = document.getElementById('dock-menu-wrapper');
+
+      // Detectar móvil
+      const isMobileDevice = () => {
+        const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+        const isTouch = /android|ipad|iphone|ipod|windows phone|kindle|silk/i.test(userAgent);
+        const isSmallScreen = window.matchMedia("(max-width: 1024px)").matches;
+        return isTouch || isSmallScreen;
+      };
+
+      // Verificar si ya está en modo standalone (App abierta)
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+
       registerSW({ 
         immediate: true,
         onRegisteredSW(swUrl) {
           console.log('PWA: Service Worker activo en', swUrl);
         }
       });
+
+      const showPwaToast = () => {
+        const dismissed = sessionStorage.getItem('pwa-dismissed'); 
+        // Solo mostrar si es móvil Y NO es standalone (si ya es app, no mostramos el banner de instalar)
+        if (!dismissed && pwaToast && isMobileDevice() && !isStandalone) {
+          setTimeout(() => {
+            pwaToast.classList.add('show');
+          }, 2500);
+        }
+      };
+
+      window.addEventListener('beforeinstallprompt', (e: any) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        showPwaToast();
+      });
+
+      if (installBtn) {
+        installBtn.addEventListener('click', async () => {
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`PWA: Resultado: ${outcome}`);
+            deferredPrompt = null;
+            if (pwaToast) pwaToast.classList.remove('show');
+          }
+        });
+      }
+
+      if (dismissBtn) {
+        dismissBtn.addEventListener('click', () => {
+          if (pwaToast) pwaToast.classList.remove('show');
+          sessionStorage.setItem('pwa-dismissed', 'true');
+        });
+      }
+
+      // 6. AQUÍ ESTÁ LA MAGIA: Si se instala correctamente
+      window.addEventListener('appinstalled', () => {
+        // Ocultamos el toast
+        if (pwaToast) pwaToast.classList.remove('show');
+        
+        // ACTIVAMOS EL DOCK MENU AL INSTANTE
+        if (dockWrapper) {
+          dockWrapper.classList.add('is-installed');
+          console.log("PWA: App instalada, mostrando Dock Menu.");
+        }
+      });
     </script>
 
     <script src="/scripts/theme-toggle.js" defer></script>
-
     <script is:inline>
       window.addEventListener('load', () => {
         const loader = document.getElementById('loader-wrapper');
         if (loader) {
           loader.style.opacity = '0';
-          setTimeout(() => {
-            loader.style.display = 'none';
-          }, 500);
+          setTimeout(() => { loader.style.display = 'none'; }, 500);
         }
       });
     </script>
-
     <script is:inline>
       document.addEventListener('DOMContentLoaded', () => {
         const curtain = document.getElementById('home-transition-curtain');
-        
         document.addEventListener('click', (e) => {
           const link = e.target.closest('a');
           if (!link) return;
-
           const href = link.getAttribute('href');
           const target = link.getAttribute('target'); 
-          
-          const isHomeLink = 
-             href === '/' || 
-             href === '/es' || 
-             href === '/en' ||
-             link.classList.contains('js-trigger-home');
-
-          // DETECTAR SI ES MOVIL (Usamos 1024px igual que en tu CSS del DockMenu)
+          const isHomeLink = href === '/' || href === '/es' || href === '/en' || link.classList.contains('js-trigger-home');
           const isMobile = window.matchMedia('(max-width: 1024px)').matches;
-
-          // MODIFICAMOS EL IF:
-          // Solo activamos la cortina si es HomeLink Y NO estamos en móvil (!isMobile)
           if (isHomeLink && !isMobile && !e.ctrlKey && !e.metaKey && target !== '_blank' && curtain) {
             e.preventDefault(); 
             curtain.classList.add('active');
-            setTimeout(() => {
-              window.location.href = href;
-            }, 1900);
+            setTimeout(() => { window.location.href = href; }, 1900);
           }
-          // Si es móvil, el código salta este bloque y hace la navegación normal instantánea.
         });
       });
     </script>
-    
   </body>
 </html>

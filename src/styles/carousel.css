@@ -209,7 +209,7 @@
     z-index: 100;
     
     /* Posicionamiento: Top-Media */
-    top: 29%;
+    top: 31%;
     left: 50%;
     right: auto;
     transform: translate(-50%, -50%);
@@ -238,7 +238,7 @@
     z-index: 50;
     
     /* Posicionamiento: Fondo levantado */
-    bottom: 28%;
+    bottom: 29%;
     left: 50%;
     right: auto;
     top: auto;

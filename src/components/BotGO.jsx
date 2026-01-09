@@ -125,18 +125,18 @@ export default function BotGO({ language = 'es' }) {
     };
   }, [isOpen]);
 
-useEffect(() => {
-    // Verificamos si la pantalla es mayor a 1024px (PC/Laptop)
-    const esPC = window.innerWidth > 1024;
-
-    if (isOpen && esPC) {
-       setTimeout(() => inputRef.current?.focus(), 100);
-    }
-  }, [isOpen]);
-
+// --- Efecto: Auto-scroll al fondo cuando llegan mensajes ---
   useEffect(() => {
-    if (messagesContainerRef.current) messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
-  }, [messages, loading]);
+    if (messagesContainerRef.current) {
+      // Usamos setTimeout para asegurar que el DOM ya se actualizó
+      setTimeout(() => {
+        messagesContainerRef.current.scrollTo({
+          top: messagesContainerRef.current.scrollHeight,
+          behavior: 'smooth' // Scroll suave
+        });
+      }, 100);
+    }
+  }, [messages, loading]); // Se ejecuta al cambiar mensajes o estado de carga
 
   const detectingProducto = (texto) => {
     const txt = texto.toLowerCase();
@@ -165,12 +165,14 @@ useEffect(() => {
     });
   };
 
-  const sendMessage = async (e) => {
+const sendMessage = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
 
     setShowSalesButton(false);
     const textoUsuario = input.toLowerCase();
+    
+    // Detección de intención de compra
     const triggers = ['comprar', 'cotizar', 'precio', 'costo', 'buy', 'price', 'quote', 'order', 'preço', 'cotação', '买', 'saber precio', 'cost'];
     const esVentaObvia = triggers.some(palabra => textoUsuario.includes(palabra));
 
@@ -206,10 +208,15 @@ useEffect(() => {
       setMessages(prev => [...prev, { role: 'assistant', content: t.error }]);
     } finally {
       setLoading(false);
-      setTimeout(() => inputRef.current?.focus(), 50);
+      
+      // === CORRECCIÓN AQUÍ ===
+      // Solo hacemos focus automático si es una pantalla grande (PC)
+      // En celular, evitamos esto para que no salte la pantalla
+      if (window.innerWidth > 1024) {
+          setTimeout(() => inputRef.current?.focus(), 50);
+      }
     }
   };
-
   // ==========================================
   // 3. RENDER (JSX)
   // ==========================================
