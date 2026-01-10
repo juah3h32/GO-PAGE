@@ -18,18 +18,18 @@ export const en = {
     },
 
     // =================================================
-    // NEW SECTION: CHATBOT (BotGo)
+    // CHATBOT SECTION (BotGo)
     // =================================================
     chatbot: {
       greeting: 'Hello! I am BotGo 🤖. How can I assist you today?',
       placeholder: 'Type a message...',
       listening: 'Listening...',
       error: 'Connection error.',
-      salesBtn: 'Get Quote',
-      voiceCode: 'en-US', // Código para voz en inglés
-      waStart: 'Hello Grupo Ortiz, I am interested in a quote for'
+      salesBtn: 'Get a Quote',
+      voiceCode: 'en-US', // IMPORTANTE: Cambiado a inglés para la síntesis de voz
+      waStart: 'Hello Grupo Ortiz, I am interested in a quote'
     },
-
+    
     // Main list for /products carousel
     products_list: [
       { 
@@ -64,22 +64,21 @@ export const en = {
       },
       { 
         img: "img6.png", 
-        division: "CORNER GUARDS", 
-        descripcion: "Custom developments.",
+        division: "CORNER BOARDS", 
+        descripcion: "Custom-made developments.",
         slug: "productos/esquineros" 
       }
     ],
   
-    // --- SPECIFIC DATA FOR ROPES PAGE (Cuerdas) ---
+    // --- SPECIFIC DATA FOR ROPES PAGE ---
     cuerdas: {
       meta_title: "Ropes | Grupo Ortiz",
-      back_aria: "Go back",
+      back_aria: "Back",
       loading: "Loading...",
       specs_title: "TECHNICAL SPECIFICATIONS",
       
-      // Fixed table labels
       specs_labels: {
-        load: "Performance",
+        load: "Yield", // O 'Performance' dependiendo del contexto técnico
         unit: "Unit",
         mat: "Material",
         weight: "Weight / Elongation",
@@ -87,10 +86,8 @@ export const en = {
         charge: "Load / Resistance"
       },
   
-      // Product Array
       products: [
         { 
-          // ID 0
           name: 'ROPE T1', 
           img: '/images/cuerdas/CuerdaT1.webp', 
           link: '#', 
@@ -105,11 +102,10 @@ export const en = {
           }
         },
         { 
-          // ID 1
           name: 'ROPE UV 6', 
           img: '/images/cuerdas/CuerdaNegra.webp', 
           link: '#',
-          description: "Polypropylene cable with UV filter, designed to resist high solar exposure at sea and field. Guarantees firmness and long lifespan in macro-tunnels, ideal for berry crops, peppers, and maritime use.",
+          description: "Polypropylene cable with UV filter, designed to resist high solar exposure at sea and in the field. Guarantees firmness and long service life in macro-tunnels, ideal for berry crops, peppers, and maritime use.",
           specs_values: { 
             load: "3,240 m", 
             unit: "1", 
@@ -120,11 +116,10 @@ export const en = {
           }
         },
         { 
-           // ID 2
           name: 'ROPE UV 8', 
           img: '/images/cuerdas/CuerdaNegra.webp', 
           link: '#',
-          description: "Polypropylene cable with UV filter, designed to resist high solar exposure at sea and field. Guarantees firmness and long lifespan in macro-tunnels, ideal for berry crops, peppers, and maritime use.",
+          description: "Polypropylene cable with UV filter, designed to resist high solar exposure at sea and in the field. Guarantees firmness and long service life in macro-tunnels, ideal for berry crops, peppers, and maritime use.",
           specs_values: { 
             load: "2500 kg", 
             unit: "16 mm", 
@@ -134,6 +129,38 @@ export const en = {
             charge: "Excellent" 
           }
         }
-      ]    
+      ]   
+    },
+
+    // =================================================
+    // DISTRIBUTOR SECTION
+    // =================================================
+    distributor: {
+      hero_title: "Become a Distributor",
+      hero_desc: "Join our network. Leave your details and a commercial advisor will contact you to validate your area.",
+      
+      form_title: "Application Details",
+      label_name: "Full Name *",
+      placeholder_name: "E.g. John Doe",
+      label_company: "Company Name",
+      placeholder_company: "E.g. North Trading Co.",
+      label_phone: "Mobile / WhatsApp *",
+      placeholder_phone: "E.g. 55 1234 5678",
+      label_city: "City & State *",
+      placeholder_city: "E.g. Dallas, Texas",
+      
+      label_products: "Which products are you interested in?",
+      products_list: [
+        "Raffia",
+        "Mesh Bags", // Arpilla se traduce comúnmente como Mesh Bags en agricultura
+        "Stretch Film",
+        "Rope",
+        "Corner Boards", // Esquinero
+        "Sacks"
+      ],
+      
+      btn_cancel: "CANCEL",
+      btn_submit: "SEND DATA"
     }
+    
 };

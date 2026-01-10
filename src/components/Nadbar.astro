@@ -15,6 +15,12 @@ const safeLang = (currentLang in translations) ? currentLang : 'es';
 const langData = translations[safeLang as keyof typeof translations];
 const t = langData.nav;
 
+// Helper para detectar ruta activa (para el estilo "Active")
+const isActive = (path: string) => {
+  if (path === `/${safeLang}/` && (pathname === `/${safeLang}/` || pathname === `/${safeLang}`)) return true;
+  return pathname.startsWith(path) && path !== `/${safeLang}/`;
+};
+
 // FUNCIÓN DE RUTAS
 function getLangPath(targetLang: string) {
   if (pathname === '/' || pathname === '') return `/${targetLang}/`;
@@ -39,13 +45,18 @@ function getLangPath(targetLang: string) {
     </div>
 
     <div class="nav-links desktop-only">
-      <a href={`/${safeLang}/`} class="nav-item js-trigger-home">{t.home}</a>
+      <a href={`/${safeLang}/`} class={`nav-item js-trigger-home ${isActive(`/${safeLang}/`) ? 'active' : ''}`}>
+        <span class="nav-text">{t.home}</span>
+        <span class="nav-glow"></span>
+      </a>
       
-      <div class="nav-item has-dropdown">
+      <div class={`nav-item has-dropdown ${isActive(`/${safeLang}/productos`) ? 'active' : ''}`}>
         <a href={`/${safeLang}/productos`} class="nav-text-link">
-          {t.products}
+          <span class="nav-text">{t.products}</span>
           <svg class="chevron" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
         </a>
+        <span class="nav-glow"></span>
+        
         <div class="dropdown-menu">
            <a href={`/${safeLang}/productos`} class="dropdown-item">{t.products}</a>
            <a href={`/${safeLang}/catalogo`} class="dropdown-item">{t.catalog}</a>
@@ -53,18 +64,23 @@ function getLangPath(targetLang: string) {
         </div>
       </div>
 
-      <div class="nav-item has-dropdown">
+      <div class={`nav-item has-dropdown ${isActive(`/${safeLang}/about`) ? 'active' : ''}`}>
         <a href={`/${safeLang}/about`} class="nav-text-link">
-          {t.about}
+          <span class="nav-text">{t.about}</span>
           <svg class="chevron" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
         </a>
+        <span class="nav-glow"></span>
+
         <div class="dropdown-menu">
           <a href={`/${safeLang}/about`} class="dropdown-item">{t.company}</a>
           <a href={`/${safeLang}/social`} class="dropdown-item">{t.social}</a>
         </div>
       </div>
 
-      <a href={`/${safeLang}/distribuidor`} class="nav-item">{t.distributor}</a>
+      <a href={`/${safeLang}/distribuidor`} class={`nav-item ${isActive(`/${safeLang}/distribuidor`) ? 'active' : ''}`}>
+        <span class="nav-text">{t.distributor}</span>
+        <span class="nav-glow"></span>
+      </a>
     </div>
 
     <div class="nav-right">
@@ -76,7 +92,6 @@ function getLangPath(targetLang: string) {
               <input id="theme-toggle" type="checkbox"> 
               <div class="theme-button">
                 <span class="theme-toggle-icon"></span>
-                <span class="theme-indicator"></span>
               </div>
             </div>
         </label>
@@ -160,46 +175,32 @@ function getLangPath(targetLang: string) {
     const accordions = document.querySelectorAll(".accordion-btn");
     const langTrigger = document.getElementById("mobile-lang-trigger");
     const langDropdown = document.getElementById("mobile-lang-dropdown");
-
-    // MODIFICADO: Solo seleccionamos el botón de escritorio
     const themeInputs = document.querySelectorAll('#theme-toggle');
     
+    // Theme logic
     const applyTheme = (isDark: boolean) => {
       if (isDark) {
         document.documentElement.classList.add('dark');
         localStorage.setItem('theme', 'dark');
-        themeInputs.forEach(input => {
-            if (input instanceof HTMLInputElement) input.checked = true;
-        });
+        themeInputs.forEach(input => { if(input instanceof HTMLInputElement) input.checked = true; });
       } else {
         document.documentElement.classList.remove('dark');
         localStorage.setItem('theme', 'light');
-        themeInputs.forEach(input => {
-            if (input instanceof HTMLInputElement) input.checked = false;
-        });
+        themeInputs.forEach(input => { if(input instanceof HTMLInputElement) input.checked = false; });
       }
     };
-
     const storedTheme = localStorage.getItem('theme');
     const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    if (storedTheme === 'dark' || (!storedTheme && systemDark)) {
-       applyTheme(true);
-    } else {
-       applyTheme(false);
-    }
+    if (storedTheme === 'dark' || (!storedTheme && systemDark)) applyTheme(true);
+    else applyTheme(false);
 
     themeInputs.forEach(input => {
-        // Clonar nodo para limpiar listeners previos
         const newInput = input.cloneNode(true);
         input.parentNode?.replaceChild(newInput, input);
-        
-        newInput.addEventListener('change', (e) => {
-             const target = e.target as HTMLInputElement;
-             applyTheme(target.checked);
-        });
+        newInput.addEventListener('change', (e) => applyTheme((e.target as HTMLInputElement).checked));
     });
 
+    // Scroll Logic (Mantiene fondo transparente al inicio)
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
             header?.classList.add('scrolled');
@@ -219,32 +220,24 @@ function getLangPath(targetLang: string) {
     }
   
     if (langTrigger && langDropdown) {
-        langTrigger.addEventListener("click", (e: Event) => {
+        langTrigger.addEventListener("click", (e) => {
             e.stopPropagation(); 
             langDropdown.classList.toggle("active");
         });
-        document.addEventListener("click", (e: Event) => {
-            const target = e.target;
-            if (target instanceof Node && !langTrigger.contains(target) && !langDropdown.contains(target)) {
+        document.addEventListener("click", (e) => {
+            if (e.target instanceof Node && !langTrigger.contains(e.target) && !langDropdown.contains(e.target)) {
                 langDropdown.classList.remove("active");
             }
         });
     }
   
     accordions.forEach(acc => {
-        acc.addEventListener("click", (e: Event) => {
-            const btn = e.currentTarget; 
-            if (btn instanceof HTMLElement) {
-               btn.classList.toggle("active");
-               const panel = btn.nextElementSibling;
-               if (panel instanceof HTMLElement) {
-                   if (panel.style.maxHeight) {
-                       panel.style.maxHeight = ''; 
-                   } else {
-                       panel.style.maxHeight = panel.scrollHeight + "px";
-                   }
-               }
-            }
+        acc.addEventListener("click", (e) => {
+            const btn = e.currentTarget as HTMLElement;
+            btn.classList.toggle("active");
+            const panel = btn.nextElementSibling as HTMLElement;
+            if (panel.style.maxHeight) panel.style.maxHeight = ''; 
+            else panel.style.maxHeight = panel.scrollHeight + "px";
         });
     });
   }
@@ -254,9 +247,12 @@ function getLangPath(targetLang: string) {
 </script>
 
 <style>
-/* ... TUS ESTILOS IGUAL QUE ANTES ... */
+/* FUENTES Y VARIABLES */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
 :root {
-  --btn-bg: #fb670b;; 
+  --btn-bg: #fb670b; 
+  --btn-glow: rgba(251, 103, 11, 0.6);
   --btn-text: #fff;
   --header-bg-scrolled: rgba(15, 15, 15, 0.95);
   --text-main: #000000;
@@ -271,17 +267,21 @@ function getLangPath(targetLang: string) {
 }
 body.no-scroll { overflow: hidden; }
 
+/* HEADER & LAYOUT */
 .montfort-header {
-  z-index: 3000 !important; /* Mayor que 2000 */
+  z-index: 3000 !important;
   position: fixed; top: 0; left: 0; width: 100%;
-  height: var(--header-height); z-index: 1000;
+  height: var(--header-height);
   transition: all 0.4s ease; padding-top: 25px;
 }
 .montfort-header.transparent { background: transparent; box-shadow: none; }
+
+/* Estado con Scroll: Fondo oscuro */
 .montfort-header.scrolled {
    background: var(--header-bg-scrolled);
    padding-top: 0;
    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+   backdrop-filter: blur(10px); /* Añadido un poco de blur al fondo oscuro */
 }
 
 .montfort-nav {
@@ -293,33 +293,130 @@ body.no-scroll { overflow: hidden; }
 .logo img { height: 45px; width: auto; transition: transform 0.3s; }
 .logo img:hover { transform: scale(1.05); }
 
+/* --- AQUÍ ESTÁ LA MAGIA DEL NAV --- */
 .nav-links { display: flex; gap: 40px; align-items: center; }
+
 .nav-item, .nav-text-link {
   position: relative;
   color: var(--text-main); text-decoration: none;
-  font-size: 13.5px; font-weight: 600; letter-spacing: 1px;
+  font-size: 13.5px; font-weight: 600; letter-spacing: 0.5px;
   text-transform: uppercase; display: flex; align-items: center; gap: 6px;
-  padding: 10px 0; transition: color 0.3s ease;
+  padding: 10px 0; 
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
-.nav-item::after {
-  content: ""; position: absolute; bottom: 0; left: 0;
-  width: 0; height: 2px; background: var(--btn-bg); transition: width 0.3s ease;
-}
-.nav-item:hover, .nav-text-link:hover { color: var(--btn-bg); }
-.nav-item:hover::after { width: 100%; }
 
+/* 1. Animación del TEXTO (Flotar + Brillo) */
+.nav-text {
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+              text-shadow 0.3s ease;
+  z-index: 2;
+}
+
+/* 2. La Barra "Laser" (Reemplaza al underline simple) */
+.nav-glow {
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--btn-bg);
+  box-shadow: 0 0 10px var(--btn-bg), 0 0 20px var(--btn-bg); /* Efecto Neón */
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(-50%);
+  opacity: 0;
+  z-index: 1;
+}
+
+/* ESTADO HOVER */
+.nav-item:hover .nav-text, 
+.nav-text-link:hover .nav-text {
+  color: var(--btn-bg);
+  transform: translateY(-2px); /* Flota hacia arriba */
+  text-shadow: 0 0 15px var(--btn-glow); /* Texto resplandeciente */
+}
+
+.nav-item:hover .nav-glow,
+.nav-text-link:hover ~ .nav-glow { /* Selector ajustado para dropdown */
+  width: 100%;
+  opacity: 1;
+}
+
+/* ESTADO ACTIVE (Página actual) */
+.nav-item.active .nav-text {
+  color: var(--btn-bg);
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(251, 103, 11, 0.4);
+}
+.nav-item.active .nav-glow {
+  width: 60%; /* La barra activa es un poco más corta pero permanente */
+  opacity: 1;
+  bottom: -4px;
+}
+
+/* Chevron animado */
+.chevron { transition: transform 0.3s ease; }
+.has-dropdown:hover .chevron { transform: rotate(180deg); color: var(--btn-bg); }
+
+
+/* BOTONES CON EFECTO 3D SUTIL */
 .btn-primary {
   background-color: var(--btn-bg); color: var(--btn-text);
   font-size: 13.5px; font-weight: 600; height: 42px; padding: 0 24px;
   border-radius: 50px; display: inline-flex; align-items: center; justify-content: center;
   text-decoration: none; border: none; cursor: pointer; line-height: 1;
-  transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Rebote elástico */
+  box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3);
+  transform-style: preserve-3d;
 }
 .btn-primary:hover {
-  background-color: #fb670b; transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 102, 0, 0.5);
+  background-color: #fb670b; 
+  transform: translateY(-2px) scale(1.03); /* Crece y sube */
+  box-shadow: 0 8px 25px rgba(255, 102, 0, 0.6); /* Sombra más intensa */
+}
+.btn-primary:active {
+  transform: translateY(1px) scale(0.98); /* Efecto click */
 }
 
+/* Dropdown Styles */
+.has-dropdown { position: relative; height: 100%; display: flex; align-items: center; }
+.dropdown-menu {
+  position: absolute; top: 60px; left: 50%; transform: translateX(-50%) translateY(15px);
+  background: rgba(20, 20, 20, 0.95); /* Fondo oscuro semitransparente */
+  backdrop-filter: blur(12px); /* Blur real */
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px; padding: 10px; min-width: 200px;
+  opacity: 0; visibility: hidden; 
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5); z-index: 100;
+}
+/* Triangulito decorativo arriba del menu */
+.dropdown-menu::before {
+    content: ''; position: absolute; top: -6px; left: 50%; margin-left: -6px;
+    border-width: 0 6px 6px 6px; border-style: solid;
+    border-color: transparent transparent rgba(255,255,255,0.1) transparent;
+}
+
+.has-dropdown:hover .dropdown-menu { 
+    opacity: 1; visibility: visible; 
+    transform: translateX(-50%) translateY(0); 
+}
+
+.dropdown-item {
+  display: block; color: #aaa; padding: 10px 15px;
+  text-decoration: none; font-size: 13.5px; border-radius: 6px; 
+  transition: all 0.2s;
+  position: relative; overflow: hidden;
+}
+.dropdown-item:hover { 
+    background: rgba(255,255,255,0.05); 
+    color: var(--btn-bg); 
+    padding-left: 20px; /* Desplazamiento sutil a la derecha */
+}
+
+
+/* RESTO DEL CSS (Theme Switch, Mobile, etc.) MANTENIDO IGUAL */
 .nav-right, .desktop-actions { display: flex; align-items: center; gap: 20px; }
 
 .globe-btn {
@@ -329,29 +426,8 @@ body.no-scroll { overflow: hidden; }
   align-items: center; gap: 8px; font-family: inherit;
   transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3);
 }
-.globe-btn span {
-    font-size: 13.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
-}
-.globe-btn:hover { 
-    background-color: #fb670b; transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 102, 0, 0.5);
-}
-
-.has-dropdown { position: relative; height: 100%; display: flex; align-items: center; }
-.dropdown-menu {
-  position: absolute; top: 70px; left: 50%; transform: translateX(-50%) translateY(10px);
-  background: #1a1a1a; border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 12px; padding: 10px; min-width: 200px;
-  opacity: 0; visibility: hidden; transition: all 0.25s ease;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.5); z-index: 100;
-}
-.has-dropdown:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
-.dropdown-item {
-  display: block; color: var(--text-muted); padding: 10px 15px;
-  text-decoration: none; font-size: 13.5px; border-radius: 6px; transition: 0.2s;
-}
-.dropdown-item:hover { background: rgba(255,255,255,0.05); color: var(--btn-bg); }
-.active-lang { color: var(--btn-bg); font-weight: bold; }
+.globe-btn span { font-size: 13.5px; font-weight: 600; text-transform: uppercase; }
+.globe-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 102, 0, 0.5); }
 
 .hamburger {
   display: none; flex-direction: column; justify-content: space-between;
@@ -396,7 +472,7 @@ body.no-scroll { overflow: hidden; }
   background-color: var(--btn-bg); color: #fff; border: none;
   border-radius: 50px; padding: 8px 16px; display: flex; align-items: center;
   gap: 8px; font-size: 14px; font-weight: 600; cursor: pointer;
-  box-shadow: 0 4px 10px rgba(255, 102, 0, 0.3); transition: transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(255, 102, 0, 0.3);
 }
 .mobile-mini-dropdown {
   position: absolute; top: 120%; right: 0; background: #222;
@@ -417,6 +493,7 @@ body.no-scroll { overflow: hidden; }
   .nav-right { display: flex; align-items: center; }
 }
 
+/* Theme Switch */
 .theme-switch { display: flex; align-items: center; justify-content: center; margin: 0; height: 45px; cursor: pointer; }
 .theme-switch .theme-switch-outer {
     height: 100%; background: #262626; width: 90px; border-radius: 165px;
@@ -425,30 +502,15 @@ body.no-scroll { overflow: hidden; }
     display: flex; align-items: center;
 }
 .theme-switch .theme-switch-outer input[type="checkbox"] { opacity: 0; appearance: none; position: absolute; width: 100%; height: 100%; cursor: pointer; z-index: 10; margin: 0; }
-.theme-switch .theme-switch-outer .theme-button { 
-    width: 100%; height: 100%; display: flex; position: relative; pointer-events: none; 
-}
+.theme-switch .theme-switch-outer .theme-button { width: 100%; height: 100%; display: flex; position: relative; pointer-events: none; }
 .theme-switch .theme-switch-outer .theme-toggle-icon {
     height: 30px; width: 30px; background: #ffffff;
     border-radius: 100%; box-shadow: 0px 4px 15px 0px #0f0e17;
     position: absolute; z-index: 2; transition: left 0.3s ease-in; left: 0; top: 0;
 }
 .theme-switch .theme-switch-outer input[type="checkbox"]:checked ~ .theme-button .theme-toggle-icon { left: calc(100% - 30px); }
-.theme-switch .theme-switch-outer input[type="checkbox"]:checked ~ .theme-button .theme-indicator { animation: theme-indicator 1s forwards; }
-
-.theme-switch .theme-switch-outer .theme-indicator {
-    height: 24px; width: 24px; top: 50%; transform: translateY(-50%); border-radius: 50%;
-    border: 2px solid var(--btn-bg); box-sizing: border-box; right: 5px; position: absolute;
-    opacity: 0;
-}
-@keyframes theme-indicator {
-    0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; }
-}
 
 [dir="rtl"] .nav-links { flex-direction: row-reverse; }
 [dir="rtl"] .mobile-mini-dropdown { left: 0; right: auto; }
-
-.montfort-header.logo-shifted .logo {
-   display: none; 
-}
+.montfort-header.logo-shifted .logo { display: none; }
 </style>

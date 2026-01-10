@@ -1,16 +1,16 @@
 export const zh = {
     nav: {
       home: '首頁',
-      products: '產品',
-      catalog: '目錄',
-      promos: '優惠',
+      products: '產品中心',
+      catalog: '產品目錄',
+      promos: '促銷活動',
       about: '關於我們',
       company: '公司簡介',
       social: '社會責任',
-      distributor: '經銷商',
+      distributor: '經銷專區',
       contact: '聯絡我們'
     },
-    hero: { title: "歡迎", subtitle: "持久的品質" },
+    hero: { title: "歡迎光臨", subtitle: "持久卓越的品質" },
     common: { 
         seeMore: "查看更多", 
         buy: "購買", 
@@ -18,54 +18,54 @@ export const zh = {
     },
 
     // =================================================
-    // NEW SECTION: CHATBOT (BotGo) - CHINESE (Traditional)
+    // CHATBOT SECTION (BotGo)
     // =================================================
     chatbot: {
-      greeting: '您好！我是 BotGo 🤖。請問今天有什麼可以幫您的？',
+      greeting: '您好！我是 BotGo 🤖。今天有什麼可以為您服務的嗎？',
       placeholder: '輸入訊息...',
       listening: '正在聆聽...',
       error: '連線錯誤。',
       salesBtn: '詢價',
-      voiceCode: 'zh-TW', // Código para voz en Chino Tradicional (Taiwán)
+      voiceCode: 'zh-TW', // Código para voz em Chinês Tradicional (Taiwan)
       waStart: '您好 Grupo Ortiz，我有興趣詢價'
     },
-
+    
     // Lista principal para el carrusel de /productos
     products_list: [
       { 
         img: "img1.png", 
-        division: "拉伸膜", // Stretch Film
+        division: "STRETCH FILM", // 纏繞膜
         descripcion: "製造用於農業包裝的工業網袋。",
         slug: "productos/stretch-film" 
       },
       { 
         img: "img2.png", 
-        division: "繩索", // Cuerdas
-        descripcion: "用於工業用途的高強度繩索和纜繩。",
+        division: "ROPES", // 繩索
+        descripcion: "工業用高強度繩索與纜繩。",
         slug: "cuerdas" 
       },
       { 
         img: "img3.png", 
-        division: "拉菲草", // Rafia (PP Raffia)
-        descripcion: "用於包裝和貨物的拉菲草解決方案。",
+        division: "RAFIA", // 拉菲草
+        descripcion: "用於包裝和裝載的拉菲草解決方案。",
         slug: "rafias" 
       },
       { 
         img: "img4.png", 
-        division: "拉菲草", 
-        descripcion: "客製化軟包裝。",
+        division: "RAFIA", 
+        descripcion: "客製化柔性包裝。",
         slug: "productos/rafia-empaques" 
       },
       { 
         img: "img5.png", 
-        division: "編織袋", // Sacos
+        division: "SACKS", // 編織袋
         descripcion: "工業技術紡織品。",
         slug: "productos/sacos" 
       },
       { 
         img: "img6.png", 
-        division: "護角", // Esquineros
-        descripcion: "量身定做的開發。",
+        division: "CORNER BOARDS", // 護角板
+        descripcion: "量身定制的開發方案。",
         slug: "productos/esquineros" 
       }
     ],
@@ -77,63 +77,90 @@ export const zh = {
       loading: "載入中...",
       specs_title: "技術規格",
       
-      // Etiquetas fijas de la tabla
       specs_labels: {
-        load: "性能",         // Rendimiento
-        unit: "單位",         // Unidad
-        mat: "材質",          // Material
-        weight: "重量 / 延伸率", // Peso / Elongación
-        resist: "強度",         // Resistencia
-        charge: "負荷 / 強度"   // Carga / Resistencia
+        load: "產量/性能",
+        unit: "單位",
+        mat: "材質",
+        weight: "重量 / 延伸率",
+        resist: "抗性",
+        charge: "負荷 / 耐用度"
       },
   
-      // Array de productos
       products: [
         { 
-          // ID 0
-          name: '繩索 T1', 
+          name: '繩索 T1 (ROPE T1)', 
           img: '/images/cuerdas/CuerdaT1.webp', 
           link: '#', 
-          description: "多功能且耐用的繩索，採用優質材料製造。專為承受從輕負荷到重型工業作業而設計。其 3 股和 4 股結構提供了完美的平衡。",
+          description: "多功能且耐用的繩索，採用優質材料製造。專為承受輕負載至重型工業作業而設計。其 3 股和 4 股結構提供了完美的平衡。",
           specs_values: { 
             load: "939 m", 
             unit: "1", 
             mat: "PP-V", 
             weight: "21 kg", 
             resist: "390 KG", 
-            charge: "優異" 
+            charge: "極佳" 
           }
         },
         { 
-          // ID 1
-          name: '繩索 UV 6', 
+          name: '繩索 UV 6 (ROPE UV 6)', 
           img: '/images/cuerdas/CuerdaNegra.webp', 
           link: '#',
-          description: "帶有抗紫外線濾鏡的聚丙烯纜繩，專為抵禦海洋和田野的高強度日曬而設計。確保在大型溫室大棚中的堅固性和長壽命，非常適合漿果、甜椒種植及海事用途。",
+          description: "含抗紫外線濾光劑的聚丙烯纜繩，專為抵抗海洋和田野的高強度日曬而設計。確保在大型溫室中的穩固性和長壽命，非常適合漿果、甜椒種植及海事用途。",
           specs_values: { 
             load: "3,240 m", 
             unit: "1", 
             mat: "PP-UV", 
             weight: "18 kg", 
             resist: "105 kg", 
-            charge: "優異" 
+            charge: "極佳" 
           }
         },
         { 
-           // ID 2
-          name: '繩索 UV 8', 
+          name: '繩索 UV 8 (ROPE UV 8)', 
           img: '/images/cuerdas/CuerdaNegra.webp', 
           link: '#',
-          description: "帶有抗紫外線濾鏡的聚丙烯纜繩，專為抵禦海洋和田野的高強度日曬而設計。確保在大型溫室大棚中的堅固性和長壽命，非常適合漿果、甜椒種植及海事用途。",
+          description: "含抗紫外線濾光劑的聚丙烯纜繩，專為抵抗海洋和田野的高強度日曬而設計。確保在大型溫室中的穩固性和長壽命，非常適合漿果、甜椒種植及海事用途。",
           specs_values: { 
             load: "2500 kg", 
             unit: "16 mm", 
             mat: "Nylon-X", 
             weight: "1%", 
             resist: "高", 
-            charge: "優異" 
+            charge: "極佳" 
           }
         }
-      ]    
+      ]   
+    },
+
+    // =================================================
+    // DISTRIBUTOR SECTION
+    // =================================================
+    distributor: {
+      hero_title: "我想成為經銷商",
+      hero_desc: "加入我們的網絡。留下您的資料，我們的商務顧問將會聯繫您以確認您的所在區域。",
+      
+      form_title: "申請資料",
+      label_name: "全名 *",
+      placeholder_name: "例如：王大明",
+      label_company: "公司名稱",
+      placeholder_company: "例如：北方貿易公司",
+      label_phone: "手機 / WhatsApp *",
+      placeholder_phone: "例如：55 1234 5678",
+      label_city: "城市與省份 *",
+      placeholder_city: "例如：台北市",
+      
+      label_products: "您對哪些產品感興趣？",
+      products_list: [
+        "拉菲草 (Rafia)",
+        "網袋 (Mesh Bags)",
+        "纏繞膜 (Stretch Film)",
+        "繩索 (Rope)",
+        "護角板 (Corner Boards)",
+        "編織袋 (Sacks)"
+      ],
+      
+      btn_cancel: "取消",
+      btn_submit: "送出資料"
     }
+    
 };

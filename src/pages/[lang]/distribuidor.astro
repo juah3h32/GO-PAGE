@@ -1,0 +1,36 @@
+---
+// src/pages/[lang]/index.astro
+import "../../styles/carousel.css";
+
+// Importaciones de Layouts y Componentes
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Form from "../../components/DistributorForm.astro"; // Importación correcta
+
+import { languages, translations } from '../../i18n';
+
+// Generación de rutas DINÁMICA
+export function getStaticPaths() {
+  return Object.keys(languages).map((lang) => ({
+    params: { lang },
+  }));
+}
+
+// Lógica de Traducción
+const { lang } = Astro.params;
+// Asegura que el idioma sea válido, si no, usa español por defecto
+const currentLang = (lang && lang in translations) ? lang : 'es'; 
+const t = translations[currentLang as keyof typeof translations];
+
+// Título de la página
+const pageTitle = `${t.hero.title} | ${languages[currentLang as keyof typeof languages]}`;
+---
+
+<BaseLayout title={pageTitle} currentLang={currentLang}>
+
+  <div class="page-content">
+    
+    <Form currentLang={currentLang} />
+
+  </div>
+
+</BaseLayout>

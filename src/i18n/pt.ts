@@ -18,23 +18,23 @@ export const pt = {
     },
 
     // =================================================
-    // NOVA SEÇÃO: CHATBOT (BotGo) - PORTUGUÊS
+    // SEÇÃO CHATBOT (BotGo)
     // =================================================
     chatbot: {
-      greeting: 'Olá! Eu sou o BotGo 🤖. Como posso ajudar você hoje?',
+      greeting: 'Olá! Sou o BotGo 🤖. Como posso ajudar você hoje?',
       placeholder: 'Digite uma mensagem...',
       listening: 'Ouvindo...',
       error: 'Erro de conexão.',
-      salesBtn: 'Solicitar Cotação',
-      voiceCode: 'pt-BR', // Código para voz em Português do Brasil
-      waStart: 'Olá Grupo Ortiz, estou interessado em cotar'
+      salesBtn: 'Cotar',
+      voiceCode: 'pt-BR', // Código para voz em Português
+      waStart: 'Olá Grupo Ortiz, tenho interesse em uma cotação'
     },
-
+    
     // Lista principal para o carrossel de /produtos
     products_list: [
       { 
         img: "img1.png", 
-        division: "FILME STRETCH", 
+        division: "STRETCH FILM", 
         descripcion: "Fabricação de sacos de malha industriais para embalagem agrícola.",
         slug: "productos/stretch-film" 
       },
@@ -58,26 +58,25 @@ export const pt = {
       },
       { 
         img: "img5.png", 
-        division: "SACOS", 
+        division: "SACARIA", 
         descripcion: "Têxteis técnicos industriais.",
         slug: "productos/sacos" 
       },
       { 
         img: "img6.png", 
-        division: "CANTONEIRAS", // Esquineros em PT
+        division: "CANTONEIRAS", 
         descripcion: "Desenvolvimentos sob medida.",
         slug: "productos/esquineros" 
       }
     ],
   
-    // --- DADOS ESPECÍFICOS DA PÁGINA DE CORDAS (Cuerdas) ---
+    // --- DADOS ESPECÍFICOS DA PÁGINA DE CORDAS ---
     cuerdas: {
       meta_title: "Cordas | Grupo Ortiz",
       back_aria: "Voltar",
       loading: "Carregando...",
       specs_title: "ESPECIFICAÇÕES TÉCNICAS",
       
-      // Etiquetas fixas da tabela
       specs_labels: {
         load: "Rendimento",
         unit: "Unidade",
@@ -87,10 +86,8 @@ export const pt = {
         charge: "Carga / Resistência"
       },
   
-      // Array de produtos
       products: [
         { 
-          // ID 0
           name: 'CORDA T1', 
           img: '/images/cuerdas/CuerdaT1.webp', 
           link: '#', 
@@ -105,13 +102,12 @@ export const pt = {
           }
         },
         { 
-          // ID 1
           name: 'CORDA UV 6', 
           img: '/images/cuerdas/CuerdaNegra.webp', 
           link: '#',
-          description: "Cabo de polipropileno com filtro UV, projetado para resistir à alta exposição solar no mar e no campo. Garante firmeza e longa vida útil em macrotúneis, ideal para cultivos de berries, pimentão e uso marítimo.",
+          description: "Cabo de polipropileno com filtro UV, projetado para resistir à alta exposição solar no mar e no campo. Garante firmeza e longa vida útil em macrotúneis, ideal para cultivos de frutas vermelhas (berries), pimentão e uso marítimo.",
           specs_values: { 
-            load: "3.240 m", 
+            load: "3,240 m", 
             unit: "1", 
             mat: "PP-UV", 
             weight: "18 kg", 
@@ -120,11 +116,10 @@ export const pt = {
           }
         },
         { 
-           // ID 2
           name: 'CORDA UV 8', 
           img: '/images/cuerdas/CuerdaNegra.webp', 
           link: '#',
-          description: "Cabo de polipropileno com filtro UV, projetado para resistir à alta exposição solar no mar e no campo. Garante firmeza e longa vida útil em macrotúneis, ideal para cultivos de berries, pimentão e uso marítimo.",
+          description: "Cabo de polipropileno com filtro UV, projetado para resistir à alta exposição solar no mar e no campo. Garante firmeza e longa vida útil em macrotúneis, ideal para cultivos de frutas vermelhas (berries), pimentão e uso marítimo.",
           specs_values: { 
             load: "2500 kg", 
             unit: "16 mm", 
@@ -134,6 +129,38 @@ export const pt = {
             charge: "Excelente" 
           }
         }
-      ]    
+      ]   
+    },
+
+    // =================================================
+    // SEÇÃO DISTRIBUIDOR
+    // =================================================
+    distributor: {
+      hero_title: "Quero ser Distribuidor",
+      hero_desc: "Junte-se à nossa rede. Deixe seus dados e um consultor comercial entrará em contato para validar sua região.",
+      
+      form_title: "Dados da Solicitação",
+      label_name: "Nome Completo *",
+      placeholder_name: "Ex. João Silva",
+      label_company: "Nome da Empresa",
+      placeholder_company: "Ex. Comercializadora Sul",
+      label_phone: "Celular / WhatsApp *",
+      placeholder_phone: "Ex. 11 91234 5678",
+      label_city: "Cidade e Estado *",
+      placeholder_city: "Ex. Curitiba, Paraná",
+      
+      label_products: "Quais produtos lhe interessam?",
+      products_list: [
+        "Ráfia",
+        "Sacos de Malha", // Tradução comum para Arpilla
+        "Stretch Film",
+        "Cordas",
+        "Cantoneiras", // Tradução para Esquinero
+        "Sacaria"
+      ],
+      
+      btn_cancel: "CANCELAR",
+      btn_submit: "ENVIAR DADOS"
     }
+    
 };

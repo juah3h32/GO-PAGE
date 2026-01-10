@@ -26,7 +26,7 @@ export const es = {
       listening: 'Escuchando...',
       error: 'Error de conexión.',
       salesBtn: 'Cotizar',
-      voiceCode: 'es-ES', // Código importante para la voz en español
+      voiceCode: 'es-ES',
       waStart: 'Hola Grupo Ortiz, me interesa cotizar'
     },
     
@@ -77,7 +77,6 @@ export const es = {
       loading: "Cargando...",
       specs_title: "ESPECIFICACIONES TÉCNICAS",
       
-      // Estas son las etiquetas fijas de la tabla
       specs_labels: {
         load: "Rendimiento",
         unit: "Unidad",
@@ -87,10 +86,8 @@ export const es = {
         charge: "Carga / Resistencia"
       },
   
-      // Array con la info de cada producto
       products: [
         { 
-          // ID 0
           name: 'CUERDA T1', 
           img: '/images/cuerdas/CuerdaT1.webp', 
           link: '#', 
@@ -105,7 +102,6 @@ export const es = {
           }
         },
         { 
-          // ID 1
           name: 'CUERDA UV 6', 
           img: '/images/cuerdas/CuerdaNegra.webp', 
           link: '#',
@@ -120,7 +116,6 @@ export const es = {
           }
         },
         { 
-           // ID 2
           name: 'CUERDA UV 8', 
           img: '/images/cuerdas/CuerdaNegra.webp', 
           link: '#',
@@ -134,6 +129,38 @@ export const es = {
             charge: "Excelente" 
           }
         }
-      ]    
+      ]   
+    },
+
+    // =================================================
+    // NUEVA SECCIÓN: DISTRIBUIDOR
+    // =================================================
+    distributor: {
+      hero_title: "Quiero ser Distribuidor",
+      hero_desc: "Únete a nuestra red. Déjanos tus datos y un asesor comercial te contactará para validar tu zona.",
+      
+      form_title: "Datos de Solicitud",
+      label_name: "Nombre Completo *",
+      placeholder_name: "Ej. Juan Pérez",
+      label_company: "Nombre de Empresa",
+      placeholder_company: "Ej. Comercializadora Norte",
+      label_phone: "Celular / WhatsApp *",
+      placeholder_phone: "Ej. 55 1234 5678",
+      label_city: "Ciudad y Estado *",
+      placeholder_city: "Ej. Morelia, Michoacán",
+      
+      label_products: "¿Qué productos le interesan?",
+      products_list: [
+        "Rafia",
+        "Arpilla",
+        "Stretch Film",
+        "Cuerda",
+        "Esquinero",
+        "Sacos"
+      ],
+      
+      btn_cancel: "CANCELAR",
+      btn_submit: "ENVIAR DATOS"
     }
+    
 };

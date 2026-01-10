@@ -1,0 +1,526 @@
+---
+// src/components/DistributorForm.astro
+
+// 1. Recibimos los datos
+const { data: propsData } = Astro.props;
+
+// 2. Datos por defecto
+const defaultData = {
+  hero_title: "Hazte Distribuidor",
+  hero_desc: "Únete a nuestra red global. Lleva la calidad premium a tus clientes hoy mismo.",
+  form_title: "Solicitud de Alta",
+  label_name: "Nombre Completo",
+  placeholder_name: "Ej. Juan Pérez",
+  label_company: "Empresa",
+  placeholder_company: "Nombre de tu negocio",
+  label_phone: "Teléfono",
+  placeholder_phone: "+34 600 000 000",
+  label_city: "Ciudad",
+  placeholder_city: "Madrid",
+  label_products: "Productos de interés",
+  products_list: ["Arpilla", "Sacos", "Stretch film", "Rafia", "Esquineros"],
+  btn_cancel: "Cancelar",
+  btn_submit: "Enviar Solicitud"
+};
+
+const data = propsData || defaultData;
+---
+
+<div class="page-bg">
+  <div class="page-container">
+    
+    <div class="card fade-in">
+      
+      <div class="left-panel">
+        <div class="panel-content">
+          <div class="avatar-circle float-anim">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 21v-8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v8"></path>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+          </div>
+
+          <h2 class="slide-up delay-1">{data.hero_title}</h2>
+          <p class="slide-up delay-2">{data.hero_desc}</p>
+          
+          <div class="arrow-btn scale-in delay-3">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFC700" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+        </div>
+        
+        <div class="circle-deco deco-1"></div>
+        <div class="circle-deco deco-2"></div>
+      </div>
+
+      <div class="right-panel">
+        <div class="form-header slide-up delay-1">
+          <h3>{data.form_title}</h3>
+        </div>
+
+        <form>
+          <div class="form-row slide-up delay-2">
+            <div class="input-group">
+              <input type="text" id="name" placeholder=" " required />
+              <label for="name">{data.label_name}</label>
+              <span class="bar"></span>
+            </div>
+            <div class="input-group">
+              <input type="text" id="company" placeholder=" " />
+              <label for="company">{data.label_company}</label>
+              <span class="bar"></span>
+            </div>
+          </div>
+
+          <div class="form-row slide-up delay-3">
+            <div class="input-group">
+              <input type="tel" id="phone" placeholder=" " required />
+              <label for="phone">{data.label_phone}</label>
+              <span class="bar"></span>
+            </div>
+            <div class="input-group">
+              <input type="text" id="city" placeholder=" " required />
+              <label for="city">{data.label_city}</label>
+              <span class="bar"></span>
+            </div>
+          </div>
+
+          <div class="products-section slide-up delay-4">
+            <span class="section-label">{data.label_products}</span>
+            <div class="checkbox-grid">
+              {data.products_list && data.products_list.map((prod) => (
+                <label class="checkbox-item" key={prod}>
+                  <input type="checkbox" name="productos" value={prod} />
+                  <span class="checkmark"></span>
+                  <span class="text">{prod}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div class="form-actions slide-up delay-5">
+            <button type="button" class="btn-cancel">{data.btn_cancel}</button>
+            <button type="submit" class="btn-submit">
+              {data.btn_submit}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<script>
+  // Script simple para activar animaciones al hacer scroll (Intersection Observer)
+  document.addEventListener('DOMContentLoaded', () => {
+    const observerOptions = { threshold: 0.1 };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    const elements = document.querySelectorAll('.fade-in, .slide-up, .scale-in');
+    elements.forEach(el => observer.observe(el));
+  });
+</script>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap');
+
+  :root {
+    --primary: #fb670b;
+    --primary-dark: #e05600;
+    --accent: #FFC700;
+    --dark: #1f2937;
+    --text-gray: #6b7280;
+    --light-gray: #f3f4f6;
+    --bg-color: #f8fafc;
+  }
+
+  /* --- Layout & Background --- */
+  .page-bg {
+  
+   
+    background-size: 30px 30px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .page-container {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  .card {
+    background: white;
+    width: 100%;
+    max-width: 1100px;
+    border-radius: 24px;
+    /* Sombra suave y difusa estilo Apple/Modern SaaS */
+    box-shadow: 
+      0 20px 25px -5px rgba(0, 0, 0, 0.1), 
+      0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    opacity: 0; /* Para animación inicial */
+    transform: translateY(20px);
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.8s ease;
+  }
+
+  .card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (min-width: 900px) {
+    .card {
+      flex-direction: row;
+      min-height: 650px;
+    }
+    .left-panel { width: 40%; }
+    .right-panel { width: 60%; padding: 60px; }
+  }
+
+  /* --- Left Panel (Hero) --- */
+  .left-panel {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Decoración de fondo abstracta */
+  .circle-deco {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    z-index: 1;
+  }
+  .deco-1 { width: 300px; height: 300px; top: -100px; left: -100px; }
+  .deco-2 { width: 200px; height: 200px; bottom: -50px; right: -50px; }
+
+  .panel-content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .avatar-circle {
+    width: 80px;
+    height: 80px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  }
+
+  .left-panel h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+
+  .left-panel p {
+    font-size: 1rem;
+    line-height: 1.6;
+    opacity: 0.9;
+    margin-bottom: 40px;
+    max-width: 300px;
+  }
+
+  .arrow-btn {
+    background: white;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    cursor: default;
+  }
+
+  /* --- Right Panel (Form) --- */
+  .right-panel {
+    padding: 40px 30px;
+    background: white;
+  }
+
+  .form-header h3 {
+    font-size: 1.5rem;
+    color: var(--dark);
+    margin-bottom: 40px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-bottom: 35px;
+  }
+  
+  @media (min-width: 768px) {
+    .form-row { flex-direction: row; gap: 40px; }
+  }
+
+  /* --- Modern Inputs (Floating Label) --- */
+  .input-group {
+    width: 100%;
+    position: relative;
+    margin-top: 10px;
+  }
+
+  .input-group input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 10px 0;
+    font-size: 1rem;
+    color: var(--dark);
+    background: transparent;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+
+  .input-group label {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    font-size: 1rem;
+    color: #9ca3af;
+    pointer-events: none;
+    transition: 0.3s ease all;
+  }
+
+  /* Efecto de barra animada */
+  .bar { 
+    position: relative; 
+    display: block; 
+    width: 100%; 
+  }
+  .bar:before, .bar:after {
+    content: '';
+    height: 2px; 
+    width: 0; 
+    bottom: 0; 
+    position: absolute;
+    background: var(--primary); 
+    transition: 0.3s ease all; 
+  }
+  .bar:before { left: 50%; }
+  .bar:after { right: 50%; }
+
+  /* Estado Focus / Valido */
+  .input-group input:focus ~ .bar:before, .input-group input:focus ~ .bar:after {
+    width: 50%;
+  }
+  
+  .input-group input:focus ~ label,
+  .input-group input:not(:placeholder-shown) ~ label {
+    top: -20px;
+    font-size: 0.75rem;
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  /* --- Checkboxes --- */
+  .products-section { margin-bottom: 50px; }
+  .section-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+  }
+
+  .checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 15px;
+  }
+
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    padding: 10px;
+    border-radius: 8px;
+    transition: background 0.2s;
+  }
+  .checkbox-item:hover { background: var(--light-gray); }
+
+  /* Custom Checkbox CSS */
+  .checkbox-item input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  .checkmark {
+    height: 20px;
+    width: 20px;
+    background-color: #e2e8f0;
+    border-radius: 6px;
+    margin-right: 12px;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+  .checkbox-item:hover input ~ .checkmark { background-color: #cbd5e1; }
+  .checkbox-item input:checked ~ .checkmark {
+    background-color: var(--primary);
+    box-shadow: 0 4px 10px rgba(251, 103, 11, 0.4);
+  }
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 7px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .checkbox-item input:checked ~ .checkmark:after { display: block; }
+  
+  .checkbox-item .text {
+    font-size: 0.95rem;
+    color: var(--dark);
+    font-weight: 500;
+  }
+
+  /* --- Buttons --- */
+  .form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* En móvil separa los botones */
+    gap: 20px;
+  }
+  
+  @media (min-width: 600px) {
+    .form-actions { justify-content: flex-end; }
+  }
+
+  .btn-cancel {
+    background: none;
+    border: none;
+    font-weight: 600;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+  }
+  .btn-cancel:hover { color: var(--dark); }
+
+  .btn-submit {
+    background: var(--dark);
+    color: #ffffff;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-submit:hover {
+    background-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(251, 103, 11, 0.3);
+  }
+  .btn-submit .btn-icon {
+    transition: transform 0.3s ease;
+  }
+  .btn-submit:hover .btn-icon {
+    transform: translateX(4px);
+  }
+
+  /* --- Animations (Keyframes & Classes) --- */
+  
+  /* Animación de flotación contínua */
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+  }
+  .float-anim {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  /* Estados iniciales para la animación de entrada */
+  .slide-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .scale-in {
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Clases visibles (añadidas por JS) */
+  .visible.slide-up {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .visible.scale-in {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Delays */
+  .delay-1 { transition-delay: 0.1s; }
+  .delay-2 { transition-delay: 0.2s; }
+  .delay-3 { transition-delay: 0.3s; }
+  .delay-4 { transition-delay: 0.4s; }
+  .delay-5 { transition-delay: 0.5s; }
+
+</style>
