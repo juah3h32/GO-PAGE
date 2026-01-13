@@ -5,7 +5,6 @@
 import "../../styles/cuerdas.css"; 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import BuyButton from "../../components/BuyButton.astro";
-// ELIMINADO: import Navbar from "../../components/Nadbar.astro"; <--- YA NO LO NECESITAS AQUÍ
 import { languages, translations } from "../../i18n";
 
 // 2. GENERACIÓN DE RUTAS DINÁMICA
@@ -54,7 +53,7 @@ const specs = [
     data-products={JSON.stringify(productsList)}
   >
 
-<div class="content">
+    <div class="content">
       <a 
         href={`/${currentLang}/productos`} 
         class="back-arrow-btn" 
@@ -144,15 +143,20 @@ const specs = [
       </div>
     </div>
 
-
-
   </main>
 
   <script src="/scripts/cuerdas.js" defer></script>
 
   <script is:inline>
-    // Lógica de transición optimizada
     function initTransition() {
+      // 1. DETECCIÓN DE DISPOSITIVO
+      // Si el ancho es menor a 1024px (Móvil/Tablet), NO ejecutamos la lógica de animación.
+      // El botón funcionará como un link HTML normal.
+      if (window.matchMedia("(max-width: 1024px)").matches) {
+        return; 
+      }
+
+      // 2. Lógica para PC
       const reveal = document.getElementById("reveal-circle");
       const btn = document.getElementById("btn-regresar");
 
@@ -160,15 +164,18 @@ const specs = [
 
       reveal.classList.remove("active");
       
+      // Clonamos para limpiar listeners previos
       const newBtn = btn.cloneNode(true);
       btn.parentNode.replaceChild(newBtn, btn);
 
       newBtn.addEventListener("click", (e) => {
-        e.preventDefault();
+        e.preventDefault(); // Evita navegación inmediata
         const url = newBtn.getAttribute("href");
-        reveal.classList.add("active");
+        
+        reveal.classList.add("active"); // Inicia animación CSS
+        
         setTimeout(() => {
-          window.location.href = url;
+          window.location.href = url; // Navega después de 1.35s
         }, 1350); 
       });
     }

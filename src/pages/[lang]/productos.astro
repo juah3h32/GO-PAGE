@@ -4,10 +4,10 @@
 // Importa tus estilos
 import "../../styles/producto.css";
 import "../../styles/carousel.css";
+import "../../styles/global.css"
 import "../../styles/flechas.css";
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
-// ELIMINADO: import Navbar from "../../components/Nadbar.astro"; <--- YA NO SE NECESITA
 import { languages, translations } from "../../i18n";
 
 // Obtener las rutas disponibles
@@ -23,6 +23,8 @@ const t = translations[currentLang as keyof typeof translations];
 
 const productsList = t.products_list; 
 const seeMoreText = t.common.seeMore;
+// AGREGAMOS LA VARIABLE AQUÍ (Asegúrate de haberla puesto en tus archivos i18n)
+const divisionText = t.common.division; 
 
 // Identificamos la primera imagen para pre-cargarla (Critical rendering path)
 const firstProductImg = productsList.length > 0 ? `/images/${productsList[0].img}` : null;
@@ -62,7 +64,7 @@ const firstProductImg = productsList.length > 0 ? `/images/${productsList[0].img
                 dir={currentLang === 'ar' ? 'rtl' : 'ltr'} 
                 style={currentLang === 'ar' ? { textAlign: 'left' } : {}}
               >
-                GRUPO ORTIZ
+                {divisionText}
               </div>
               
               <div 
@@ -85,7 +87,6 @@ const firstProductImg = productsList.length > 0 ? `/images/${productsList[0].img
                 href={`/${currentLang}/${item.slug}`}
                 class="seeMore"
                 data-link
-              
                 rel="prefetch" 
               >
                 {seeMoreText}
@@ -123,11 +124,9 @@ const firstProductImg = productsList.length > 0 ? `/images/${productsList[0].img
 
       if (!revealContainer || !revealImg) return;
 
-      // Limpieza de eventos anteriores si existen (buena práctica en SPA/Astro)
       const links = document.querySelectorAll("[data-link]");
       
       links.forEach(link => {
-        // Clonamos para eliminar listeners previos y evitar duplicados tras navegación
         const newLink = link.cloneNode(true);
         link.parentNode.replaceChild(newLink, link);
 
@@ -137,7 +136,6 @@ const firstProductImg = productsList.length > 0 ? `/images/${productsList[0].img
           const url = newLink.getAttribute("href");
           if (!url) return;
 
-          // 1. Configura la imagen de la animación
           const item = newLink.closest('.item');
           const originalImg = item ? item.querySelector('img') : null;
 
@@ -145,18 +143,13 @@ const firstProductImg = productsList.length > 0 ? `/images/${productsList[0].img
             revealImg.src = originalImg.src;
           }
 
-          // 2. Activa la animación visual
           revealContainer.classList.add("active");
 
-          // OPTIMIZACIÓN: Iniciamos el fetch inmediatamente
           const pageFetch = fetch(url, { priority: 'high' }).catch(() => {});
 
           try {
-            // Esperamos la duración de la animación (1.35s)
             await new Promise(resolve => setTimeout(resolve, 1350));
-            
             window.location.href = url;
-
           } catch (error) {
             window.location.href = url;
           }
@@ -164,11 +157,9 @@ const firstProductImg = productsList.length > 0 ? `/images/${productsList[0].img
       });
     }
 
-    // Ejecutar en carga inicial y en navegación entre páginas (View Transitions)
     document.addEventListener("DOMContentLoaded", initAnimations);
     document.addEventListener("astro:page-load", initAnimations);
 
-    // Limpieza al cambiar de página
     document.addEventListener("astro:after-swap", () => {
       const revealContainer = document.getElementById("reveal-container");
       if (revealContainer) {

@@ -8,7 +8,7 @@ const isProducts = currentPath.includes('productos');
 const isHome = !isProducts && (currentPath === '/' || currentPath === `/${lang}` || currentPath === `/${lang}/`);
 
 /* LISTA NEGRA */
-const rutasOcultas = ['cuerdas', 'otra-pagina-si-quieres'];
+const rutasOcultas = ['cuerdas', 'distribuidor'];
 const debeOcultarse = rutasOcultas.some(ruta => currentPath.includes(ruta));
 ---
 

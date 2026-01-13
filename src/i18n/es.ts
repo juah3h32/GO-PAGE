@@ -13,6 +13,7 @@ export const es = {
     hero: { title: "Bienvenidos", subtitle: "Calidad que perdura" },
     common: { 
         seeMore: "Ver más", 
+        division: "División", // <--- AGREGAR ESTO
         buy: "Comprar", 
         redirecting: "Redirigiendo..." 
     },
