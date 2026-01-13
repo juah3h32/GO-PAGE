@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './BotGO.css';
 
-// IMPORTAR TUS TRADUCCIONES CENTRALES
+// IMPORTAR TUS TRADUCCIONES
 import { translations } from '../i18n'; 
 
 // ==========================================
@@ -10,8 +10,10 @@ import { translations } from '../i18n';
 const RobotIcon = ({ className }) => ( <svg className={className} viewBox="0 0 100 100" fill="none"><defs><linearGradient id="headGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stopColor="#F24F13" /><stop offset="100%" stopColor="#F24F13" /></linearGradient></defs><line x1="20" y1="35" x2="15" y2="20" stroke="#F24F13" strokeWidth="4" strokeLinecap="round"/><circle cx="15" cy="20" r="4" fill="#F24F13"/><line x1="80" y1="35" x2="85" y2="20" stroke="#F24F13" strokeWidth="4" strokeLinecap="round"/><circle cx="85" cy="20" r="4" fill="#F24F13"/><circle cx="50" cy="55" r="40" fill="url(#headGrad)" /><ellipse cx="50" cy="58" rx="32" ry="30" fill="#FFF5E6"/><rect x="25" y="45" width="50" height="22" rx="10" fill="#F24F13"/><circle cx="38" cy="56" r="5" fill="#FFD700"/><circle cx="62" cy="56" r="5" fill="#FFD700"/><ellipse cx="50" cy="78" rx="6" ry="2" fill="#D35400" opacity="0.8"/></svg> );
 const WhatsAppIcon = () => ( <svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> );
 const SendIcon = () => ( <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg> );
-const MicIcon = ({ isListening }) => ( <svg width="24" height="24" viewBox="0 0 24 24" fill={isListening ? "#F24F13" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={isListening ? "pulse-animation" : ""}><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg> );
-const BackArrowIcon = () => ( <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> );
+const MicIcon = ({ isListening, size = 24 }) => ( <svg width={size} height={size} viewBox="0 0 24 24" fill={isListening ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={isListening ? "pulse-animation" : ""}><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg> );
+const BackArrowIcon = () => ( <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> );
+const KeyboardIcon = () => ( <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><line x1="6" y1="8" x2="6" y2="8"></line><line x1="10" y1="8" x2="10" y2="8"></line><line x1="14" y1="8" x2="14" y2="8"></line><line x1="18" y1="8" x2="18" y2="8"></line><line x1="6" y1="12" x2="6" y2="12"></line><line x1="10" y1="12" x2="10" y2="12"></line><line x1="14" y1="12" x2="14" y2="12"></line><line x1="18" y1="12" x2="18" y2="12"></line><line x1="6" y1="16" x2="11" y2="16"></line><line x1="15" y1="16" x2="18" y2="16"></line></svg> );
+const CloseIcon = () => ( <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> );
 
 // ==========================================
 // 2. COMPONENTE PRINCIPAL
@@ -24,6 +26,8 @@ export default function BotGO({ language = 'es' }) {
   const isRTL = currentLangCode === 'ar';
 
   const [isOpen, setIsOpen] = useState(false);
+  const [viewMode, setViewMode] = useState('voice'); 
+
   const [messages, setMessages] = useState([
     { role: 'assistant', content: t.greeting }
   ]);
@@ -32,15 +36,25 @@ export default function BotGO({ language = 'es' }) {
   const [showSalesButton, setShowSalesButton] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [productoInteres, setProductoInteres] = useState("sus productos"); 
+  
+  // ======================================
+  // NUEVOS ESTADOS PARA MANEJAR LA VOZ
+  // ======================================
+  const [lastVoiceResponse, setLastVoiceResponse] = useState(t.greeting); 
+  const [isBotSpeaking, setIsBotSpeaking] = useState(false); // Para animar la esfera
 
   const chatWindowRef = useRef(null);
   const inputRef = useRef(null); 
   const messagesContainerRef = useRef(null); 
   const voiceTextRef = useRef('');
+  
+  // REFERENCIA AL AUDIO (Para poder pausarlo)
+  const audioRef = useRef(null);
 
   useEffect(() => {
     if (messages.length === 1 && messages[0].role === 'assistant') {
         setMessages([{ role: 'assistant', content: t.greeting }]);
+        setLastVoiceResponse(t.greeting);
     }
   }, [language, t.greeting, messages.length]);
 
@@ -48,6 +62,13 @@ export default function BotGO({ language = 'es' }) {
   // LÓGICA DE VOZ (SPEECH TO TEXT)
   // ==========================================
   const toggleListening = () => {
+    // 1. Si el bot está hablando y activas el micro, CÁLLALO.
+    if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+        setIsBotSpeaking(false);
+    }
+
     if (isListening) {
       setIsListening(false);
       return;
@@ -55,7 +76,7 @@ export default function BotGO({ language = 'es' }) {
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      alert("❌ Tu navegador no tiene soporte de voz. Prueba usar Chrome o Safari.");
+      alert("❌ Tu navegador no tiene soporte de voz.");
       return;
     }
 
@@ -65,7 +86,6 @@ export default function BotGO({ language = 'es' }) {
     recognition.interimResults = true; 
 
     recognition.onstart = () => {
-      console.log("🎤 Micrófono activado. Habla ahora...");
       setIsListening(true);
       voiceTextRef.current = '';
     };
@@ -75,27 +95,21 @@ export default function BotGO({ language = 'es' }) {
         .map(result => result[0].transcript)
         .join('');
       
-      console.log("🗣️ Escuchado:", transcript);
-      setInput(transcript);
+      setInput(transcript); 
       voiceTextRef.current = transcript;
     };
 
     recognition.onerror = (event) => {
-      console.error("⚠️ Error de reconocimiento:", event.error);
+      console.error("⚠️ Error voz:", event.error);
       setIsListening(false);
-      if (event.error === 'not-allowed') {
-        alert("🔒 Permiso denegado. Debes permitir el acceso al micrófono en la configuración del navegador.");
-      }
     };
 
     recognition.onend = () => {
-      console.log("🛑 Fin de la escucha");
       setIsListening(false);
-      
       if (voiceTextRef.current.trim().length > 0) {
           setTimeout(() => {
               sendMessage(null, voiceTextRef.current);
-          }, 400);
+          }, 600);
       }
     };
 
@@ -108,26 +122,32 @@ export default function BotGO({ language = 'es' }) {
 
   const handleCloseChat = () => {
     setIsOpen(false);
+    setViewMode('voice'); 
+    
+    // Detener audio si cierras el chat
+    if (audioRef.current) {
+        audioRef.current.pause();
+        setIsBotSpeaking(false);
+    }
+
     if (inputRef.current) inputRef.current.blur();
     window.focus();
   };
 
+  // Manejadores de teclado y clicks externos
   useEffect(() => {
     const handleGlobalKeyDown = (e) => {
       if (e.key.toLowerCase() === 'f') {
         const tagName = e.target.tagName;
-        const isTyping = (tagName === 'INPUT' || tagName === 'TEXTAREA' || e.target.isContentEditable);
-        if (!isTyping) {
+        if (tagName !== 'INPUT' && tagName !== 'TEXTAREA' && !e.target.isContentEditable) {
           e.preventDefault(); 
           setIsOpen(true);
         }
       }
     };
-
     const handleEscKey = (event) => {
-        if (event.key === 'Escape' || event.keyCode === 27) handleCloseChat();
+        if (event.key === 'Escape') handleCloseChat();
     };
-
     const handleClickOutside = (event) => {
         if (isOpen && chatWindowRef.current && !chatWindowRef.current.contains(event.target)) {
           const btn = document.querySelector('.botgo-button');
@@ -135,13 +155,11 @@ export default function BotGO({ language = 'es' }) {
           handleCloseChat();
         }
     };
-
     window.addEventListener('keydown', handleGlobalKeyDown);
     if (isOpen) {
         document.addEventListener('mousedown', handleClickOutside);
         document.addEventListener('keydown', handleEscKey);
     }
-
     return () => {
         window.removeEventListener('keydown', handleGlobalKeyDown);
         document.removeEventListener('mousedown', handleClickOutside);
@@ -150,86 +168,65 @@ export default function BotGO({ language = 'es' }) {
   }, [isOpen]);
 
   useEffect(() => {
-    if (messagesContainerRef.current) {
+    if (messagesContainerRef.current && viewMode === 'chat') {
       setTimeout(() => {
-        messagesContainerRef.current.scrollTo({
-          top: messagesContainerRef.current.scrollHeight,
-          behavior: 'smooth' 
-        });
+        messagesContainerRef.current.scrollTo({ top: messagesContainerRef.current.scrollHeight, behavior: 'smooth' });
       }, 100);
     }
-  }, [messages, loading]); 
+  }, [messages, loading, viewMode]); 
 
-  // ==========================================
-  // [NUEVO] AUTO-FOCUS AL ABRIR EL CHAT (SOLO PC)
-  // ==========================================
   useEffect(() => {
-    if (isOpen) {
-        // Detectar si es PC (pantalla mayor a 768px)
+    if (isOpen && viewMode === 'chat') {
         const isPC = window.innerWidth > 768;
-        
-        if (isPC) {
-            // Un pequeño delay asegura que el CSS (animación) haya comenzado/terminado
-            // para que el input sea "visitable" por el foco.
-            setTimeout(() => {
-                if (inputRef.current) {
-                    inputRef.current.focus();
-                }
-            }, 300); 
-        }
+        if (isPC) setTimeout(() => inputRef.current && inputRef.current.focus(), 300);
     }
-  }, [isOpen]);
+  }, [isOpen, viewMode]);
 
   const detectingProducto = (texto) => {
     const txt = texto.toLowerCase();
-    if (txt.includes('rafia') || txt.includes('fibrilada') || txt.includes('raffia') || txt.includes('رافيا')) return 'Rafia';
-    if (txt.includes('cuerda') || txt.includes('rope') || txt.includes('corda') || txt.includes('حبل')) return 'Cuerdas';
-    if (txt.includes('saco') || txt.includes('bag') || txt.includes('sack') || txt.includes('costal') || txt.includes('كيس')) return 'Sacos';
-    if (txt.includes('malla') || txt.includes('bolsa') || txt.includes('mesh') || txt.includes('شبكة')) return 'Mallas';
-    if (txt.includes('film') || txt.includes('stretch') || txt.includes('playo') || txt.includes('estirable')) return 'Stretch Film';
+    if (txt.includes('rafia') || txt.includes('raffia')) return 'Rafia';
+    if (txt.includes('cuerda') || txt.includes('rope')) return 'Cuerdas';
+    if (txt.includes('saco') || txt.includes('bag')) return 'Sacos';
+    if (txt.includes('malla') || txt.includes('mesh')) return 'Mallas';
+    if (txt.includes('film') || txt.includes('stretch')) return 'Stretch Film';
     return null; 
   };
 
   const WHATSAPP_LINK = `https://wa.me/524434845466?text=${t.waStart.replace(/ /g, '+')}+${productoInteres.replace(' ', '+')}...`;
 
   const renderFormattedText = (text) => {
-    return text.split('\n').map((str, index) => {
-      if (str.trim() === '') return <div key={index} style={{ height: '8px' }}></div>;
-      const parts = str.split(/(\*\*.*?\*\*)/g);
-      return (
-        <div key={index} style={{ marginBottom: '4px' }}>
-          {parts.map((part, i) => {
-            if (part.startsWith('**') && part.endsWith('**')) return <strong key={i}>{part.slice(2, -2)}</strong>;
-            return part;
-          })}
-        </div>
-      );
-    });
+    return text.split('\n').map((str, index) => (
+       <div key={index}>{str}</div>
+    ));
   };
 
   // ==========================================
-  // FUNCIÓN DE ENVÍO
+  // FUNCIÓN DE ENVÍO (CORREGIDA PARA AUDIO)
   // ==========================================
   const sendMessage = async (e = null, textOverride = null) => {
     if (e) e.preventDefault();
-    
     const textToSend = textOverride !== null ? textOverride : input;
-
     if (!textToSend.trim()) return;
+
+    // 1. Detener audio anterior si el usuario interrumpe
+    if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+        setIsBotSpeaking(false);
+    }
 
     setShowSalesButton(false);
     const textoUsuario = textToSend.toLowerCase();
     
-    const triggers = ['comprar', 'cotizar', 'precio', 'costo', 'buy', 'price', 'quote', 'order', 'preço', 'cotação', '买', 'saber precio', 'cost'];
+    // Detección de producto
+    const triggers = ['comprar', 'cotizar', 'precio', 'costo', 'buy', 'price'];
     const esVentaObvia = triggers.some(palabra => textoUsuario.includes(palabra));
-
     const nuevoProducto = detectingProducto(textoUsuario);
     if (nuevoProducto) setProductoInteres(nuevoProducto);
 
+    // Actualizar UI
     const userMsg = { role: 'user', content: textToSend };
-    const newMessagesForState = [...messages, userMsg]; 
-    setMessages(newMessagesForState);
-    
+    setMessages(prev => [...prev, userMsg]);
     setInput('');
     voiceTextRef.current = ''; 
     setLoading(true);
@@ -238,33 +235,49 @@ export default function BotGO({ language = 'es' }) {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-            messages: newMessagesForState,
-            language: language 
-        })
+        body: JSON.stringify({ messages: [...messages, userMsg], language: language })
       });
       const data = await response.json();
+      
       let replyText = data.reply;
+      const audioUrl = data.audio; // <--- AQUÍ RECIBIMOS EL AUDIO DEL BACKEND
 
       if (replyText.includes('[[VENTA_DETECTADA]]') || esVentaObvia) {
         setShowSalesButton(true);
         replyText = replyText.replace('[[VENTA_DETECTADA]]', '');
       }
+      
       setMessages(prev => [...prev, { role: 'assistant', content: replyText }]);
+      setLastVoiceResponse(replyText);
+
+      // 2. REPRODUCIR EL AUDIO (LO QUE FALTABA)
+      if (audioUrl) {
+          const audio = new Audio(audioUrl);
+          audioRef.current = audio; // Guardar referencia
+
+          // Eventos para animar la esfera
+          audio.onplay = () => setIsBotSpeaking(true);
+          audio.onended = () => setIsBotSpeaking(false);
+          audio.onpause = () => setIsBotSpeaking(false);
+
+          // Reproducir
+          try {
+             await audio.play();
+          } catch(err) {
+             console.log("Audio bloqueado (interacción requerida):", err);
+             setIsBotSpeaking(false);
+          }
+      }
+
     } catch (error) {
       console.error(error);
-      setMessages(prev => [...prev, { role: 'assistant', content: t.error }]);
+      const errorMsg = t.error;
+      setMessages(prev => [...prev, { role: 'assistant', content: errorMsg }]);
+      setLastVoiceResponse(errorMsg);
     } finally {
       setLoading(false);
-      
-      // Lógica de foco post-envío (distinta a la de apertura)
-      const isMobile = window.innerWidth <= 768;
-      if (isMobile) {
-          if (inputRef.current) inputRef.current.blur();
-      } else {
-          setTimeout(() => {
-              if (inputRef.current) inputRef.current.focus();
-          }, 50);
+      if (viewMode === 'chat' && window.innerWidth > 768) {
+          setTimeout(() => inputRef.current && inputRef.current.focus(), 50);
       }
     }
   };
@@ -280,97 +293,134 @@ export default function BotGO({ language = 'es' }) {
     >
       <div ref={chatWindowRef} className={`botgo-window ${isOpen ? 'show' : 'hide'}`}>
         
-        {/* HEADER */}
-        <div className="botgo-header-clean" style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
-            <button onClick={handleCloseChat} className="header-back-btn">
-                <BackArrowIcon />
-            </button>
-            <div className="header-title" style={{ textAlign: isRTL ? 'right' : 'left' }}>
-                <h2>BotGo</h2>
-            </div>
-            <div className="header-avatar-container">
-                <RobotIcon className="header-robot-icon" />
-            </div>
-        </div>
+        {/* VISTA DE VOZ */}
+        {viewMode === 'voice' && (
+            <div className="botgo-voice-interface">
+                <div className="voice-header">
+                    <span>Asistente Virtual</span>
+                    <button className="voice-close-btn" onClick={handleCloseChat}>
+                        <CloseIcon />
+                    </button>
+                </div>
 
-        {/* MENSAJES */}
-        <div className="botgo-messages" ref={messagesContainerRef}>
-          {messages.map((msg, idx) => (
-            <div 
-                key={idx} 
-                className={`msg-row ${msg.role}`}
-                style={{ 
-                    flexDirection: isRTL && msg.role === 'assistant' ? 'row-reverse' : 
-                                  (isRTL && msg.role === 'user' ? 'row' : undefined) 
-                }}
-            >
-              {msg.role === 'assistant' && (
-                  <div className="msg-avatar-small"><RobotIcon className="msg-icon-svg" /></div>
-              )}
-              
-              <div 
-                className={`msg-bubble ${msg.role} structured-text`}
-                style={{ direction: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' }}
-              >
-                 {renderFormattedText(msg.content)}
-              </div>
-            </div>
-          ))}
-
-           {loading && (
-            <div className="msg-row assistant" style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
-              <div className="msg-avatar-small"><RobotIcon className="msg-icon-svg" /></div>
-              <div className="msg-bubble assistant typing">
-                  <span className="dot"></span><span className="dot"></span><span className="dot"></span>
-              </div>
-            </div>
-          )}
-
-          {showSalesButton && (
-            <div className="sales-action-container">
-              <a 
-                href={WHATSAPP_LINK} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="whatsapp-float-btn"
-                style={{ direction: isRTL ? 'rtl' : 'ltr' }}
-              >
-                <WhatsAppIcon /> {t.salesBtn} {productoInteres}
-              </a>
-            </div>
-          )}
-        </div>
-
-        {/* INPUT (FOOTER) */}
-        <div className="botgo-footer-curve">
-            <form 
-                onSubmit={sendMessage} 
-                className="botgo-input-capsule"
-                style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}
-            >
-                <button type="button" className="action-btn-mic" onClick={toggleListening}>
-                    <MicIcon isListening={isListening} />
-                </button>
-                
-                <input 
-                    ref={inputRef} 
-                    className="botgo-input-field" 
-                    type="text" 
-                    value={input} 
-                    onChange={(e) => setInput(e.target.value)} 
-                    placeholder={isListening ? t.listening : t.placeholder} 
-                    disabled={loading}
-                    dir={isRTL ? "rtl" : "ltr"}
-                    style={{ textAlign: isRTL ? 'right' : 'left' }}
-                />
-                
-                <button type="submit" className="action-btn-send" disabled={loading || !input.trim()}>
-                    <div style={{ transform: isRTL ? 'rotate(180deg)' : 'none' }}>
-                        <SendIcon />
+                <div className="voice-content">
+                    {/* ESFERA: Se anima si el bot habla (speaking) o escucha (listening) */}
+                    <div className={`voice-orb-container 
+                        ${loading ? 'thinking' : ''} 
+                        ${isBotSpeaking ? 'speaking' : ''} 
+                        ${isListening ? 'listening' : 'idle'}`}
+                    >
+                        <div className="voice-orb-core"></div>
+                        <div className="voice-orb-ring ring-1"></div>
+                        <div className="voice-orb-ring ring-2"></div>
                     </div>
-                </button>
-            </form>
-        </div>
+
+                    <div className="voice-text-display">
+                        {isListening ? (
+                            <p className="user-listening-text">{input || "Escuchando..."}</p>
+                        ) : loading ? (
+                            <p className="assistant-thinking-text">Pensando...</p>
+                        ) : (
+                            <p className="assistant-speech-text">
+                                {lastVoiceResponse.length > 150 
+                                    ? lastVoiceResponse.substring(0, 150) + "..." 
+                                    : lastVoiceResponse}
+                            </p>
+                        )}
+                    </div>
+                </div>
+
+                <div className="voice-controls">
+                    <button className="voice-control-btn secondary" onClick={() => setViewMode('chat')}>
+                        <KeyboardIcon />
+                    </button>
+                    <button 
+                        className={`voice-control-btn primary-mic ${isListening ? 'active' : ''}`} 
+                        onClick={toggleListening}
+                    >
+                        <MicIcon isListening={isListening} size={32} />
+                    </button>
+                    <button className="voice-control-btn secondary" onClick={handleCloseChat}>
+                        <CloseIcon />
+                    </button>
+                </div>
+            </div>
+        )}
+
+        {/* VISTA DE CHAT (TEXTO) */}
+        {viewMode === 'chat' && (
+            <div className="botgo-chat-interface">
+                <div className="botgo-header-clean" style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
+                    <button onClick={() => setViewMode('voice')} className="header-back-btn">
+                        <BackArrowIcon />
+                    </button>
+                    <div className="header-title" style={{ textAlign: isRTL ? 'right' : 'left' }}>
+                        <h2>BotGo</h2>
+                    </div>
+                    <div className="header-avatar-container">
+                        <RobotIcon className="header-robot-icon" />
+                    </div>
+                </div>
+
+                <div className="botgo-messages" ref={messagesContainerRef}>
+                    {messages.map((msg, idx) => (
+                        <div 
+                            key={idx} 
+                            className={`msg-row ${msg.role}`}
+                            style={{ 
+                                flexDirection: isRTL && msg.role === 'assistant' ? 'row-reverse' : 
+                                            (isRTL && msg.role === 'user' ? 'row' : undefined) 
+                            }}
+                        >
+                            {msg.role === 'assistant' && (
+                                <div className="msg-avatar-small"><RobotIcon className="msg-icon-svg" /></div>
+                            )}
+                            
+                            <div 
+                                className={`msg-bubble ${msg.role} structured-text`}
+                                style={{ direction: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' }}
+                            >
+                                {renderFormattedText(msg.content)}
+                            </div>
+                        </div>
+                    ))}
+                    {loading && (
+                        <div className="msg-row assistant">
+                            <div className="msg-avatar-small"><RobotIcon className="msg-icon-svg" /></div>
+                            <div className="msg-bubble assistant typing"><span className="dot"></span><span className="dot"></span><span className="dot"></span></div>
+                        </div>
+                    )}
+                    {showSalesButton && (
+                        <div className="sales-action-container">
+                            <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="whatsapp-float-btn">
+                                <WhatsAppIcon /> {t.salesBtn} {productoInteres}
+                            </a>
+                        </div>
+                    )}
+                </div>
+
+                <div className="botgo-footer-curve">
+                    <form onSubmit={sendMessage} className="botgo-input-capsule" style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
+                        <button type="button" className="action-btn-mic" onClick={toggleListening}>
+                            <MicIcon isListening={isListening} />
+                        </button>
+                        <input 
+                            ref={inputRef} 
+                            className="botgo-input-field" 
+                            type="text" 
+                            value={input} 
+                            onChange={(e) => setInput(e.target.value)} 
+                            placeholder={isListening ? t.listening : t.placeholder} 
+                            disabled={loading}
+                            dir={isRTL ? "rtl" : "ltr"}
+                        />
+                        <button type="submit" className="action-btn-send" disabled={loading || !input.trim()}>
+                            <div style={{ transform: isRTL ? 'rotate(180deg)' : 'none' }}><SendIcon /></div>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        )}
 
       </div>
       

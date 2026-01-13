@@ -471,3 +471,213 @@
   .botgo-messages { padding: 10px 15px; }
   .botgo-header-clean { padding: 15px 20px 5px 20px; }
 }
+/* =========================================
+   10. INTERFAZ DE VOZ (GEMINI / RECEPCIONISTA)
+   ========================================= */
+
+.botgo-voice-interface {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #FFF5E6 0%, #FFFFFF 100%); /* Fondo degradado naranja muy suave */
+  position: relative;
+  overflow: hidden;
+}
+
+.botgo-chat-interface {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER DE VOZ */
+.voice-header {
+  padding: 20px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-grey);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.voice-close-btn {
+  background: none;
+  border: none;
+  color: var(--text-dark);
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+.voice-close-btn:hover { background: rgba(0,0,0,0.05); }
+
+/* CONTENIDO CENTRAL (ORBE Y TEXTO) */
+.voice-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 30px;
+  text-align: center;
+  gap: 30px;
+}
+
+/* TEXTOS DINÁMICOS */
+.voice-text-display {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.assistant-speech-text {
+  font-size: 1.3rem;
+  color: var(--text-dark);
+  font-weight: 500;
+  line-height: 1.4;
+  animation: fadeIn 0.5s ease;
+}
+
+.user-listening-text {
+  font-size: 1.2rem;
+  color: var(--primary-orange);
+  font-style: italic;
+}
+
+.assistant-thinking-text {
+  font-size: 1.1rem;
+  color: #999;
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* =========================================
+   11. ANIMACIÓN DE LA ESFERA (ORB)
+   ========================================= */
+.voice-orb-container {
+  width: 120px;
+  height: 120px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.voice-orb-core {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ff8c5a, var(--primary-orange));
+  box-shadow: 0 0 30px rgba(242, 79, 19, 0.4);
+  z-index: 10;
+  transition: transform 0.3s ease;
+}
+
+.voice-orb-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid var(--primary-orange);
+  opacity: 0;
+  z-index: 1;
+}
+
+/* ESTADO: IDLE (Respirando) */
+.voice-orb-container.idle .voice-orb-core {
+  animation: orb-breathe 4s infinite ease-in-out;
+}
+@keyframes orb-breathe {
+  0%, 100% { transform: scale(0.95); box-shadow: 0 0 25px rgba(242, 79, 19, 0.3); }
+  50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(242, 79, 19, 0.6); }
+}
+
+/* ESTADO: LISTENING (Ondas activas) */
+.voice-orb-container.listening .voice-orb-core {
+  transform: scale(0.8);
+}
+.voice-orb-container.listening .voice-orb-ring.ring-1 {
+  width: 100%; height: 100%;
+  animation: orb-ripple 1.5s infinite ease-out;
+}
+.voice-orb-container.listening .voice-orb-ring.ring-2 {
+  width: 100%; height: 100%;
+  animation: orb-ripple 1.5s infinite ease-out 0.5s;
+}
+
+@keyframes orb-ripple {
+  0% { width: 100%; height: 100%; opacity: 0.8; border-width: 2px; }
+  100% { width: 220%; height: 220%; opacity: 0; border-width: 0px; }
+}
+
+/* ESTADO: THINKING (Girando colores) */
+.voice-orb-container.thinking .voice-orb-core {
+  background: radial-gradient(circle at 30% 30%, #fff, var(--primary-orange));
+  animation: orb-pulse-fast 0.8s infinite alternate;
+}
+@keyframes orb-pulse-fast { to { transform: scale(1.1); filter: brightness(1.2); } }
+
+/* =========================================
+   12. CONTROLES INFERIORES
+   ========================================= */
+.voice-controls {
+  padding: 30px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+}
+
+.voice-control-btn {
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, background 0.2s;
+}
+
+/* Botones laterales (Teclado / Cerrar) */
+.voice-control-btn.secondary {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  color: #555;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.voice-control-btn.secondary:hover {
+  background-color: #e0e0e0;
+  transform: scale(1.05);
+}
+
+/* Botón Central Micrófono (Grande) */
+.voice-control-btn.primary-mic {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-orange), #ff6b3d);
+  color: white;
+  box-shadow: 0 8px 20px rgba(242, 79, 19, 0.3);
+}
+.voice-control-btn.primary-mic:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(242, 79, 19, 0.4);
+}
+.voice-control-btn.primary-mic.active {
+  background: white;
+  color: var(--primary-orange);
+  border: 2px solid var(--primary-orange);
+  animation: pulse-border 1.5s infinite;
+}
+
+@keyframes pulse-border {
+  0% { box-shadow: 0 0 0 0 rgba(242, 79, 19, 0.7); }
+  70% { box-shadow: 0 0 0 15px rgba(242, 79, 19, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(242, 79, 19, 0); }
+}

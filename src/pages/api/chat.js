@@ -1,15 +1,23 @@
-import OpenAI from "openai";
+import { MsEdgeTTS, OUTPUT_FORMAT } from "msedge-tts";
+import * as googleTTS from 'google-tts-api';
 
-// Esto indica a Astro que esta ruta es dinámica (Server Side Rendering)
 export const prerender = false;
 
-const openai = new OpenAI({
-  apiKey: import.meta.env.OPENAI_API_KEY,
-});
+// --- CONFIGURACIÓN DE VOZ ---
+const VOICE_MAP = {
+  es: "es-MX-DaliaNeural",      
+  en: "en-US-JennyNeural",      
+  pt: "pt-BR-FranciscaNeural",  
+  fr: "fr-FR-DeniseNeural",     
+  zh: "zh-CN-XiaoxiaoNeural",   
+  ar: "ar-EG-SalmaNeural"       
+};
 
-/**
- * BASE DE CONOCIMIENTO: GRUPO ORTIZ (GO)
- */
+const LANGUAGES_MAP = {
+  'es': 'Spanish', 'en': 'English', 'pt': 'Portuguese',
+  'zh': 'Chinese', 'ar': 'Arabic', 'fr': 'French'
+};
+
 const CATALOGO_TECNICO = `
 === IDENTIDAD CORPORATIVA (CONTEXTO "GO") ===
 - Entidad: Grupo Ortiz (a menudo referido como "GO" o "go").
@@ -71,87 +79,99 @@ const CATALOGO_TECNICO = `
 - Con Liner: Bolsa interior protectora.
 `;
 
-const LANGUAGES_MAP = {
-  'es': 'Spanish',
-  'en': 'English',
-  'pt': 'Portuguese',
-  'zh': 'Chinese (Simplified)',
-  'ar': 'Arabic',
-  'fr': 'French'
-};
 
-export async function POST({ request }) {
-  // 1. Validación de seguridad básica
-  if (!import.meta.env.OPENAI_API_KEY) {
-    return new Response(JSON.stringify({ error: "Falta configuración del servidor (API KEY)" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" }
-    });
+// --- HELPER AUDIO ---
+async function generarAudio(texto, idiomaCode) {
+  let cleanText = texto.replace(/\[\[.*?\]\]/g, '').replace(/[*#\-]/g, ' ').replace(/\s+/g, ' ').trim();
+  if (cleanText.length > 200) cleanText = cleanText.substring(0, 198) + "...";
+  
+  const voiceId = VOICE_MAP[idiomaCode] || VOICE_MAP['es'];
+
+  try {
+    const tts = new MsEdgeTTS();
+    await tts.setMetadata(voiceId, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
+    const readable = await tts.toStream(cleanText);
+    const chunks = [];
+    for await (const chunk of readable) chunks.push(chunk);
+    return `data:audio/mp3;base64,${Buffer.concat(chunks).toString("base64")}`;
+  } catch (e) {
+    try {
+      const b64 = await googleTTS.getAudioBase64(cleanText, { lang: idiomaCode||'es', slow:false });
+      return `data:audio/mp3;base64,${b64}`;
+    } catch (err) { return null; }
   }
+}
+
+// --- ENDPOINT ---
+export async function POST({ request }) {
+  const apiKey = import.meta.env.GEMINI_API_KEY;
+  if (!apiKey) return new Response(JSON.stringify({ reply: "❌ ERROR: Falta API Key." }), { status: 200 });
 
   try {
     const body = await request.json();
-    const { messages, language } = body;
+    const { messages, language, isVoice = false } = body;
+    const targetLang = LANGUAGES_MAP[language] || 'Spanish';
+    const langCode = language || 'es';
+    let lastUserMessage = messages?.[messages.length - 1]?.content || "Hola";
 
-    // Validación de entrada
-    if (!messages || !Array.isArray(messages)) {
-        return new Response(JSON.stringify({ error: "Formato de mensajes inválido" }), { status: 400 });
+    // --- PASO 1: DESCUBRIR QUÉ MODELO TIENES REALMENTE ---
+    // En lugar de adivinar, pedimos la lista a Google.
+    const listUrl = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
+    const listResp = await fetch(listUrl);
+    const listData = await listResp.json();
+
+    if (listData.error) {
+        throw new Error(`Error listando modelos (${listData.error.code}): ${listData.error.message}`);
     }
 
-    const targetLang = LANGUAGES_MAP[language] || 'Spanish';
+    // Buscamos el primer modelo que sirva para 'generateContent'
+    // Preferencia: Flash -> Pro -> Cualquiera
+    const availableModels = listData.models || [];
+    const validModel = availableModels.find(m => m.name.includes('flash') && m.supportedGenerationMethods.includes('generateContent')) 
+                    || availableModels.find(m => m.name.includes('pro') && m.supportedGenerationMethods.includes('generateContent'))
+                    || availableModels.find(m => m.supportedGenerationMethods.includes('generateContent'));
 
-    // Construcción del System Prompt
-    const SYSTEM_PROMPT = `
-    Eres BotGo, el asistente virtual experto en ventas de **Grupo Ortiz (GO)**.
+    if (!validModel) {
+        throw new Error("Tu API Key es válida, pero no tienes acceso a ningún modelo de chat (generateContent).");
+    }
+
+    // Usamos el nombre EXACTO que Google nos dio (ej: models/gemini-1.5-flash-001)
+    const exactModelName = validModel.name.replace("models/", "");
+    console.log("✅ Modelo encontrado y usado:", exactModelName);
+
+    // --- PASO 2: CHATEAR ---
+    const chatUrl = `https://generativelanguage.googleapis.com/v1beta/models/${exactModelName}:generateContent?key=${apiKey}`;
     
-    *** REGLA DE CONTEXTO "GO" ***
-    Si el usuario menciona "GO", "go" o "Go", interpreta que es **Grupo Ortiz**.
-
-    *** REGLA DE PRESENTACIÓN DE PRODUCTOS ***
-    1. **Pregunta General:** Si preguntan "¿qué venden?" o por el catálogo general:
-       - Muestra SOLO la lista de las **7 CATEGORÍAS** (Resumen).
-       - NO des detalles técnicos aún. Pregunta qué línea les interesa.
-    2. **Pregunta Específica:** Si preguntan por un producto específico (ej: "Rafia"), da el detalle técnico de esa sección.
-
-    *** INSTRUCCIONES DE RESPUESTA ***
-    - Idioma de respuesta: **${targetLang}**.
-    - Tono: Profesional, amable y orientado a la venta.
-    - **IMPORTANTE:** Usa la información de la base de datos, pero NO incluyas códigos de citación como o en tu respuesta final. Habla naturalmente.
-
-    *** BASE DE CONOCIMIENTO ***
-    ${CATALOGO_TECNICO}
-
-    *** DETECCIÓN DE VENTA ***
-    Si el usuario muestra intención clara de compra (palabras: precio, cotizar, comprar, costo, quote), añade al FINAL de tu respuesta (en una línea nueva y sola):
-    [[VENTA_DETECTADA]]
-    `;
-
-    // 2. Optimización de Contexto: Enviamos solo los últimos 8 mensajes para no gastar tokens excesivos
-    // Mantenemos siempre el mensaje del sistema primero
-    const recentMessages = messages.slice(-8); 
-    
-    const completion = await openai.chat.completions.create({
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT }, 
-        ...recentMessages
-      ],
-      model: "gpt-4o-mini", 
-      temperature: 0.3,
-      max_tokens: 600, // Límite de seguridad para la respuesta
+    const response = await fetch(chatUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ 
+          role: "user", 
+          parts: [{ text: `Eres BotGo de Grupo Ortiz (GO). Idioma: ${targetLang}. Base de datos: ${CATALOGO_TECNICO}. Usuario dice: "${lastUserMessage}"` }] 
+        }]
+      })
     });
 
-    return new Response(JSON.stringify({
-      reply: completion.choices[0].message.content
-    }), { 
-      status: 200,
-      headers: { "Content-Type": "application/json" } // Importante para el frontend
-    });
+    const data = await response.json();
+
+    if (data.error) {
+        throw new Error(`Error Chat (${data.error.code}): ${data.error.message}`);
+    }
+
+    const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sin respuesta.";
+
+    // --- AUDIO ---
+    let audioUrl = null;
+    if (isVoice) audioUrl = await generarAudio(replyText, langCode);
+
+    return new Response(JSON.stringify({ reply: replyText, audio: audioUrl }), { status: 200 });
 
   } catch (error) {
-    console.error("API Error:", error);
-    return new Response(JSON.stringify({ error: "Error procesando la solicitud" }), { 
-      status: 500,
-      headers: { "Content-Type": "application/json" }
-    });
+    console.error("❌ FALLO:", error.message);
+    return new Response(JSON.stringify({ 
+        reply: `Error Técnico: ${error.message}`, 
+        audio: null 
+    }), { status: 200 });
   }
 }
