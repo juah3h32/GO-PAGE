@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown'; 
 import './BotGO.css';
 
-// IMPORTAR TUS TRADUCCIONES
+// IMPORTAR TUS TRADUCCIONES (Asegúrate de que la ruta sea correcta)
 import { translations } from '../i18n'; 
 
 // ==========================================
@@ -38,7 +39,7 @@ export default function BotGO({ language = 'es' }) {
   const [productoInteres, setProductoInteres] = useState("sus productos"); 
   
   // ======================================
-  // NUEVOS ESTADOS PARA MANEJAR LA VOZ
+  // ESTADOS PARA MANEJAR LA VOZ
   // ======================================
   const [lastVoiceResponse, setLastVoiceResponse] = useState(t.greeting); 
   const [isBotSpeaking, setIsBotSpeaking] = useState(false); // Para animar la esfera
@@ -48,7 +49,7 @@ export default function BotGO({ language = 'es' }) {
   const messagesContainerRef = useRef(null); 
   const voiceTextRef = useRef('');
   
-  // REFERENCIA AL AUDIO (Para poder pausarlo)
+  // REFERENCIA AL AUDIO
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -62,7 +63,6 @@ export default function BotGO({ language = 'es' }) {
   // LÓGICA DE VOZ (SPEECH TO TEXT)
   // ==========================================
   const toggleListening = () => {
-    // 1. Si el bot está hablando y activas el micro, CÁLLALO.
     if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
@@ -108,7 +108,7 @@ export default function BotGO({ language = 'es' }) {
       setIsListening(false);
       if (voiceTextRef.current.trim().length > 0) {
           setTimeout(() => {
-              sendMessage(null, voiceTextRef.current);
+              sendMessage(null, voiceTextRef.current, true); 
           }, 600);
       }
     };
@@ -123,13 +123,10 @@ export default function BotGO({ language = 'es' }) {
   const handleCloseChat = () => {
     setIsOpen(false);
     setViewMode('voice'); 
-    
-    // Detener audio si cierras el chat
     if (audioRef.current) {
         audioRef.current.pause();
         setIsBotSpeaking(false);
     }
-
     if (inputRef.current) inputRef.current.blur();
     window.focus();
   };
@@ -182,98 +179,67 @@ export default function BotGO({ language = 'es' }) {
     }
   }, [isOpen, viewMode]);
 
-  const detectingProducto = (texto) => {
-    const txt = texto.toLowerCase();
-    if (txt.includes('rafia') || txt.includes('raffia')) return 'Rafia';
-    if (txt.includes('cuerda') || txt.includes('rope')) return 'Cuerdas';
-    if (txt.includes('saco') || txt.includes('bag')) return 'Sacos';
-    if (txt.includes('malla') || txt.includes('mesh')) return 'Mallas';
-    if (txt.includes('film') || txt.includes('stretch')) return 'Stretch Film';
-    return null; 
-  };
-
   const WHATSAPP_LINK = `https://wa.me/524434845466?text=${t.waStart.replace(/ /g, '+')}+${productoInteres.replace(' ', '+')}...`;
 
-  const renderFormattedText = (text) => {
-    return text.split('\n').map((str, index) => (
-       <div key={index}>{str}</div>
-    ));
+  const playServerAudio = async (audioBase64) => {
+    if (!audioBase64) return;
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    const audio = new Audio(audioBase64);
+    audioRef.current = audio;
+    audio.onplay = () => setIsBotSpeaking(true);
+    audio.onended = () => setIsBotSpeaking(false);
+    audio.onpause = () => setIsBotSpeaking(false);
+    try {
+      await audio.play();
+    } catch (err) {
+      console.warn("Audio bloqueado:", err);
+      setIsBotSpeaking(false);
+    }
   };
 
-  // ==========================================
-  // FUNCIÓN DE ENVÍO (CORREGIDA PARA AUDIO)
-  // ==========================================
-  const sendMessage = async (e = null, textOverride = null) => {
+  const sendMessage = async (e = null, textOverride = null, isVoiceRequest = false) => {
     if (e) e.preventDefault();
     const textToSend = textOverride !== null ? textOverride : input;
     if (!textToSend.trim()) return;
 
-    // 1. Detener audio anterior si el usuario interrumpe
     if (audioRef.current) {
         audioRef.current.pause();
-        audioRef.current = null;
         setIsBotSpeaking(false);
     }
+    window.speechSynthesis.cancel(); 
 
-    setShowSalesButton(false);
-    const textoUsuario = textToSend.toLowerCase();
-    
-    // Detección de producto
-    const triggers = ['comprar', 'cotizar', 'precio', 'costo', 'buy', 'price'];
-    const esVentaObvia = triggers.some(palabra => textoUsuario.includes(palabra));
-    const nuevoProducto = detectingProducto(textoUsuario);
-    if (nuevoProducto) setProductoInteres(nuevoProducto);
-
-    // Actualizar UI
     const userMsg = { role: 'user', content: textToSend };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
-    voiceTextRef.current = ''; 
     setLoading(true);
 
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: [...messages, userMsg], language: language })
+        body: JSON.stringify({ 
+            messages: [...messages, userMsg],
+            isVoice: isVoiceRequest 
+        })
       });
+      
       const data = await response.json();
-      
-      let replyText = data.reply;
-      const audioUrl = data.audio; // <--- AQUÍ RECIBIMOS EL AUDIO DEL BACKEND
+      const replyText = data.reply;
+      const audioUrl = data.audio; 
 
-      if (replyText.includes('[[VENTA_DETECTADA]]') || esVentaObvia) {
-        setShowSalesButton(true);
-        replyText = replyText.replace('[[VENTA_DETECTADA]]', '');
-      }
-      
       setMessages(prev => [...prev, { role: 'assistant', content: replyText }]);
       setLastVoiceResponse(replyText);
 
-      // 2. REPRODUCIR EL AUDIO (LO QUE FALTABA)
-      if (audioUrl) {
-          const audio = new Audio(audioUrl);
-          audioRef.current = audio; // Guardar referencia
-
-          // Eventos para animar la esfera
-          audio.onplay = () => setIsBotSpeaking(true);
-          audio.onended = () => setIsBotSpeaking(false);
-          audio.onpause = () => setIsBotSpeaking(false);
-
-          // Reproducir
-          try {
-             await audio.play();
-          } catch(err) {
-             console.log("Audio bloqueado (interacción requerida):", err);
-             setIsBotSpeaking(false);
-          }
+      if (isVoiceRequest && audioUrl) {
+          await playServerAudio(audioUrl);
       }
 
     } catch (error) {
       console.error(error);
-      const errorMsg = t.error;
-      setMessages(prev => [...prev, { role: 'assistant', content: errorMsg }]);
-      setLastVoiceResponse(errorMsg);
+      setMessages(prev => [...prev, { role: 'assistant', content: "Error de conexión." }]);
     } finally {
       setLoading(false);
       if (viewMode === 'chat' && window.innerWidth > 768) {
@@ -281,10 +247,6 @@ export default function BotGO({ language = 'es' }) {
       }
     }
   };
-
-  // ==========================================
-  // 3. RENDER (JSX)
-  // ==========================================
 
   return (
     <div 
@@ -304,7 +266,7 @@ export default function BotGO({ language = 'es' }) {
                 </div>
 
                 <div className="voice-content">
-                    {/* ESFERA: Se anima si el bot habla (speaking) o escucha (listening) */}
+                    {/* ESFERA */}
                     <div className={`voice-orb-container 
                         ${loading ? 'thinking' : ''} 
                         ${isBotSpeaking ? 'speaking' : ''} 
@@ -321,11 +283,18 @@ export default function BotGO({ language = 'es' }) {
                         ) : loading ? (
                             <p className="assistant-thinking-text">Pensando...</p>
                         ) : (
-                            <p className="assistant-speech-text">
-                                {lastVoiceResponse.length > 150 
-                                    ? lastVoiceResponse.substring(0, 150) + "..." 
-                                    : lastVoiceResponse}
-                            </p>
+                            <div className="assistant-speech-text">
+                                <ReactMarkdown>
+                                    {(() => {
+                                        // ----------------------------------------------------
+                                        // AQUÍ ESTÁ LA MAGIA PARA CORTAR A 2 PÁRRAFOS
+                                        // ----------------------------------------------------
+                                        const paragraphs = lastVoiceResponse.split(/\n+/).filter(p => p.trim() !== '');
+                                        const topTwo = paragraphs.slice(0, 2);
+                                        return topTwo.join('\n\n') + (paragraphs.length > 2 ? '...' : '');
+                                    })()}
+                                </ReactMarkdown>
+                            </div>
                         )}
                     </div>
                 </div>
@@ -380,7 +349,9 @@ export default function BotGO({ language = 'es' }) {
                                 className={`msg-bubble ${msg.role} structured-text`}
                                 style={{ direction: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' }}
                             >
-                                {renderFormattedText(msg.content)}
+                                <ReactMarkdown>
+                                    {msg.content}
+                                </ReactMarkdown>
                             </div>
                         </div>
                     ))}
@@ -400,10 +371,15 @@ export default function BotGO({ language = 'es' }) {
                 </div>
 
                 <div className="botgo-footer-curve">
-                    <form onSubmit={sendMessage} className="botgo-input-capsule" style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
+                    <form 
+                        onSubmit={(e) => sendMessage(e, null, false)} 
+                        className="botgo-input-capsule" 
+                        style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}
+                    >
                         <button type="button" className="action-btn-mic" onClick={toggleListening}>
                             <MicIcon isListening={isListening} />
                         </button>
+                        
                         <input 
                             ref={inputRef} 
                             className="botgo-input-field" 
@@ -414,8 +390,11 @@ export default function BotGO({ language = 'es' }) {
                             disabled={loading}
                             dir={isRTL ? "rtl" : "ltr"}
                         />
+                        
                         <button type="submit" className="action-btn-send" disabled={loading || !input.trim()}>
-                            <div style={{ transform: isRTL ? 'rotate(180deg)' : 'none' }}><SendIcon /></div>
+                            <div style={{ transform: isRTL ? 'rotate(180deg)' : 'none' }}>
+                                <SendIcon />
+                            </div>
                         </button>
                     </form>
                 </div>

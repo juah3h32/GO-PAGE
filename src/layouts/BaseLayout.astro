@@ -1,4 +1,5 @@
 ---
+
 // src/layouts/BaseLayout.astro
 
 import { pwaInfo } from 'virtual:pwa-info';
@@ -54,12 +55,16 @@ const {
       /* ... (Tus estilos anteriores se mantienen igual) ... */
       :root {
         --body-bg: #ffffff;
-        --slide-gradient: linear-gradient(to right, #ffffff 0%, #ffffff 20%, #fb670b 60%, #ff7a18 100%);
+        /* CAMBIO REALIZADO: Ahora es solo blanco sólido, sin degradado naranja */
+        --slide-gradient: #ffffff;
       }
+      
       html.dark {
         --body-bg: #111010;
+        /* El modo oscuro mantiene el degradado naranja (si también quieres quitarlo aquí, avísame) */
         --slide-gradient: linear-gradient(to right, #000000 0%, #000000 20%, #fb670b 60%, #ff7a18 100%);
       }
+
       html, body {
         margin: 0; padding: 0; width: 100%; min-height: 100vh;
         font-family: 'Poppins', sans-serif; overflow-x: hidden; 

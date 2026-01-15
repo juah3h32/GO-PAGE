@@ -36,10 +36,16 @@
   --font-title: 'MorganitePro', sans-serif;
   --font-body: 'NeueMontreal', sans-serif;
   --font-elegant: 'Moisette', serif;
+  --spec-bg: #FB670B; 
+  /* Texto blanco para que se lea bien sobre el naranja */
+  --spec-text: #ffffff;
+  /* Borde del mismo color */
+  --spec-border: #FB670B;
 
   /* --- MODO CLARO (LIGHT) - BLANCO PURO --- */
   --bg-color: #ffffff;
   --bg-pattern: radial-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+  --tech-orange: #FB670B;
   --bg-size: 30px 30px;
 
   --text-color: #0f172a;       /* Negro/Azul muy oscuro */
@@ -64,6 +70,11 @@ html.dark {
 
   --text-color: #ffffff;
   --text-muted: #a3a3a3;
+  --spec-bg: rgba(255, 255, 255, 0.03);
+  /* Texto blanco */
+  --spec-text: #ffffff;
+  /* Borde sutil */
+  --spec-border: rgba(150, 150, 150, 0.2);
   
   /* Fondo especial para tarjetas/productos en modo oscuro (Tu degradado) */
   --card-bg: linear-gradient(180deg, #111111 0%, #222222 50%, #000000 100%);
@@ -233,11 +244,11 @@ body {
 
 /* Caja individual de especificación (Versión Final Corregida) */
 .spec-box {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(150, 150, 150, 0.2);
+  /* Usamos la variable que acabamos de crear */
+  background: var(--spec-bg);
+  border: 1px solid var(--spec-border);
   border-radius: 12px;
   
-  /* Padding dinámico */
   padding: 1.5vh 0.4vw; 
   
   display: flex;
@@ -271,6 +282,7 @@ body {
   font-family: var(--font-body);
   opacity: 0.7; 
   margin-bottom: 0.5vh;
+  color: var(--text-color);
   white-space: nowrap; 
 }
 
@@ -292,6 +304,12 @@ body {
 .spec-percent { 
   font-size: clamp(0.6rem, 0.6vw, 0.9rem); 
   color: var(--tech-orange); 
+}
+/* IMPORTANTE: Asegurar que el texto dentro sea del color correcto (Blanco en modo claro) */
+.spec-box .spec-value,
+.spec-box .spec-label,
+.spec-box .spec-percent {
+    color: var(--spec-text) !important;
 }
 
 /* =================================================================
@@ -557,7 +575,7 @@ model-viewer.model-3d-custom {
   }
 
   .spec-box {
-    background: #f7f7f7 !important;
+    background: var(--spec-bg) !important;
     border: 1px solid #eeeeee;
     border-radius: 10px;
     padding: 8px 2px !important; 
@@ -570,7 +588,7 @@ model-viewer.model-3d-custom {
   }
 
   .spec-value {
-    color: #000 !important;
+    color: var(--text-color);
     font-size: 0.95rem !important; 
     font-weight: 800;
     font-family: var(--font-body);

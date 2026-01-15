@@ -5,8 +5,17 @@
 <div class="fondo-global"></div>
 
 <style>
-  /* 1. VARIABLES EXACTAS DEL CÓDIGO ORIGINAL */
   :root {
+    /* 1. MODO CLARO (BLANCO): Sin degradado */
+    --bg-gradient: none;
+    
+    /* Opcional: Si quieres que sea totalmente transparente o blanco explícito */
+    /* --bg-gradient: linear-gradient(to right, white, white); */
+  }
+
+  :global(.dark) {
+    /* 2. MODO OSCURO: Aquí activamos el degradado */
+    /* He movido aquí tu degradado principal (el complejo) para que se vea en Dark Mode */
     --bg-gradient: linear-gradient(
       70deg,
       #ff7a18 0%,
@@ -16,38 +25,24 @@
     );
   }
 
-  :global(.dark) {
-    --bg-gradient: linear-gradient(70deg, #fb670b, #222222);
-  }
-
-  /* 2. ESTILOS COPIADOS DE ".carousel::before" */
   .fondo-global {
-    /* Posición fija para que sirva de fondo de pantalla */
-    position: fixed; 
-    
-    /* Centrado en la pantalla (Punto de anclaje) */
+    position: fixed;
     top: 50%;
     left: 50%;
-    
-    /* DIMENSIONES GIGANTES (Del original) */
     width: 2000px;
     height: 1200px;
     
-    /* EL DEGRADADO */
+    /* Usará 'none' en blanco y el degradado en oscuro */
     background-image: var(--bg-gradient);
     
-    /* LA FORMA ORGÁNICA (Del original) */
     border-radius: 20% 30% 80% 10%;
-    
-    /* EL DESENFOQUE (Del original) */
     filter: blur(150px);
-    
-    /* LA POSICIÓN Y TRANSFORMACIÓN EXACTA (Del original) */
     transform: translate(-10%, -50%);
+    z-index: -10;
+    pointer-events: none;
     
-    /* CAPAS Y COMPORTAMIENTO */
-    z-index: -10; /* Detrás de todo */
-    pointer-events: none; /* Ignora clicks */
-    transition: background 1s ease, transform 1s ease;
+    /* Nota: background-image no se puede animar suavemente (fade). 
+       Si quieres un efecto suave al cambiar, es mejor usar opacidad */
+    transition: background-image 1s ease, transform 1s ease;
   }
 </style>

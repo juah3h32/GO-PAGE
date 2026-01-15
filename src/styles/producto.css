@@ -2,42 +2,34 @@
    PAGE REVEAL TRANSITION (CORREGIDO)
 ================================ */
 :root {
-  /* ... tus variables existentes ... */
   --body-bg: #ffffff;
   --text-color: #1a1a1a;
   
-  /* === AGREGAR ESTO PARA MODO CLARO (Termina en BLANCO) === */
-  --reveal-gradient: radial-gradient(
-    circle,
-    #ff7a18 0%,
-    #fb670b 45%,
-    #ffffff 100%  /* <--- Aquí está la clave: termina en blanco */
-  );
-  --slide-gradient: linear-gradient(
-    to right,       
-    #ffffff 0%,     /* <--- Blanco */
-    #ffffff 20%,    /* <--- Blanco */
-    #fb670b 60%,    
-    #ff7a18 100%    
-  );
+  /* === MODO CLARO: BLANCO PURO === */
+  /* Eliminamos el 'radial-gradient' con naranja y ponemos solo blanco */
+  --reveal-gradient: #ffffff; 
+  
+  /* Si usas la barra de slide, también en blanco */
+  --slide-gradient: #ffffff;
 }
 
 html.dark {
-  /* ... tus variables existentes ... */
   --body-bg: #111010;
   --text-color: #ffffff;
 
-  /* === AGREGAR ESTO PARA MODO OSCURO (Termina en NEGRO) === */
+  /* === MODO OSCURO: DEGRADADO NARANJA === */
+  /* Aquí SÍ mantenemos tu diseño original */
   --reveal-gradient: radial-gradient(
     circle,
     #ff7a18 0%,
     #fb670b 45%,
-    #000000 100% /* <--- Aquí termina en negro puro */
+    #000000 100% 
   );
-    --slide-gradient: linear-gradient(
+  
+  --slide-gradient: linear-gradient(
     to right,       
-    #000000 0%,     /* <--- Negro */
-    #000000 20%,    /* <--- Negro */
+    #000000 0%,     
+    #000000 20%,    
     #fb670b 60%,    
     #ff7a18 100%    
   );
@@ -48,26 +40,25 @@ html.dark {
   position: absolute;
   inset: 0;
   
-  /* --- CAMBIO AQUÍ: Usamos la variable en lugar del código fijo --- */
+  /* Esto tomará BLANCO en light y DEGRADADO en dark */
   background: var(--reveal-gradient);
   
   clip-path: circle(0% at 50% 50%);
   transition: clip-path 1.35s cubic-bezier(.77, 0, .175, 1);
 }
+
 .reveal-container {
-position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 9999; /* Muy importante */
-    pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  pointer-events: none;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
-
 
 /* CAPA 2: La Imagen del Producto */
 .reveal-content {
@@ -84,18 +75,12 @@ position: fixed;
   width: 100%;
   height: 100%;
   object-fit: contain;
-  
-  /* Estado inicial */
-  transform: scale(0.8); /* CAMBIO: 0.8 es más sutil que 0.5 */
+  transform: scale(0.8); 
   opacity: 0;
-  
-  /* CAMBIO: Usamos 'ease-out' en lugar del 'cubic-bezier' de rebote 
-     para que sea más "suave" y elegante, menos caricaturesco. */
   transition: opacity 0.18s ease-out, transform 0.8s ease-out; 
 }
 
 /* === ESTADO ACTIVO === */
-
 .reveal-container.active {
   pointer-events: all;
 }
@@ -107,10 +92,5 @@ position: fixed;
 .reveal-container.active .reveal-content img {
   transform: scale(1);
   opacity: 1;
-  
-  /* CAMBIO CRÍTICO: Aumentamos el delay.
-     El fondo tarda 1.35s en total. 
-     Con 0.45s esperamos a que el círculo ya esté abierto 
-     antes de empezar a mostrar la imagen. */
   transition-delay: 0.45s; 
 }

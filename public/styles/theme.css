@@ -6,11 +6,15 @@
   
   /* 1. Fondo base: Blanco neutro */
   --bg: #ffffff; 
+  --spec-bg: #FB670B; 
+  /* Texto blanco para que se lea bien sobre el naranja */
+  --spec-text: #ffffff;
+  /* Borde del mismo color */
+  --spec-border: #FB670B;
   
-  /* 2. Patrón: PUNTOS SUTILES (AJUSTADO) */
-  /* CAMBIO: Usamos rgba(0, 0, 0, 0.1). El '0.1' es la opacidad (10%).
-     Si los quieres aún más claros, baja a 0.05. Si los quieres más oscuros, sube a 0.2 */
-  --bg-pattern: radial-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+  /* 2. Patrón: PUNTOS MÁS VISIBLES */
+  /* CAMBIO: Subí la opacidad de 0.1 a 0.25 para que se noten más */
+  --bg-pattern: radial-gradient(rgba(0, 0, 0, 0.25) 1px, transparent 1px);
   
   /* 3. Tamaño */
   --bg-size: 30px 30px; 
@@ -49,12 +53,15 @@
   );
 }
 
-/* =====================================================
-   DARK MODE
-===================================================== */
+/* El resto de tu CSS (Dark mode, Global Styles, etc.) se queda igual... */
 html.dark {
   /* Fondo oscuro NEUTRO */
   --bg: #111111; 
+  --spec-bg: rgba(255, 255, 255, 0.03);
+  /* Texto blanco */
+  --spec-text: #ffffff;
+  /* Borde sutil */
+  --spec-border: rgba(255, 255, 255, 0.2);
   
   /* Puntos grises neutros para modo oscuro */
   --bg-pattern: radial-gradient(#444444 1px, transparent 1px);

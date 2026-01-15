@@ -26,12 +26,14 @@
     "openai": "^6.16.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "react-markdown": "^10.1.0",
     "sharp": "^0.34.3",
     "three": "^0.182.0"
   },
   "devDependencies": {
     "@types/cesium": "^1.67.14",
     "@types/three": "^0.181.0",
-    "@vite-pwa/astro": "^1.2.0"
+    "@vite-pwa/astro": "^1.2.0",
+    "@vitejs/plugin-basic-ssl": "^2.1.3"
   }
 }

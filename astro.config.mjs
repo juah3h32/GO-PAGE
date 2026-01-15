@@ -5,6 +5,9 @@ import sitemap from '@astrojs/sitemap';
 import AstroPWA from '@vite-pwa/astro';
 import node from '@astrojs/node';
 
+// 1. Importamos el plugin de SSL
+import basicSsl from '@vitejs/plugin-basic-ssl';
+
 export default defineConfig({
   site: 'https://example.com',
   output: 'server', 
@@ -50,18 +53,21 @@ export default defineConfig({
     })
   ],
 
-  // --- AQUÍ HICE EL CAMBIO ---
-vite: {
+  vite: {
+    // 2. Aquí está la lógica inteligente:
+    // Si estamos en desarrollo, usa basicSsl(). Si no, usa null (no hace nada).
+    plugins: [
+      process.env.NODE_ENV === 'development' ? basicSsl() : null
+    ],
+
     server: {
-      // Agregamos la dirección exacta que te dio el error
       allowedHosts: ['feat-enquiry-turbo-solely.trycloudflare.com'],
-      host: true // Esto ayuda a exponer la red
+      host: true 
     },
     define: {
       CESIUM_BASE_URL: JSON.stringify('/cesium')
     }
   },
-  // ---------------------------
 
   adapter: node({
     mode: 'standalone'

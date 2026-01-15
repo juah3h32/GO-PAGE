@@ -36,37 +36,37 @@ export const es = {
       { 
         img: "img1.png", 
         division: "STRETCH FILM", 
-        descripcion: "Fabricación de arpillas industriales para empaque agrícola.",
+        descripcion: "Película Estirable de óptica cristalina y altos estándares de calidad. Garantiza la integridad de la carga y eficiencia en costos. Nuestra línea incluye una opción Biodegradable, formulada para degradarse un 90% más rápido sin sacrificar propiedades mecánicas, uniendo resistencia industrial y responsabilidad ambiental.",
         slug: "productos/stretch-film" 
       },
       { 
         img: "img2.png", 
         division: "CUERDAS", 
-        descripcion: "Cuerdas y cabos de alta resistencia para uso industrial.",
+        descripcion: "Cuerda de Filamentos de Polipropileno (PP) de alto rendimiento. Gracias a su fabricación híbrida con materiales de alta y baja densidad, logramos un equilibrio perfecto: extrema ligereza sin sacrificar la resistencia a la rotura. Una solución flexible y duradera diseñada para trabajos exigentes.",
         slug: "cuerdas" 
       },
       { 
         img: "img3.png", 
         division: "RAFIA", 
-        descripcion: "Soluciones de rafia para embalaje y carga.",
+        descripcion: "Rafia de Película de Polipropileno (PP) de alto desempeño. Su fabricación con materiales de alta y baja densidad garantiza un equilibrio ideal: gran ligereza y elevada resistencia a la rotura. Un producto flexible y versátil, diseñado para ofrecer el máximo rendimiento en el atado.",
         slug: "rafias" 
       },
       { 
         img: "img4.png", 
-        division: "RAFIA", 
-        descripcion: "Empaques flexibles personalizados.",
+        division: "ARPILLA", 
+        descripcion: "Arpillas de Rafia de Polipropileno en tejido plano con costura reforzada tipo 'L'. La incorporación de monofilamento otorga una resistencia superior, facilitando la manipulación y el transporte. Su diseño ventilado de alta calidad conserva la frescura del producto, ideal para frutas, verduras y hortalizas.",
         slug: "productos/rafia-empaques" 
       },
       { 
         img: "img5.png", 
         division: "SACOS", 
-        descripcion: "Textiles técnicos industriales.",
+        descripcion: "Sacos de Rafia de calidad superior, resultado de tecnología de última generación y materia prima seleccionada. Ofrecen una solución de envasado robusta y confiable, ideal para una amplia gama de industrias: desde alimentos (harinas, azúcar) hasta productos químicos y fertilizantes.",
         slug: "productos/sacos" 
       },
       { 
         img: "img6.png", 
         division: "ESQUINEROS", 
-        descripcion: "Desarrollos a la medida.",
+        descripcion: "Esquineros de cartón diseñados para optimizar la logística. Proporcionan resistencia estructural y mejoran la estabilidad de la carga, permitiendo mantener la tensión adecuada del film para una distribución uniforme y segura durante el transporte.",
         slug: "productos/esquineros" 
       }
     ],
