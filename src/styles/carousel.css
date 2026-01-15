@@ -271,7 +271,7 @@ body, html {
      ========================================= */
   .carousel .list .item img {
     position: absolute; z-index: 100;
-    top: 33%; /* Ajusté un poco para dar espacio a la tarjeta más ancha */
+    top: 25%; /* Ajusté un poco para dar espacio a la tarjeta más ancha */
     left: 50%; right: auto;
     transform: translate(-50%, -50%);
     width: clamp(180px, 60vw, 300px); /* Un poco más grande para llenar espacio */
@@ -289,7 +289,7 @@ body, html {
     z-index: 50;
     
     /* Posición ajustada */
-    bottom: 20%; 
+    bottom: 25%; 
     left: 50%; 
     right: auto; 
     top: auto;
@@ -330,41 +330,47 @@ body, html {
     transform: translateX(-50%) translateY(0);
     transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.3s; /* Animación más suave */
   }
-
-  /* =========================================
-     4. TIPOGRAFÍA
+/* =========================================
+     4. TIPOGRAFÍA (CORREGIDO)
      ========================================= */
   
-  /* Título de fondo */
+  /* Título de fondo (El texto gigante transparente) */
   .carousel .list .item .introduce .title {
     position: fixed;
     bottom: 100%; 
-    transform: translate(-50%, 60%); 
+    transform: translate(-50%, 50%); 
     width: 100vw; 
     font-family: var(--fuente-titulos);
-    font-size: 22vw; /* Aumentado para impacto */
+    font-size: 52vw; 
     font-weight: 600;
     line-height: 0.8;
     text-align: center;
     white-space: nowrap; 
+    
+    /* Configuración para que sea solo contorno sutil */
     color: transparent;
-    -webkit-text-stroke: 2px rgba(0, 0, 0, 0.1); /* Más sutil para no ensuciar */
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.05); /* Lo hice más fino y claro para que no se vea negro sucio */
+    
     pointer-events: none; 
     z-index: -1; 
   }
 
-  /* Título Principal (Topic) */
+  /* Título Principal (Topic) - EL QUE SE VEÍA CON SOMBRA NEGRA */
   .carousel .list .item .introduce .topic {
     font-family: var(--fuente-titulos);
     width: 100%; 
     margin-bottom: 5px;
     
-    /* Ajuste responsivo para que siempre quepa en una línea */
     font-size: clamp(2.5rem, 13vw, 4.5rem); 
-    
     line-height: 0.9;
     font-weight: 800;
     color: #000000;
+    
+    /* --- AQUÍ ESTÁ LA SOLUCIÓN --- */
+    text-shadow: none !important; /* Elimina cualquier sombra heredada o borrosa */
+    filter: none; /* Asegura que no haya filtros oscureciendo */
+    /* ----------------------------- */
+
     white-space: nowrap; 
     overflow: hidden; 
     text-overflow: ellipsis;
@@ -372,27 +378,34 @@ body, html {
 
   .carousel .list .item .introduce .des {
     margin-bottom: 20px;
-    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+    padding: 0 15px;
+    
+    font-size: clamp(0.9rem, 3.5vw, 1.1rem);
     color: #555; 
-    line-height: 1.35;
-    /* Permitimos un poco más de texto */
-    max-height: 120px; 
-    display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
-  }
+    line-height: 1.5;
 
+    height: 100px; 
+    overflow: hidden; 
+    
+    -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+  }
   /* =========================================
-     5. BOTÓN
+     BOTÓN (Ajustado para estar cerca del texto)
      ========================================= */
   .carousel .list .item .introduce .seeMore {
-    align-self: center; /* Centrado para mejor estética móvil */
-    width: 90%; 
-    margin: 0; padding: 18px 0;
-    font-size: 1.1rem; font-weight: 700;
+    align-self: center; 
+    width: 100%; 
+    max-width: 280px; 
+    margin-top: -10px; /* Subimos un poquito el botón para que quede pegado al desvanecido */
+    padding: 15px 0;
+    
+    font-size: 1rem; font-weight: 700;
     color: #ffffff; background-color: #fb670b;
     border: none; border-radius: 20px;
-    /* Sombra del botón a juego */
     box-shadow: 0 10px 20px rgba(251, 103, 11, 0.4);
-    transform: none;
+    
+    cursor: pointer;
+    z-index: 10; /* Asegura que el botón esté pulsable */
   }
-  .arrows { display: none; }
 }
