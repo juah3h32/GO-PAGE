@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,9 +7,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Distribuidor Grupo Ortiz | Portal Oficial</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@100..700&family=Manrope:wght@200..800&display=swap" rel="stylesheet">
     
     <style>
+        /* =========================================
+           1. REGISTRO DE FUENTES (DEL CÓDIGO 2)
+           ========================================= */
+        @font-face {
+            font-family: 'MorganitePro';
+            src: url('../fonts/MorganitePro-ExtraBold.ttf') format('truetype');
+            font-weight: 800;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'NeueMontreal';
+            src: url('../fonts/NeueMontreal-Medium.otf') format('opentype');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+
         /* ================= VARIABLES GLOBALES ================= */
         :root {
             --primary: #fb670b;
@@ -16,18 +37,24 @@
             --text-main: #ffffff;
             --text-muted: #a1a1aa;
             --glass-border: rgba(255, 255, 255, 0.1);
+
+            /* ASIGNACIÓN DE FUENTES CON RESPALDO */
+            /* Si no encuentra Morganite, usa Antonio. Si no, sans-serif */
+            --fuente-titulos: 'MorganitePro', 'Antonio', sans-serif;
+            --fuente-cuerpo: 'NeueMontreal', 'Manrope', sans-serif;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        /* SCROLL SUAVE AL DAR CLICK */
         html { scroll-behavior: smooth; }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            /* APLICAMOS LA FUENTE DE CUERPO DEL CÓDIGO 2 */
+            font-family: var(--fuente-cuerpo);
             color: var(--text-main);
             overflow-x: hidden;
             position: relative;
+        
         }
 
         /* Ocultos por defecto en PC */
@@ -43,13 +70,12 @@
             max-width: 1400px; margin: 0 auto; padding: 0 30px; position: relative; z-index: 1;
         }
 
-        /* HERO SECTION REESTRUCTURADA */
+        /* HERO SECTION */
         .hero {
             display: flex; 
             flex-direction: column; 
             justify-content: center;
             min-height: 100vh; 
-            /* AJUSTE ESCRITORIO: Espacio superior para respetar tu Header importado */
             padding-top: 140px; 
             padding-bottom: 20px;
             gap: 40px;
@@ -65,51 +91,76 @@
 
         .hero-content { padding-right: 40px; position: relative; z-index: 10; }
 
+        /* ESTILO DEL "TOPIC" PEQUEÑO (COMO EL CÓDIGO 2) */
         .brand-tag {
-            display: inline-flex; padding: 8px 18px;
-            background: rgba(251, 103, 11, 0.15); border: 1px solid rgba(251, 103, 11, 0.4);
-            color: var(--primary); border-radius: 50px; font-weight: 700; font-size: 0.9rem;
-            margin-bottom: 30px; text-transform: uppercase; letter-spacing: 1.5px;
+            display: inline-flex; 
+            font-family: var(--fuente-titulos); /* Morganite */
+            font-size: 2.5rem; /* Más grande porque la fuente es condensada */
+            color: var(--primary); 
+            margin-bottom: 25px; 
+            text-transform: uppercase; 
+            letter-spacing: 3px;
+            font-weight: 600;
         }
 
+        /* ESTILO DEL TÍTULO GIGANTE (COMO EL CÓDIGO 2) */
         .hero h1 {
-            font-size: clamp(3rem, 5vw, 5.5rem); line-height: 1.05; font-weight: 800;
-            margin-bottom: 25px; color: white;
+            font-family: var(--fuente-titulos); /* Morganite */
+            font-size: clamp(5rem, 10vw, 11rem); /* TAMAÑO GIGANTE */
+            line-height: 0.85; /* MÁS PEGADO */
+            font-weight: 800;
+            margin-bottom: 20px; 
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .hero h1 span { color: var(--primary); }
 
+        /* ESTILO DE LA DESCRIPCIÓN (COMO EL CÓDIGO 2) */
         .hero p {
-            font-size: 1.2rem; color: var(--text-muted); line-height: 1.6;
-            max-width: 580px; margin-bottom: 40px;
+            font-family: var(--fuente-cuerpo);
+            font-size: 1.1rem; 
+            color: var(--text-muted); 
+            line-height: 1.5;
+            max-width: 500px; 
+            margin-bottom: 40px;
+            font-weight: 400;
         }
 
         /* Stats */
         .stats-row {
             display: flex; gap: 60px; border-top: 1px solid var(--glass-border); padding-top: 30px;
             opacity: 0; transform: translateY(20px);
-            margin-bottom: 35px; /* Espacio para el botón nuevo */
+            margin-bottom: 35px;
         }
         .stat-item h3 {
-            font-size: 3rem; font-weight: 700; color: white; margin-bottom: 5px; display: flex;
+            font-family: var(--fuente-cuerpo); /* Morganite para números */
+            font-size: 4rem; 
+            line-height: 0.9;
+            font-weight: 700; color: white; margin-bottom: 5px; display: flex;
         }
-        .stat-suffix { font-size: 1.5rem; color: var(--primary); margin-left: 2px; }
-        .stat-item p { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+        .stat-suffix { font-size: 2rem; color: var(--primary); margin-left: 2px; align-self: flex-start; margin-top: 5px;}
+        .stat-item p { 
+            font-family: var(--fuente-cuerpo);
+            font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); 
+        }
 
-        /* --- NUEVO BOTÓN HERO --- */
+        /* --- NUEVO BOTÓN HERO (ESTILO PILL) --- */
         .hero-cta-wrapper {
-            opacity: 0; transform: translateY(20px); /* Para animación GSAP */
+            opacity: 0; transform: translateY(20px);
         }
         .btn-hero-cta {
             display: inline-block;
             background: var(--primary);
             color: white;
             text-decoration: none;
-            padding: 18px 35px;
+            padding: 15px 45px; /* Pill shape */
             border-radius: 50px;
-            font-weight: 800;
-            font-size: 1.1rem;
+            font-family: var(--fuente-cuerpo);
+            font-weight: 700;
+            font-size: 1rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             box-shadow: 0 10px 30px rgba(251, 103, 11, 0.4);
             transition: all 0.3s ease;
             border: 1px solid transparent;
@@ -135,7 +186,7 @@
         }
         @keyframes floatUpDown { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
 
-        /* ================= MARQUEE INTEGRADO (SCROLL INFINITO) ================= */
+        /* ================= MARQUEE ================= */
         .hero-marquee-section {
             width: 100vw; 
             margin-left: calc(-50vw + 50%); 
@@ -169,17 +220,21 @@
             transition: all 0.3s ease;
         }
 
-        .info-card:hover {
-            border-color: var(--primary); background: rgba(251, 103, 11, 0.05); transform: translateY(-3px);
-        }
-        .info-card.highlight {
-            border: 1px solid var(--primary); background: rgba(251, 103, 11, 0.08);
-        }
+        .info-card:hover { border-color: var(--primary); background: rgba(251, 103, 11, 0.05); transform: translateY(-3px); }
+        .info-card.highlight { border: 1px solid var(--primary); background: rgba(251, 103, 11, 0.08); }
         .info-card.highlight:hover { background: var(--primary); }
         .info-card.highlight:hover h3, .info-card.highlight:hover p { color: white; }
 
-        .card-content h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; color: white; }
-        .card-content p { font-size: 0.85rem; line-height: 1.5; color: var(--text-muted); }
+.card-content h3 { 
+    font-family: var(--fuente-titulos);
+    font-size: 3.8rem; 
+    text-transform: uppercase; /* <-- ESTA ES LA CORRECCIÓN */
+    font-weight: 600; 
+    margin-bottom: 5px; 
+    color: white; 
+    letter-spacing: 1px;
+}
+        .card-content p { font-size: 0.9rem; line-height: 1.4; color: var(--text-muted); }
 
         @keyframes scroll-infinite {
             0% { transform: translateX(0); }
@@ -196,13 +251,18 @@
             box-shadow: 0 40px 100px rgba(0,0,0,0.5); position: relative;
         }
         .form-header { text-align: center; margin-bottom: 40px; }
-        .form-header h2 { font-size: 2.5rem; margin-bottom: 10px; color: white; }
+        .form-header h2 { 
+            font-family: var(--fuente-titulos);
+            font-size: 8rem; margin-bottom: 5px; color: white; 
+            text-transform: uppercase; letter-spacing: 1px;
+        }
         
         .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
         .form-group label { display: block; margin-bottom: 8px; color: #ccc; font-size: 0.9rem; }
         input[type="text"], input[type="tel"], input[type="email"] {
             width: 100%; padding: 16px 20px; background: rgba(0, 0, 0, 0.3);
-            border: 1px solid #333; border-radius: 12px; color: white; font-size: 1rem; outline: none; transition: 0.3s;
+            border: 1px solid #333; border-radius: 12px; color: white; 
+            font-family: var(--fuente-cuerpo); font-size: 1rem; outline: none; transition: 0.3s;
         }
         input:focus { border-color: var(--primary); background: rgba(0,0,0,0.5); }
 
@@ -235,27 +295,22 @@
         
         .btn-submit {
             width: 100%; padding: 20px; background: linear-gradient(135deg, #fb670b, #d65200);
-            color: white; border: none; border-radius: 15px; font-size: 1.1rem; font-weight: 800;
+            color: white; border: none; border-radius: 15px; 
+            font-family: var(--fuente-cuerpo); font-size: 1.1rem; font-weight: 800;
             text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.2s;
         }
         .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(251, 103, 11, 0.4); }
 
-        /* ==========================================================================
-           VERSION MÓVIL (APP MODE) 
-           ========================================================================== */
+        /* ================= MÓVIL (APP MODE) ================= */
         @media (max-width: 1000px) {
             #canvas-container { display: none; }
             body {
-                background: #0a0a0a;
+               
                 background-image: radial-gradient(circle at 100% 0%, rgba(251, 103, 11, 0.15) 0%, transparent 40%);
                 padding-bottom: 80px; 
             }
 
-            /* HEADER ELIMINADO EN CSS - El espacio se maneja en .hero */
-
             .hero {
-                min-height: auto;
-                /* AJUSTE MÓVIL: Padding superior grande para simular que está debajo de tu Header App */
                 padding-top: 100px; 
                 gap: 20px;
             }
@@ -274,7 +329,12 @@
                 align-items: center; 
             }
             
-            .hero h1 { font-size: 2.8rem; letter-spacing: -1px; }
+            /* Ajuste de tipografía móvil */
+            .brand-tag { font-size: 1.2rem; }
+            .hero h1 { 
+                font-size: 5.5rem; /* Morganite se ve bien muy grande incluso en móvil */
+                line-height: 0.85; 
+            }
             
             .hero-visual {
                 order: 2; width: 100%; height: 280px;
@@ -290,7 +350,7 @@
                 margin-top: 0; margin-bottom: 20px;
                 opacity: 1 !important; transform: none !important; 
             }
-            .stat-item h3 { font-size: 1.5rem; justify-content: center; }
+            .stat-item h3 { font-size: 2.5rem; justify-content: center; } /* Morganite */
 
             .hero-cta-wrapper {
                 width: 100%;
@@ -306,7 +366,7 @@
             }
             
             .info-card { width: 260px; height: 160px; padding: 20px; }
-            .card-content h3 { font-size: 1.1rem; }
+            .card-content h3 { font-size: 1.6rem; }
             .card-content p { font-size: 0.8rem; }
 
             /* Form */
@@ -315,7 +375,7 @@
                 padding: 30px 20px; border-radius: 24px;
                 background: transparent; border: none; box-shadow: none; backdrop-filter: none;
             }
-            .form-header h2 { font-size: 1.8rem; }
+            .form-header h2 { font-size: 3rem; }
             .input-grid { grid-template-columns: 1fr; gap: 15px; }
             input[type="text"], input[type="tel"], input[type="email"] { height: 55px; background: #1f1f1f; font-size: 16px; }
             .products-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -323,13 +383,13 @@
             
             .form-container .btn-submit { display: none; }
 
-            /* Botón Sticky Móvil */
             .mobile-bottom-bar {
                 display: block; position: fixed; bottom: 20px; left: 20px; right: 20px; z-index: 99;
             }
             .sticky-btn {
                 width: 100%; height: 60px; border-radius: 18px;
                 background: var(--primary); color: white; border: none;
+                font-family: var(--fuente-cuerpo);
                 font-weight: 800; font-size: 1.1rem; box-shadow: 0 10px 30px rgba(251, 103, 11, 0.4);
                 cursor: pointer;
             }
@@ -337,9 +397,10 @@
 
         .section-label {
             text-align: center;
-            font-size: 0.9rem;
+            font-family: var(--fuente-titulos); /* Morganite */
+            font-size: 3.5rem;
             font-weight: 800;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             color: var(--text-main); 
             margin-bottom: 20px;  
             text-transform: uppercase;
