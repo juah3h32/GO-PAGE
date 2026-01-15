@@ -15,6 +15,20 @@ const safeLang = (currentLang in translations) ? currentLang : 'es';
 const langData = translations[safeLang as keyof typeof translations];
 const t = langData.nav;
 
+// --- LOGICA BOTON ATRAS ---
+// Escribe aquí las partes de la URL donde SI quieres que salga el botón.
+// Ejemplo: si pones '/rafia', saldrá en 'es/rafia', 'en/rafia', etc.
+const pagesWithBackBtn = [
+  '/cuerdas',
+  '/rafia',
+  '/arpilla', 
+  '/esquineros',
+  // Agrega aquí cualquier otra página nueva
+];
+
+// Verificamos si la página actual está en la lista
+const showBackBtn = pagesWithBackBtn.some(page => pathname.includes(page));
+// ---------------------------
 // Helper para detectar ruta activa (para el estilo "Active")
 const isActive = (path: string) => {
   if (path === `/${safeLang}/` && (pathname === `/${safeLang}/` || pathname === `/${safeLang}`)) return true;
@@ -83,13 +97,12 @@ function getLangPath(targetLang: string) {
       </a>
     </div>
 
-    <div class="nav-right">
+<div class="nav-right">
        
        <div class="desktop-actions desktop-only">
-         
         <label class="theme-switch" aria-label="Cambiar tema">
             <div class="theme-switch-outer">
-              <input id="theme-toggle" type="checkbox"> 
+              <input class="js-theme-toggle" type="checkbox"> 
               <div class="theme-button">
                 <span class="theme-toggle-icon"></span>
               </div>
@@ -113,7 +126,29 @@ function getLangPath(targetLang: string) {
         <a href={`/${safeLang}/contacto`} class="nav-btn btn-primary">{t.contact}</a>
       </div>
       
-      <div class="mobile-controls mobile-only">
+<div class="mobile-controls mobile-only">
+         
+         {showBackBtn && (
+            <a 
+                href={`/${safeLang}/productos`} 
+                class="back-arrow-btn" 
+                aria-label="Volver a productos"
+             >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="19" y1="12" x2="5" y2="12" />
+                  <polyline points="12 19 5 12 12 5" />
+                </svg>
+             </a>
+         )}
+         
+         <label class="mobile-theme-btn" aria-label="Cambiar tema móvil">
+             <input class="js-theme-toggle" type="checkbox" style="display:none;">
+             <div class="icon-container">
+                 <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                 <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+             </div>
+         </label>
+
          <button id="mobile-lang-trigger" class="lang-pill-btn">
              <span>{safeLang.toUpperCase()}</span>
          </button>
@@ -175,7 +210,9 @@ function getLangPath(targetLang: string) {
     const accordions = document.querySelectorAll(".accordion-btn");
     const langTrigger = document.getElementById("mobile-lang-trigger");
     const langDropdown = document.getElementById("mobile-lang-dropdown");
-    const themeInputs = document.querySelectorAll('#theme-toggle');
+    
+    // CAMBIO AQUÍ: Seleccionamos por clase, no por ID
+    const themeInputs = document.querySelectorAll('.js-theme-toggle');
     
     // Theme logic
     const applyTheme = (isDark: boolean) => {
@@ -189,18 +226,24 @@ function getLangPath(targetLang: string) {
         themeInputs.forEach(input => { if(input instanceof HTMLInputElement) input.checked = false; });
       }
     };
+
     const storedTheme = localStorage.getItem('theme');
     const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    // Inicializar estado
     if (storedTheme === 'dark' || (!storedTheme && systemDark)) applyTheme(true);
     else applyTheme(false);
 
+    // Event Listeners para todos los toggles (movil y desktop)
     themeInputs.forEach(input => {
+        // Clonamos para eliminar listeners viejos si Astro recarga
         const newInput = input.cloneNode(true);
         input.parentNode?.replaceChild(newInput, input);
         newInput.addEventListener('change', (e) => applyTheme((e.target as HTMLInputElement).checked));
     });
 
-    // Scroll Logic (Mantiene fondo transparente al inicio)
+    // ... (El resto del código de Scroll, Menu hamburguesa, etc. sigue igual) ...
+    // Scroll Logic
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
             header?.classList.add('scrolled');
@@ -267,12 +310,16 @@ function getLangPath(targetLang: string) {
 }
 body.no-scroll { overflow: hidden; }
 
-/* HEADER & LAYOUT */
+/* Busca esta clase y cambia el z-index */
 .montfort-header {
-  z-index: 3000 !important;
-  position: fixed; top: 0; left: 0; width: 100%;
+  z-index: 99999 !important; /* CAMBIO: De 3000 a 99999 */
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 100%;
   height: var(--header-height);
-  transition: all 0.4s ease; padding-top: 25px;
+  transition: all 0.4s ease; 
+  padding-top: 25px;
 }
 .montfort-header.transparent { background: transparent; box-shadow: none; }
 
@@ -429,19 +476,40 @@ body.no-scroll { overflow: hidden; }
 .globe-btn span { font-size: 13.5px; font-weight: 600; text-transform: uppercase; }
 .globe-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 102, 0, 0.5); }
 
+/* --- BUSCA ESTA PARTE EN TU <style> Y REEMPLÁZALA --- */
+
+/* Busca esta clase */
 .hamburger {
-  display: none; flex-direction: column; justify-content: space-between;
-  width: 28px; height: 20px; background: none; border: none; cursor: pointer; padding: 0;
-  z-index: 1200;
+  display: none; 
+  flex-direction: column; 
+  justify-content: space-between;
+  width: 28px; 
+  height: 20px; 
+  background: none; 
+  border: none; 
+  cursor: pointer; 
+  padding: 0;
+  z-index: 100000; /* CAMBIO: Asegura que esto sea mayor que .montfort-header y .mobile-menu */
 }
+
 .hamburger span {
-  display: block; width: 100%; height: 3px; background: var(--text-main);
+  display: block; width: 100%; height: 3px; 
+  background: var(--text-main); /* Color normal (Negro en light, Blanco en dark) */
   border-radius: 2px; transition: 0.3s;
 }
-.hamburger.active span:nth-child(1) { transform: rotate(45deg) translateY(8px); background: var(--btn-bg); }
-.hamburger.active span:nth-child(2) { opacity: 0; }
-.hamburger.active span:nth-child(3) { transform: rotate(-45deg) translateY(-8px); background: var(--btn-bg); }
 
+/* --- AGREGA ESTO PARA CORREGIR EL ERROR --- */
+/* Cuando el header se oscurece al bajar (scrolled), forzamos el menú a BLANCO */
+.montfort-header.scrolled .hamburger span {
+  background: #ffffff !important;
+}
+
+/* Animación cuando se abre el menú (se convierte en X y se pone Naranja) */
+.hamburger.active span:nth-child(1) { transform: rotate(45deg) translateY(8px); background: var(--btn-bg) !important; }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: rotate(-45deg) translateY(-8px); background: var(--btn-bg) !important; }
+
+/* ------------------------------------------------ */
 .mobile-menu {
   position: fixed; top: 0; right: 0; width: 100%; height: 100vh;
   background: #121212;
@@ -452,7 +520,7 @@ body.no-scroll { overflow: hidden; }
 .mobile-menu.active { transform: translateX(0); }
 .mobile-scroll-container { overflow-y: auto; height: 100%; padding-bottom: 40px; }
 .mobile-link {
-  display: block; font-size: 18px; color: var(--text-main); text-decoration: none;
+  display: block; font-size: 18px; color:white; text-decoration: none;
   padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
   font-weight: 500; text-align: left; width: 100%; background: none; border: none;
 }
@@ -513,4 +581,93 @@ body.no-scroll { overflow: hidden; }
 [dir="rtl"] .nav-links { flex-direction: row-reverse; }
 [dir="rtl"] .mobile-mini-dropdown { left: 0; right: auto; }
 .montfort-header.logo-shifted .logo { display: none; }
+
+/* ESTILOS BOTÓN TEMA MÓVIL (NUEVO) */
+.mobile-theme-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-theme-btn .icon-container {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1); /* Fondo sutil */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-main);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.mobile-theme-btn .icon-container:active {
+    transform: scale(0.95);
+}
+
+/* Lógica de cambio de icono (Sol/Luna) */
+.mobile-theme-btn .sun-icon { display: block; }
+.mobile-theme-btn .moon-icon { display: none; }
+
+/* Cuando el checkbox oculto está checked (Modo Oscuro) */
+.mobile-theme-btn input:checked ~ .icon-container {
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff; /* Color naranja al estar activo */
+    border-color: rgba(251, 103, 11, 0.3);
+}
+
+.mobile-theme-btn input:checked ~ .icon-container .sun-icon { display: none; }
+.mobile-theme-btn input:checked ~ .icon-container .moon-icon { display: block; }
+
+/* Ajuste para modo claro/oscuro global */
+:global(html.dark) .mobile-theme-btn .icon-container {
+    background: rgba(0, 0, 0, 0.3);
+}
+/* --- BOTÓN ATRÁS FIJO Y NEGRO --- */
+.back-arrow-btn {
+  /* 1. POSICIÓN FIJA */
+  position: fixed; 
+  top: 25px; /* Ajusta esto para alinear con tu logo o menú */
+  left: 20px; /* Lo fijamos a la izquierda de la pantalla */
+  z-index: 100002 !important; /* Z-index altísimo para que flote sobre todo */
+
+  /* 2. TAMAÑO */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* 3. COLORES (NEGRO) */
+  border: 2px solid #000000; /* Borde Negro Sólido */
+  color: #000000 !important; /* Flecha Negra */
+  background: #ffffff; /* Fondo Blanco (para que resalte sobre fotos oscuras) */
+  
+  /* EXTRAS */
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3); /* Sombra para efecto flotante */
+}
+
+/* EFECTO AL TOCARLO */
+.back-arrow-btn:hover {
+  transform: scale(1.1);
+  background: #000000; /* Se vuelve negro al tocarlo */
+  color: #ffffff !important; /* La flecha se vuelve blanca */
+  border-color: #000000;
+}
+
+/* ELIMINAR CAMBIOS DEL MODO OSCURO (Para que siempre sea Negro/Blanco) */
+:global(html.dark) .back-arrow-btn {
+  border-color: #000000;
+  color: #000000 !important;
+  background: #ffffff;
+}
 </style>

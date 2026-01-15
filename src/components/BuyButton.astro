@@ -1,8 +1,7 @@
 ---
 /* src/components/BuyButton.astro */
 
-// 1. Recibimos los textos desde el componente padre (cuerdas.astro)
-// Si no llegan, usamos los valores por defecto en español.
+// 1. Recibimos los textos desde el componente padre
 const { 
   text = "Comprar", 
   redirecting = "Redirigiendo..." 
@@ -41,7 +40,6 @@ const {
     const box = button.querySelector(".box");
 
     if (!truck || !box) {
-        console.error("Error: Elementos del camión no encontrados en el DOM");
         return;
     }
 
@@ -119,15 +117,18 @@ const {
 
 <style>
   .cta-btn {
-    /* Variables originales */
+    /* --- PALETA DE COLORES CORREGIDA --- */
     --color: #fff;
-    --background: #2b3044;
+    --background: #fb670b;      /* Tu color naranja principal */
+    
+    /* Aquí estaba el problema: cambié el gris por naranja oscuro para dar profundidad */
+    --street: #d65608;          /* Borde 3D superior/inferior (Naranja oscuro) */
+    --street-fill: #b34606;     /* Relleno interior cuando se abre (Naranja más oscuro) */
+    
     --tick: #16bf78;
     --base: #0d0f18;
     --wheel: #1b1b1b;
     --wheel-inner: #646464;
-    --street: #646b8c;
-    --street-fill: #404660;
     --truck-body: #f4f6f8;
     --truck-body-shadow: #d0d4d8;
     --window: #2a2d35;
@@ -143,7 +144,8 @@ const {
     border: none;
     outline: none;
     
-    /* Forzamos color blanco */
+    /* Forzamos opacidad y color */
+    opacity: 1 !important;
     color: #ffffff !important; 
     
     background: var(--background);
@@ -154,6 +156,9 @@ const {
     transform: rotateX(var(--rx, 0deg)) translateZ(0);
     transition: transform 0.5s, border-radius 0.3s linear var(--br-d, 0s);
     margin-top: 20px;
+    
+    /* Agregamos una sombra suave para que resalte más y no se vea plano */
+    box-shadow: 0 10px 20px -8px rgba(251, 103, 11, 0.5);
   }
 
   .cta-btn:hover,
@@ -162,6 +167,7 @@ const {
       color: #ffffff !important;
   }
 
+  /* El resto de los estilos se mantienen para que la animación funcione */
   .cta-btn:before,
   .cta-btn:after {
     content: "";
@@ -183,12 +189,13 @@ const {
   .cta-btn .default,
   .cta-btn .success {
     display: block;
-    font-weight: 500;
+    font-weight: 600; /* Aumenté un poco el grosor para que se lea mejor sobre naranja */
     font-size: 14px;
     line-height: 24px;
     opacity: var(--o, 1);
     transition: opacity 0.3s;
     color: #ffffff !important; 
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Sombra ligera al texto para legibilidad */
   }
 
   .cta-btn .success {
@@ -215,7 +222,7 @@ const {
     transition: stroke-dashoffset 0.4s ease 0.45s;
   }
 
-  /* --- CAMIÓN (Sin cambios) --- */
+  /* --- CAMIÓN --- */
   .cta-btn .truck {
     position: absolute;
     width: 80px;
@@ -368,6 +375,7 @@ const {
     background: #d0d0d0;
     transform: translateX(calc(var(--hx, 0) * 1px));
   }
+  
 
   .cta-btn.animation { --rx: -90deg; --br: 0; }
   .cta-btn.animation .default { --o: 0; }

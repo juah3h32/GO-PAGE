@@ -271,7 +271,7 @@ body, html {
      ========================================= */
   .carousel .list .item img {
     position: absolute; z-index: 100;
-    top: 25%; /* Ajusté un poco para dar espacio a la tarjeta más ancha */
+    top: 28%; /* Ajusté un poco para dar espacio a la tarjeta más ancha */
     left: 50%; right: auto;
     transform: translate(-50%, -50%);
     width: clamp(180px, 60vw, 300px); /* Un poco más grande para llenar espacio */
@@ -359,7 +359,6 @@ body, html {
   .carousel .list .item .introduce .topic {
     font-family: var(--fuente-titulos);
     width: 100%; 
-    margin-bottom: 5px;
     
     font-size: clamp(2.5rem, 13vw, 4.5rem); 
     line-height: 0.9;

@@ -19,10 +19,11 @@
   position: fixed; 
   bottom: 20px; 
   right: 20px; 
-  z-index: 9999;
-  font-family: 'Poppins', 'Segoe UI', sans-serif;
   
-  /* SOLUCIÓN CURSOR: Cursor nativo por defecto en el área invisible */
+  /* CAMBIO AQUÍ: Supera al menú hamburguesa (que tiene 100000) */
+  z-index: 200000 !important; 
+  
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
   cursor: default; 
 }
 
@@ -447,7 +448,7 @@
     bottom: auto;
     transform: translateY(-50%);
     width: auto;
-    z-index: 9999;
+     z-index: 100000 !important; /* CAMBIO: De 3000 a 99999 */
     display: flex;
     justify-content: flex-end;
   }
@@ -483,6 +484,7 @@
   /* D. Ventana Full Screen */
   .botgo-window {
     position: fixed !important; 
+    z-index: 10000 !important;
     top: 0; 
     left: 0; 
     right: 0; 
