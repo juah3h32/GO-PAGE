@@ -121,13 +121,22 @@ export default function BotGO({ language = 'es' }) {
     }
   };
 
-  const handleCloseChat = () => {
+const handleCloseChat = () => {
     setIsOpen(false);
     setViewMode('voice'); 
-    if (audioRef.current) {
+    
+    // --- INICIO DEL CAMBIO ---
+    // Hemos comentado (desactivado) la parte que pausa el audio.
+    // Ahora, aunque se cierre visualmente, el audio seguirá sonando de fondo.
+    
+    /* if (audioRef.current) {
         audioRef.current.pause();
         setIsBotSpeaking(false);
     }
+    */
+   
+    // --- FIN DEL CAMBIO ---
+
     if (inputRef.current) inputRef.current.blur();
     window.focus();
   };

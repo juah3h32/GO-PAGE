@@ -525,7 +525,7 @@
   .botgo-header-clean { padding: 15px 20px 5px 20px; }
 }
 /* =========================================
-   10. INTERFAZ DE VOZ (GEMINI / RECEPCIONISTA) - MEJORADO
+   10. INTERFAZ DE VOZ (GEMINI / RECEPCIONISTA)
    ========================================= */
 
 .botgo-voice-interface {
@@ -539,6 +539,13 @@
   overflow: hidden;
 }
 
+.botgo-chat-interface {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 /* HEADER DE VOZ */
 .voice-header {
   padding: 20px 25px;
@@ -549,7 +556,6 @@
   box-sizing: border-box; /* Asegura que el padding no desborde */
   z-index: 20; /* Por encima de todo */
 }
-
 .voice-header span {
   font-weight: 600;
   color: var(--text-grey);
@@ -557,20 +563,17 @@
 }
 
 .voice-close-btn {
-  background: rgba(0,0,0,0.03); /* Fondo sutil */
+  background: none;
   border: none;
   color: var(--text-dark);
   cursor: pointer;
-  width: 32px;
-  height: 32px;
+  padding: 5px;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
+  transition: background 0.2s;
 }
-.voice-close-btn:hover { background: rgba(0,0,0,0.1); transform: rotate(90deg); }
+.voice-close-btn:hover { background: rgba(0,0,0,0.05); }
 
+/* CONTENIDO CENTRAL (ORBE Y TEXTO) */
 /* CONTENIDO CENTRAL (ORBE Y TEXTO) */
 .voice-content {
   flex: 1; /* Ocupa todo el espacio disponible */
@@ -584,7 +587,6 @@
   gap: 25px; /* Espacio entre la esfera y el texto */
 }
 
-/* --- ÁREA DE TEXTO CON DEGRADADO (FADE) --- */
 .voice-text-display {
   position: relative;
   width: 100%;
@@ -628,166 +630,19 @@
   
   pointer-events: none;
 }
+.user-listening-text {
+  font-size: 1.2rem;
+  color: var(--primary-orange);
+  font-style: italic;
+}
 
-/* Textos de estado (Escuchando/Pensando) */
-.user-listening-text,
 .assistant-thinking-text {
   font-size: 1.1rem;
-  font-weight: 500;
-  margin: 0;
-  animation: pulse-text 2s infinite ease-in-out;
-}
-.user-listening-text { color: var(--primary-orange); }
-.assistant-thinking-text { color: #999; }
-
-@keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes pulse-text { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
-
-/* =========================================
-   11. ANIMACIÓN DE LA ESFERA (ORB)
-   ========================================= */
-.voice-orb-container {
-  width: 110px;
-  height: 110px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* Margen negativo para subirla un poquito ópticamente si es necesario */
-  margin-top: -20px; 
+  color: #999;
 }
 
-/* El Núcleo Central */
-.voice-orb-core {
-  width: 55px;
-  height: 55px;
-  border-radius: 50%;
-  /* Gradiente más rico para que parezca 3D */
-  background: radial-gradient(circle at 35% 35%, #ffab85, var(--primary-orange));
-  box-shadow: 0 10px 25px rgba(242, 79, 19, 0.35);
-  z-index: 10;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efecto rebote suave */
-}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Los Anillos */
-.voice-orb-ring {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  border: 1px solid var(--primary-orange);
-  opacity: 0;
-  z-index: 1;
-  width: 55px;
-  height: 55px;
-  box-sizing: border-box;
-}
-
-/* Estados de la Esfera */
-.voice-orb-container.idle .voice-orb-core {
-  animation: orb-float 3s infinite ease-in-out;
-}
-
-.voice-orb-container.listening .voice-orb-core {
-  transform: scale(1.2);
-  box-shadow: 0 0 30px rgba(242, 79, 19, 0.6);
-}
-.voice-orb-container.listening .voice-orb-ring.ring-1 {
-  border-width: 2px;
-  width: 100%; height: 100%;
-  opacity: 0.2;
-  transform: translate(-50%, -50%) scale(1.3);
-}
-
-.voice-orb-container.thinking .voice-orb-core {
-  background: radial-gradient(circle at 30% 30%, #fff, #bdc3c7);
-  animation: orb-pulse-fast 0.8s infinite alternate;
-}
-
-/* HABLANDO */
-.voice-orb-container.speaking .voice-orb-core {
-  animation: orb-beat 0.4s infinite alternate;
-}
-.voice-orb-container.speaking .voice-orb-ring.ring-1 { animation: wave-expand 1.2s infinite linear; }
-.voice-orb-container.speaking .voice-orb-ring.ring-2 { animation: wave-expand 1.2s infinite linear 0.4s; }
-
-/* Keyframes de la esfera */
-@keyframes orb-float {
-  0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 10px 25px rgba(242, 79, 19, 0.3); }
-  50% { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 30px rgba(242, 79, 19, 0.2); }
-}
-@keyframes orb-pulse-fast { to { transform: scale(1.08); } }
-@keyframes orb-beat { 
-  0% { transform: scale(1); } 
-  100% { transform: scale(1.15); box-shadow: 0 0 35px rgba(242, 79, 19, 0.8); } 
-}
-@keyframes wave-expand {
-  0% { width: 55px; height: 55px; opacity: 0.8; border-width: 2px; }
-  100% { width: 160px; height: 160px; opacity: 0; border-width: 0px; }
-}
-
-/* =========================================
-   12. CONTROLES INFERIORES
-   ========================================= */
-.voice-controls {
-  padding: 0 40px 40px 40px; /* Padding inferior más amplio */
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.voice-control-btn {
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
-  outline: none;
-}
-
-/* Botones Laterales */
-.voice-control-btn.secondary {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background-color: #ffffff;
-  color: #666;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  border: 1px solid rgba(0,0,0,0.05);
-}
-.voice-control-btn.secondary:hover {
-  background-color: #f9f9f9;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.12);
-  color: var(--primary-orange);
-}
-
-/* Botón Central Micrófono (Héroe) */
-.voice-control-btn.primary-mic {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary-orange), #ff6b3d);
-  color: white;
-  box-shadow: 0 10px 25px rgba(242, 79, 19, 0.35);
-  position: relative; /* Para el efecto active */
-}
-.voice-control-btn.primary-mic:hover {
-  transform: scale(1.08) translateY(-2px);
-  box-shadow: 0 15px 30px rgba(242, 79, 19, 0.45);
-}
-.voice-control-btn.primary-mic:active { transform: scale(0.95); }
-
-/* Efecto cuando está activo (escuchando) */
-.voice-control-btn.primary-mic.active {
-  background: #ffffff;
-  color: var(--primary-orange);
-  box-shadow: 0 0 0 4px rgba(242, 79, 19, 0.2);
-}
 /* =========================================
    11. ANIMACIÓN DE LA ESFERA (ORB) - CORREGIDO
    ========================================= */
