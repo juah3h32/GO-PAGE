@@ -707,7 +707,7 @@ model-viewer.model-3d-custom {
   .specs-title {
     width: 100%; text-align: center !important;
     border-left: none !important; padding-left: 0 !important;
-    color: var(--mobile-card-text) !important; /* Adaptable */
+    color:#000 !important; /* Adaptable */
     display: block !important;
   }
 

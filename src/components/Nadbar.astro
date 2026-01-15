@@ -634,7 +634,7 @@ body.no-scroll { overflow: hidden; }
   position: fixed; 
   top: 25px; /* Ajusta esto para alinear con tu logo o menú */
   left: 20px; /* Lo fijamos a la izquierda de la pantalla */
-  z-index: 100002 !important; /* Z-index altísimo para que flote sobre todo */
+  z-index: 1 !important; /* Z-index altísimo para que flote sobre todo */
 
   /* 2. TAMAÑO */
   width: 40px;
@@ -659,7 +659,7 @@ body.no-scroll { overflow: hidden; }
 /* EFECTO AL TOCARLO */
 .back-arrow-btn:hover {
   transform: scale(1.1);
-  background: #000000; /* Se vuelve negro al tocarlo */
+  background: #fb670b; /* Se vuelve naranja al tocarlo */
   color: #ffffff !important; /* La flecha se vuelve blanca */
   border-color: #000000;
 }
@@ -668,6 +668,6 @@ body.no-scroll { overflow: hidden; }
 :global(html.dark) .back-arrow-btn {
   border-color: #000000;
   color: #000000 !important;
-  background: #ffffff;
+  background: #fb670b;
 }
 </style>
